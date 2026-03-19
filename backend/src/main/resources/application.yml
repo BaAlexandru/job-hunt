@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: job-hunt
+  docker:
+    compose:
+      file: ../compose.yaml
+      skip:
+        in-tests: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
