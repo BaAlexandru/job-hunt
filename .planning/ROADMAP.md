@@ -33,11 +33,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Flyway runs at least one baseline migration on startup and the schema is visible in PostgreSQL
   4. CLAUDE.md files exist in each module directory with module-specific guidance
   5. Kotlin compiler plugins (plugin.spring, plugin.jpa) are configured and verified working
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md -- Monorepo restructure, Gradle multi-project, Docker Compose, Flyway, health endpoint
+- [ ] 01-02-PLAN.md -- CLAUDE.md files per module and .claude/skills/ project conventions
 
 ### Phase 2: Authentication
 **Goal**: Users can create accounts, log in with persistent sessions, log out, and reset forgotten passwords via the REST API
@@ -156,7 +156,7 @@ Note: Phase 6 and Phase 7 can run in parallel (both depend on earlier phases, no
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Infrastructure | 0/0 | Not started | - |
+| 1. Foundation & Infrastructure | 0/2 | Planning complete | - |
 | 2. Authentication | 0/0 | Not started | - |
 | 3. Company & Job Domain | 0/0 | Not started | - |
 | 4. Application Tracking | 0/0 | Not started | - |
