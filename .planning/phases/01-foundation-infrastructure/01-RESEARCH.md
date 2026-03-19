@@ -79,7 +79,7 @@ None -- discussion stayed within phase scope
 | Kotlin Reflect | org.jetbrains.kotlin:kotlin-reflect | Kotlin reflection for Spring | Keep |
 | Jackson Kotlin | tools.jackson.module:jackson-module-kotlin | JSON serialization | Keep (SB4 uses tools.jackson group) |
 | Spring Boot DevTools | spring-boot-devtools | Hot reload | Keep (developmentOnly) |
-| Docker Compose | spring-boot-docker-compose | Auto-discover compose.yaml | Keep (developmentOnly) |
+| Docker Compose | spring-boot-docker-compose | Auto-discover compose.yaml | Keep (testAndDevelopmentOnly) |
 | Kotlin Test JUnit5 | org.jetbrains.kotlin:kotlin-test-junit5 | Test framework | Keep |
 | JUnit Platform | org.junit.platform:junit-platform-launcher | Test runner | Keep (testRuntimeOnly) |
 
@@ -186,7 +186,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("tools.jackson.module:jackson-module-kotlin")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+    testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

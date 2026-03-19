@@ -28,7 +28,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Depends on**: Nothing (first phase)
 **Requirements**: INFR-01, INFR-02, INFR-03, INFR-04, DEVX-01, DEVX-02
 **Success Criteria** (what must be TRUE):
-  1. Running `docker compose up` starts the Spring Boot backend and PostgreSQL database successfully
+  1. Running `./gradlew :backend:bootRun` starts the Spring Boot app and auto-starts PostgreSQL via Docker Compose
   2. The monorepo has /backend, /frontend, and /infra directories with the Spring Boot app in /backend
   3. Flyway runs at least one baseline migration on startup and the schema is visible in PostgreSQL
   4. CLAUDE.md files exist in each module directory with module-specific guidance

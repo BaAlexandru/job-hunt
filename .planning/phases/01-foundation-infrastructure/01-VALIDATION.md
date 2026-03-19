@@ -58,6 +58,13 @@ created: 2026-03-19
 
 ---
 
+## Notes
+
+- **Test database access**: Tests use `testAndDevelopmentOnly` spring-boot-docker-compose to auto-start PostgreSQL. No test-specific Spring profile is needed for Phase 1, but Phase 2 (Security) will likely require an `application-test.yml` to configure security contexts for tests.
+- **pgcrypto extension**: Technically unnecessary on PostgreSQL 13+ (gen_random_uuid() is built-in), but kept intentionally for additional cryptographic functions that may be useful later.
+
+---
+
 ## Manual-Only Verifications
 
 | Behavior | Requirement | Why Manual | Test Instructions |

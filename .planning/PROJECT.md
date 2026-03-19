@@ -47,7 +47,7 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 
 ## Constraints
 
-- **Tech Stack (Backend)**: Kotlin + Spring Boot 3.x, Spring Security + JWT, Spring Data JPA + PostgreSQL, Flyway migrations
+- **Tech Stack (Backend)**: Kotlin + Spring Boot 4.x, Spring Security + JWT, Spring Data JPA + PostgreSQL, Flyway migrations
 - **Tech Stack (Frontend)**: React 18+ with TypeScript, Next.js (with Turbopack), TanStack Query, Tailwind CSS / shadcn/ui
 - **Tech Stack (AI)**: Spring AI with flexible provider abstraction (Claude, OpenAI, swappable)
 - **Infrastructure**: Docker + Docker Compose for local dev first, Kubernetes (Helm) for production later

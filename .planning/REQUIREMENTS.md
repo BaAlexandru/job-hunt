@@ -54,10 +54,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFR-01**: Application runs in Docker containers via Docker Compose
-- [ ] **INFR-02**: PostgreSQL runs as a container in the compose stack
-- [ ] **INFR-03**: Monorepo structure with /backend, /frontend, /infra directories
-- [ ] **INFR-04**: Database migrations managed by Flyway
+- [x] **INFR-01**: Application runs in Docker containers via Docker Compose
+- [x] **INFR-02**: PostgreSQL runs as a container in the compose stack
+- [x] **INFR-03**: Monorepo structure with /backend, /frontend, /infra directories
+- [x] **INFR-04**: Database migrations managed by Flyway
 - [ ] **INFR-05**: Responsive web design usable on mobile viewports
 
 ### Developer Experience
@@ -143,10 +143,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DOCS-03 | Phase 6 | Pending |
 | DOCS-04 | Phase 6 | Pending |
 | DOCS-05 | Phase 6 | Pending |
-| INFR-01 | Phase 1 | Pending |
-| INFR-02 | Phase 1 | Pending |
-| INFR-03 | Phase 1 | Pending |
-| INFR-04 | Phase 1 | Pending |
+| INFR-01 | Phase 1 | Complete |
+| INFR-02 | Phase 1 | Complete |
+| INFR-03 | Phase 1 | Complete |
+| INFR-04 | Phase 1 | Complete |
 | INFR-05 | Phase 7 | Pending |
 | DEVX-01 | Phase 1 | Pending |
 | DEVX-02 | Phase 1 | Pending |
