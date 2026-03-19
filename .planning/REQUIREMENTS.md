@@ -116,46 +116,46 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | TBD | Pending |
-| AUTH-02 | TBD | Pending |
-| AUTH-03 | TBD | Pending |
-| AUTH-04 | TBD | Pending |
-| COMP-01 | TBD | Pending |
-| COMP-02 | TBD | Pending |
-| COMP-03 | TBD | Pending |
-| JOBS-01 | TBD | Pending |
-| JOBS-02 | TBD | Pending |
-| JOBS-03 | TBD | Pending |
-| JOBS-04 | TBD | Pending |
-| APPL-01 | TBD | Pending |
-| APPL-02 | TBD | Pending |
-| APPL-03 | TBD | Pending |
-| APPL-04 | TBD | Pending |
-| APPL-05 | TBD | Pending |
-| APPL-06 | TBD | Pending |
-| APPL-07 | TBD | Pending |
-| INTV-01 | TBD | Pending |
-| INTV-02 | TBD | Pending |
-| INTV-03 | TBD | Pending |
-| INTV-04 | TBD | Pending |
-| DOCS-01 | TBD | Pending |
-| DOCS-02 | TBD | Pending |
-| DOCS-03 | TBD | Pending |
-| DOCS-04 | TBD | Pending |
-| DOCS-05 | TBD | Pending |
-| INFR-01 | TBD | Pending |
-| INFR-02 | TBD | Pending |
-| INFR-03 | TBD | Pending |
-| INFR-04 | TBD | Pending |
-| INFR-05 | TBD | Pending |
-| DEVX-01 | TBD | Pending |
-| DEVX-02 | TBD | Pending |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Pending |
+| AUTH-04 | Phase 2 | Pending |
+| COMP-01 | Phase 3 | Pending |
+| COMP-02 | Phase 3 | Pending |
+| COMP-03 | Phase 3 | Pending |
+| JOBS-01 | Phase 3 | Pending |
+| JOBS-02 | Phase 3 | Pending |
+| JOBS-03 | Phase 3 | Pending |
+| JOBS-04 | Phase 3 | Pending |
+| APPL-01 | Phase 4 | Pending |
+| APPL-02 | Phase 4 | Pending |
+| APPL-03 | Phase 8 | Pending |
+| APPL-04 | Phase 8 | Pending |
+| APPL-05 | Phase 4 | Pending |
+| APPL-06 | Phase 4 | Pending |
+| APPL-07 | Phase 4 | Pending |
+| INTV-01 | Phase 5 | Pending |
+| INTV-02 | Phase 5 | Pending |
+| INTV-03 | Phase 5 | Pending |
+| INTV-04 | Phase 5 | Pending |
+| DOCS-01 | Phase 6 | Pending |
+| DOCS-02 | Phase 6 | Pending |
+| DOCS-03 | Phase 6 | Pending |
+| DOCS-04 | Phase 6 | Pending |
+| DOCS-05 | Phase 6 | Pending |
+| INFR-01 | Phase 1 | Pending |
+| INFR-02 | Phase 1 | Pending |
+| INFR-03 | Phase 1 | Pending |
+| INFR-04 | Phase 1 | Pending |
+| INFR-05 | Phase 7 | Pending |
+| DEVX-01 | Phase 1 | Pending |
+| DEVX-02 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 34 total
-- Mapped to phases: 0
-- Unmapped: 34
+- Mapped to phases: 34
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-19*
-*Last updated: 2026-03-19 after initial definition*
+*Last updated: 2026-03-19 after roadmap creation*
