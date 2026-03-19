@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 01-02-PLAN.md (Phase 01 complete)
-last_updated: "2026-03-19T23:15:32.675Z"
+stopped_at: Phase 2 context gathered
+last_updated: "2026-03-19T23:45:32.419Z"
 last_activity: 2026-03-20 -- Completed 01-02 developer experience tooling
 progress:
   total_phases: 8
@@ -64,12 +64,14 @@ Recent decisions affecting current work:
 - [Phase 01]: Added foojay-resolver-convention plugin to auto-download Java 24 toolchain
 - [Phase 01]: Set spring.docker.compose.skip.in-tests=false for test DB connectivity
 - [Phase 01]: CLAUDE.md content verified against actual build.gradle.kts and application.yml from Phase 01-01
+- [Audit]: No API versioning — flat `/api/` prefix for all endpoints. Monorepo means frontend/backend evolve in lockstep; add versioning only if needed later
+- [Audit]: Spring Actuator added — /actuator/health (DB, Flyway, disk), /actuator/info, /actuator/flyway exposed. Custom HealthController removed. Secure actuator endpoints when Spring Security is added in Phase 2
 
 ### Pending Todos
 
-- Decide API versioning strategy before Phase 2: `/api/v1/` prefix vs flat `/api/` (ARCHITECTURE.md assumes `/api/v1/`, Phase 1 health endpoint uses `/api/`)
+- RESOLVED: No API versioning — flat `/api/` prefix. ARCHITECTURE.md examples updated.
 - Add MockK, SpringMockK, and Testcontainers to backend dependencies when Phase 2 planning starts (STACK.md recommends them; Phase 1 doesn't need them yet)
-- Interview Management (Phase 5) needs research coverage before planning — FEATURES.md and ARCHITECTURE.md have minimal treatment
+- RESOLVED: Interview Management added to FEATURES.md (table stakes + dependency graph) and ARCHITECTURE.md (component table, package structure, build order)
 
 ### Blockers/Concerns
 
@@ -78,6 +80,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-19T23:10:30Z
-Stopped at: Completed 01-02-PLAN.md (Phase 01 complete)
-Resume file: None
+Last session: 2026-03-19T23:45:32.416Z
+Stopped at: Phase 2 context gathered
+Resume file: .planning/phases/02-authentication/02-CONTEXT.md
