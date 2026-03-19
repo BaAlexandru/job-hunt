@@ -62,8 +62,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Developer Experience
 
-- [ ] **DEVX-01**: Nested CLAUDE.md files per module (backend, frontend, infra)
-- [ ] **DEVX-02**: Dedicated project-level Claude Code skills
+- [x] **DEVX-01**: Nested CLAUDE.md files per module (backend, frontend, infra)
+- [x] **DEVX-02**: Dedicated project-level Claude Code skills
 
 ## v2 Requirements
 
@@ -148,8 +148,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFR-03 | Phase 1 | Complete |
 | INFR-04 | Phase 1 | Complete |
 | INFR-05 | Phase 7 | Pending |
-| DEVX-01 | Phase 1 | Pending |
-| DEVX-02 | Phase 1 | Pending |
+| DEVX-01 | Phase 1 | Complete |
+| DEVX-02 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 34 total
