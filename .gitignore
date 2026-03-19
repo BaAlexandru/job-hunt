@@ -1,0 +1,29 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# Kotlin
+*.class
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+*.local
+
+# Node (frontend)
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Docker
+docker-compose.override.yml
