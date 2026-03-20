@@ -2,6 +2,8 @@ package com.alex.job.hunt.jobhunt.config
 
 import com.alex.job.hunt.jobhunt.dto.MessageResponse
 import com.alex.job.hunt.jobhunt.service.AuthenticationException
+import com.alex.job.hunt.jobhunt.service.InvalidTokenException
+import com.alex.job.hunt.jobhunt.service.RateLimitException
 import com.alex.job.hunt.jobhunt.service.RegistrationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -34,4 +36,14 @@ class AuthExceptionHandler {
     fun handleMissingCookie(ex: MissingRequestCookieException): ResponseEntity<MessageResponse> =
         ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(MessageResponse("Refresh token required"))
+
+    @ExceptionHandler(InvalidTokenException::class)
+    fun handleInvalidTokenException(ex: InvalidTokenException): ResponseEntity<MessageResponse> =
+        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(MessageResponse(ex.message ?: "Invalid token"))
+
+    @ExceptionHandler(RateLimitException::class)
+    fun handleRateLimitException(ex: RateLimitException): ResponseEntity<MessageResponse> =
+        ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+            .body(MessageResponse(ex.message ?: "Too many requests"))
 }

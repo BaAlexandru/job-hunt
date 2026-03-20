@@ -1,6 +1,7 @@
 package com.alex.job.hunt.jobhunt.config
 
 import com.alex.job.hunt.jobhunt.security.JwtAuthenticationFilter
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -37,6 +38,11 @@ class SecurityConfig(
                 authorize("/api/auth/**", permitAll)
                 authorize("/actuator/**", permitAll)
                 authorize(anyRequest, authenticated)
+            }
+            exceptionHandling {
+                authenticationEntryPoint = org.springframework.security.web.AuthenticationEntryPoint { _, response, _ ->
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
+                }
             }
             addFilterBefore<UsernamePasswordAuthenticationFilter>(jwtAuthenticationFilter)
         }

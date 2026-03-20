@@ -4,6 +4,7 @@ import com.alex.job.hunt.jobhunt.dto.MessageResponse
 import com.alex.job.hunt.jobhunt.repository.EmailVerificationTokenRepository
 import com.alex.job.hunt.jobhunt.repository.UserRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 
 class InvalidTokenException(message: String) : RuntimeException(message)
@@ -14,6 +15,7 @@ class EmailVerificationService(
     private val userRepository: UserRepository
 ) {
 
+    @Transactional
     fun verify(token: String): MessageResponse {
         val verificationToken = emailVerificationTokenRepository.findByToken(token)
             ?: throw InvalidTokenException("Invalid verification token")

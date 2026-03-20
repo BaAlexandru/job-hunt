@@ -7,6 +7,7 @@ import com.alex.job.hunt.jobhunt.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID
@@ -23,6 +24,7 @@ class PasswordResetService(
 
     private val logger = LoggerFactory.getLogger(PasswordResetService::class.java)
 
+    @Transactional
     fun requestReset(email: String): MessageResponse {
         if (!rateLimiter.isAllowed("password-reset:$email", 3, 3600)) {
             throw RateLimitException("Too many reset requests. Try again later.")
@@ -45,6 +47,7 @@ class PasswordResetService(
         return MessageResponse("If an account with that email exists, a reset link has been sent.")
     }
 
+    @Transactional
     fun confirmReset(token: String, newPassword: String): MessageResponse {
         val resetToken = passwordResetTokenRepository.findByToken(token)
             ?: throw InvalidTokenException("Invalid reset token")
