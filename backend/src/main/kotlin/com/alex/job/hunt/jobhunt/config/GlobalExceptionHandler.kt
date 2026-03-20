@@ -4,6 +4,7 @@ import com.alex.job.hunt.jobhunt.dto.ErrorResponse
 import com.alex.job.hunt.jobhunt.service.AuthenticationException
 import com.alex.job.hunt.jobhunt.service.ConflictException
 import com.alex.job.hunt.jobhunt.service.InvalidTokenException
+import com.alex.job.hunt.jobhunt.service.InvalidTransitionException
 import com.alex.job.hunt.jobhunt.service.NotFoundException
 import com.alex.job.hunt.jobhunt.service.RateLimitException
 import com.alex.job.hunt.jobhunt.service.RegistrationException
@@ -79,6 +80,13 @@ class GlobalExceptionHandler {
         request: HttpServletRequest
     ): ResponseEntity<ErrorResponse> =
         buildResponse(HttpStatus.NOT_FOUND, ex.message ?: "Resource not found", request)
+
+    @ExceptionHandler(InvalidTransitionException::class)
+    fun handleInvalidTransitionException(
+        ex: InvalidTransitionException,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorResponse> =
+        buildResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.message ?: "Invalid status transition", request)
 
     @ExceptionHandler(ConflictException::class)
     fun handleConflictException(

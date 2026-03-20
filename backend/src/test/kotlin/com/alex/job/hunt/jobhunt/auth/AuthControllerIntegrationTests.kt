@@ -4,6 +4,8 @@ import com.alex.job.hunt.jobhunt.dto.AuthRequest
 import com.alex.job.hunt.jobhunt.dto.PasswordResetConfirmRequest
 import com.alex.job.hunt.jobhunt.dto.PasswordResetRequest
 import com.alex.job.hunt.jobhunt.dto.RegisterRequest
+import com.alex.job.hunt.jobhunt.repository.ApplicationNoteRepository
+import com.alex.job.hunt.jobhunt.repository.ApplicationRepository
 import com.alex.job.hunt.jobhunt.repository.CompanyRepository
 import com.alex.job.hunt.jobhunt.repository.EmailVerificationTokenRepository
 import com.alex.job.hunt.jobhunt.repository.JobRepository
@@ -47,6 +49,12 @@ class AuthControllerIntegrationTests {
     lateinit var tokenBlocklistRepository: TokenBlocklistRepository
 
     @Autowired
+    lateinit var applicationNoteRepository: ApplicationNoteRepository
+
+    @Autowired
+    lateinit var applicationRepository: ApplicationRepository
+
+    @Autowired
     lateinit var jobRepository: JobRepository
 
     @Autowired
@@ -60,6 +68,8 @@ class AuthControllerIntegrationTests {
 
     @BeforeEach
     fun setUp() {
+        applicationNoteRepository.deleteAll()
+        applicationRepository.deleteAll()
         jobRepository.deleteAll()
         companyRepository.deleteAll()
         tokenBlocklistRepository.deleteAll()

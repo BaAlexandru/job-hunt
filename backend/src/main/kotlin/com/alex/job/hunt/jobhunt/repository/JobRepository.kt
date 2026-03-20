@@ -13,6 +13,8 @@ interface JobRepository : JpaRepository<JobEntity, UUID> {
 
     fun findByIdAndUserId(id: UUID, userId: UUID): JobEntity?
 
+    fun findAllByIdIn(ids: Set<UUID>): List<JobEntity>
+
     fun existsByCompanyIdAndUserIdAndArchivedFalse(companyId: UUID, userId: UUID): Boolean
 
     @Query(
