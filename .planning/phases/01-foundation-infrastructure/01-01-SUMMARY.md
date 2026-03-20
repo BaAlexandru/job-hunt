@@ -142,6 +142,10 @@ None - no external service configuration required. Docker must be running for te
 - Docker Compose PostgreSQL available for all subsequent phases
 - Health endpoint confirms application boots and connects to database
 
+## Post-Phase Changes
+
+- **Actuator added (2026-03-20):** `spring-boot-starter-actuator` added; custom `HealthController.kt` deleted. Health monitoring now at `/actuator/health` with DB, Flyway, and disk space indicators. See 01-VERIFICATION.md for details.
+
 ---
 *Phase: 01-foundation-infrastructure*
 *Completed: 2026-03-20*

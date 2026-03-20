@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 2 context gathered
-last_updated: "2026-03-19T23:45:32.419Z"
-last_activity: 2026-03-20 -- Completed 01-02 developer experience tooling
+stopped_at: Completed 02-03-PLAN.md (Phase 02 complete)
+last_updated: "2026-03-20T01:08:04.959Z"
+last_activity: 2026-03-20 -- Completed 02-03 auth verification, reset, and integration tests
 progress:
   total_phases: 8
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  completed_phases: 2
+  total_plans: 5
+  completed_plans: 5
   percent: 100
 ---
 
@@ -21,33 +21,34 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Track jobs you've applied to with their status, documents, and timeline so nothing falls through the cracks during a job search.
-**Current focus:** Phase 1: Foundation & Infrastructure
+**Current focus:** Phase 2: Authentication
 
 ## Current Position
 
-Phase: 1 of 8 (Foundation & Infrastructure) -- COMPLETE
-Plan: 2 of 2 in current phase
+Phase: 2 of 8 (Authentication) -- COMPLETE
+Plan: 3 of 3 in current phase (02-03 complete)
 Status: Phase Complete
-Last activity: 2026-03-20 -- Completed 01-02 developer experience tooling
+Last activity: 2026-03-20 -- Completed 02-03 auth verification, reset, and integration tests
 
 Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 7 min
-- Total execution time: 0.2 hours
+- Total plans completed: 4
+- Average duration: 5 min
+- Total execution time: 0.4 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation-infrastructure | 2 | 13 min | 7 min |
+| 02-authentication | 3 | 16 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (11 min), 01-02 (2 min)
-- Trend: accelerating
+- Last 5 plans: 01-01 (11 min), 01-02 (2 min), 02-01 (3 min), 02-02 (3 min), 02-03 (10 min)
+- Trend: fast
 
 *Updated after each plan completion*
 
@@ -66,11 +67,20 @@ Recent decisions affecting current work:
 - [Phase 01]: CLAUDE.md content verified against actual build.gradle.kts and application.yml from Phase 01-01
 - [Audit]: No API versioning — flat `/api/` prefix for all endpoints. Monorepo means frontend/backend evolve in lockstep; add versioning only if needed later
 - [Audit]: Spring Actuator added — /actuator/health (DB, Flyway, disk), /actuator/info, /actuator/flyway exposed. Custom HealthController removed. Secure actuator endpoints when Spring Security is added in Phase 2
+- [Phase 02]: Used jjwt-gson instead of jjwt-jackson to avoid Jackson 2/3 classpath conflict with Spring Boot 4
+- [Phase 02]: JWT config as custom properties (jwt.secret, jwt.access-expiration-ms) not under spring namespace
+- [Phase 02]: Redis auto-configured via Docker Compose integration, no explicit host/port properties
+- [Phase 02]: Used PasswordEncoderFactories.createDelegatingPasswordEncoder() for future-proof password hashing
+- [Phase 02]: Refresh cookie scoped to /api/auth/refresh path for security
+- [Phase 02]: Custom AuthenticationException to avoid name collision with Spring Security's AuthenticationException
+- [Phase 02]: @Transactional on services accessing lazy-loaded JPA relationships
+- [Phase 02]: AuthenticationEntryPoint returning 401 (not default 403) for unauthenticated REST API requests
+- [Phase 02]: Spring Boot 4 AutoConfigureMockMvc moved to spring-boot-webmvc-test module
 
 ### Pending Todos
 
 - RESOLVED: No API versioning — flat `/api/` prefix. ARCHITECTURE.md examples updated.
-- Add MockK, SpringMockK, and Testcontainers to backend dependencies when Phase 2 planning starts (STACK.md recommends them; Phase 1 doesn't need them yet)
+- RESOLVED: MockK and SpringMockK added in 02-01. Testcontainers deferred -- Phase 2 tests use Docker Compose.
 - RESOLVED: Interview Management added to FEATURES.md (table stakes + dependency graph) and ARCHITECTURE.md (component table, package structure, build order)
 
 ### Blockers/Concerns
@@ -80,6 +90,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-19T23:45:32.416Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-authentication/02-CONTEXT.md
+Last session: 2026-03-20T00:50:00Z
+Stopped at: Completed 02-03-PLAN.md (Phase 02 complete)
+Resume file: Phase 02 complete -- ready for Phase 03

@@ -50,10 +50,11 @@ created: 2026-03-20
 
 ## Wave 0 Requirements
 
-- [ ] Add test dependencies: MockK, SpringMockK (if compatible), Testcontainers PostgreSQL, Testcontainers Redis
-- [ ] Verify JJWT `jjwt-jackson` compatibility with Spring Boot 4 Jackson 3
+- [ ] Add test dependencies: MockK, SpringMockK (if compatible), spring-security-test
+- [ ] Verify JJWT with `jjwt-gson` works correctly (avoids Jackson 2/3 conflict — jjwt-jackson removed)
 - [ ] Create shared test fixtures for auth integration tests (test user factory, JWT helper)
 - [ ] Validate SpringMockK 4.x works with Spring Boot 4 — fallback to `@MockitoBean` if not
+- [ ] Confirm `./gradlew :backend:test` passes after Plan 02 creates SecurityFilterChain (expected to fail after Plan 01 only)
 
 *Wave 0 validates toolchain compatibility before feature work begins.*
 

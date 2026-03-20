@@ -69,6 +69,7 @@ The project currently exists as a single Spring Boot 4.0.4 application with Kotl
 | **Security Filter Chain** | Authentication, authorization, CORS, JWT validation | All inbound requests |
 | **Auth Controller/Service** | User registration, login, token refresh, OAuth2 | PostgreSQL (user table), JWT library |
 | **Job Controller/Service** | CRUD for companies, jobs, applications, status transitions | PostgreSQL (core domain tables) |
+| **Interview Controller/Service** | Interview scheduling, round tracking, notes per stage, timeline view | PostgreSQL (interview table, linked to applications) |
 | **Document Controller/Service** | File upload/download, document metadata, linking docs to applications | PostgreSQL (metadata), File Storage (binaries) |
 | **AI Controller/Service** | CV analysis, cover letter generation, job description parsing | Spring AI ChatClient, Document Service, Job Service |
 | **PostgreSQL** | Persistent storage for all structured data | Accessed via Spring Data JPA |
@@ -85,7 +86,7 @@ job-hunt/
 │   ├── build.gradle.kts
 │   ├── src/
 │   │   ├── main/
-│   │   │   ├── kotlin/com/alex/jobhunt/
+│   │   │   ├── kotlin/com/alex/job/hunt/jobhunt/
 │   │   │   │   ├── JobHuntApplication.kt
 │   │   │   │   ├── config/              # Spring configuration
 │   │   │   │   │   ├── SecurityConfig.kt
@@ -127,6 +128,12 @@ job-hunt/
 │   │   │   │   │   ├── StorageService.kt     # Abstraction
 │   │   │   │   │   ├── LocalStorageService.kt
 │   │   │   │   │   └── dto/
+│   │   │   │   ├── interview/            # Interview management
+│   │   │   │   │   ├── InterviewController.kt
+│   │   │   │   │   ├── InterviewService.kt
+│   │   │   │   │   ├── Interview.kt
+│   │   │   │   │   ├── InterviewRepository.kt
+│   │   │   │   │   └── dto/
 │   │   │   │   ├── ai/                  # AI features (later phase)
 │   │   │   │   │   ├── AiController.kt
 │   │   │   │   │   ├── CvAnalysisService.kt
@@ -149,7 +156,7 @@ job-hunt/
 │   │   │           ├── V3__create_jobs.sql
 │   │   │           ├── V4__create_applications.sql
 │   │   │           └── V5__create_documents.sql
-│   │   └── test/kotlin/com/alex/jobhunt/
+│   │   └── test/kotlin/com/alex/job/hunt/jobhunt/
 │   └── Dockerfile
 ├── frontend/                    # Next.js application
 │   ├── package.json
@@ -194,10 +201,9 @@ job-hunt/
 │   │       ├── QueryProvider.tsx
 │   │       └── AuthProvider.tsx
 │   └── Dockerfile
+├── compose.yaml                    # Docker Compose at root for Spring Boot auto-discovery
 ├── infra/                       # Infrastructure configuration
-│   ├── docker/
-│   │   ├── docker-compose.yml   # Local dev (Postgres, backend, frontend)
-│   │   └── docker-compose.prod.yml
+│   ├── docker/                  # Dockerfiles for production builds (future)
 │   └── k8s/                     # Kubernetes manifests (later)
 │       ├── helm/
 │       └── manifests/
@@ -233,7 +239,7 @@ job-hunt/
 ```kotlin
 // application/ApplicationController.kt
 @RestController
-@RequestMapping("/api/v1/applications")
+@RequestMapping("/api/applications")
 class ApplicationController(
     private val applicationService: ApplicationService
 ) {
@@ -408,7 +414,7 @@ Response: { id, name, type, size, downloadUrl, createdAt }
 ```
 User clicks "Analyze CV for this job"
     |
-Frontend: POST /api/v1/ai/analyze-cv { applicationId, documentId }
+Frontend: POST /api/ai/analyze-cv { applicationId, documentId }
     |
 AiController -> CvAnalysisService:
     1. Load job description (from Job entity)
@@ -424,12 +430,12 @@ Response: { suggestions: [...], relevanceScore, missingKeywords: [...] }
 ### Authentication Flow
 
 ```
-Registration: POST /api/v1/auth/register { email, password }
+Registration: POST /api/auth/register { email, password }
     -> Hash password (BCrypt)
     -> Save User entity
     -> Return JWT pair (access + refresh)
 
-Login: POST /api/v1/auth/login { email, password }
+Login: POST /api/auth/login { email, password }
     -> Validate credentials
     -> Return JWT pair
 
@@ -508,7 +514,7 @@ Authenticated Request:
 
 | Boundary | Communication | Notes |
 |----------|---------------|-------|
-| Frontend <-> Backend | REST API over HTTP, JSON payloads, JWT auth | API versioning via URL prefix `/api/v1/`. CORS configured for frontend origin. |
+| Frontend <-> Backend | REST API over HTTP, JSON payloads, JWT auth | API versioning via URL prefix `/api/`. CORS configured for frontend origin. |
 | Backend <-> PostgreSQL | Spring Data JPA (Hibernate) | Connection pooling via HikariCP (Spring Boot default). |
 | Backend <-> File Storage | StorageService interface | Profile-driven implementation selection (`@Profile("dev")` vs `@Profile("prod")`). |
 | Backend <-> Anthropic | Spring AI ChatClient | Async-capable for long-running analysis. Consider timeout configuration. |
@@ -532,11 +538,16 @@ Phase 2: Core Domain
   backend/application/ (CRUD, status state machine, linked to job)
   Flyway V2-V4
 
-Phase 3: Documents
+Phase 3: Interviews
+  backend/interview/ (CRUD, round tracking, notes)
+  Timeline query (merge interview events + status changes)
+  Flyway V5
+
+Phase 4: Documents
   backend/document/ (upload, download, metadata)
   StorageService abstraction (local implementation)
   Link documents to applications
-  Flyway V5
+  Flyway V6
 
 Phase 4: Frontend Shell
   Next.js setup with App Router
@@ -562,16 +573,16 @@ Phase 6: AI Features
 
 ## Migration Note: Current Structure to Monorepo
 
+> **Decision (2026-03-19):** compose.yaml stays at project root for Spring Boot docker-compose auto-discovery. Backend is a Gradle subproject; frontend is a standalone Next.js project (not a Gradle subproject).
+
 The project currently has Spring Boot at the root. To adopt the monorepo structure:
 
-1. Create `backend/` directory
-2. Move `src/`, `build.gradle.kts`, `gradle/`, `gradlew`, `gradlew.bat` into `backend/`
-3. Create a root `settings.gradle.kts` that includes `backend` as a subproject (or keep backend as standalone Gradle project)
-4. Create `frontend/` with `npx create-next-app@latest`
-5. Create `infra/docker/` and move `compose.yaml` there
-6. Update `compose.yaml` to include both backend and frontend services
-
-Alternatively, keep backend and frontend as independent projects within the monorepo (no shared build system). This is simpler and is recommended -- Gradle for backend, npm/pnpm for frontend, Docker Compose ties them together.
+1. Create `backend/` directory as a Gradle subproject via `settings.gradle.kts` `include(":backend")`
+2. Move source files into `backend/src/`, create `backend/build.gradle.kts`
+3. Root `build.gradle.kts` declares plugins with `apply false`
+4. Keep `compose.yaml` at project root (Spring Boot docker-compose starter auto-discovers it)
+5. Create `frontend/` as a standalone Next.js project (pnpm, not Gradle)
+6. Create `infra/docker/` for production Dockerfiles (future phases)
 
 ## Sources
 

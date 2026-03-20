@@ -9,6 +9,8 @@
 
 JobHunt is a personal job application tracker with AI features — a category that existing SaaS products (Huntr, Teal, Seekario) have validated heavily but uniformly gatekeep behind paid tiers. The research confirms that self-hosting is itself the primary differentiator: unlimited applications, unlimited AI usage at API cost, and full data ownership, versus competitors charging $40+/month for features that are now cheap to build. The recommended approach is a monorepo with a Kotlin/Spring Boot backend and Next.js frontend, structured package-by-feature, with a clear six-phase build order that keeps the backend ahead of the frontend and defers AI integration until the document and job management foundations are solid.
 
+> **Update (2026-03-19):** The user decided to keep Spring Boot 4.0.4 + Spring AI 2.0.0-M3 (accepting milestone risks) rather than the 3.5.9 recommendation below. The ROADMAP.md (8 phases) supersedes the 6-phase ordering in "Implications for Roadmap" below. See `.planning/phases/01-foundation-infrastructure/01-CONTEXT.md` for the rationale.
+
 The stack choices are well-aligned and production-grade for 2026. The primary architectural risk is over-engineering early: trying to build the kanban board before auth works, or adding AI before documents are stored. The feature dependency chain is strict — auth enables company tracking, which enables job tracking, which enables applications, which enables AI analysis. Every shortcut in that chain creates retrofit work. The research is explicit: add `user_id` to every entity on day one even though it is currently single-user, enforce Kotlin compiler plugins from the first commit, and configure CORS/JWT filter ordering correctly before touching the frontend. These are cheap to do upfront and expensive to fix later.
 
 The most important build constraint comes from PITFALLS.md: the project currently has Spring Boot at the root rather than in a `backend/` subdirectory. The architecture research provides a concrete migration path, and this restructuring should happen before any feature work begins. Three pitfalls require Phase 1 attention regardless of the feature being built: Kotlin compiler plugins, multi-tenancy data model scoping, and CORS/JWT filter chain ordering. Skipping any of these creates either a security vulnerability or a data-layer rewrite.
@@ -77,7 +79,7 @@ The system follows a monorepo structure with three directories: `backend/` (Spri
 - Package-by-feature with strict Controller -> Service -> Repository dependency direction
 - Application status as an explicit state machine with validated transitions (not free-form string updates)
 - TanStack Query for all server state; no Redux; only minimal client state in React context
-- API versioning via URL prefix `/api/v1/` from day one
+- Flat `/api/` prefix for all endpoints (no versioning — monorepo means frontend/backend evolve together)
 
 ### Critical Pitfalls
 
@@ -94,6 +96,8 @@ The system follows a monorepo structure with three directories: `backend/` (Spri
 ---
 
 ## Implications for Roadmap
+
+> **Note:** The phase ordering below was the initial research recommendation. The actual ROADMAP.md has 8 phases with finer granularity (auth separated from foundation, application tracking separated from company/job, interview management added). Refer to ROADMAP.md for the authoritative phase plan.
 
 The architecture research provides an explicit build order based on technical dependencies. The backend can be fully built and tested before writing frontend code. AI features depend on ALL core domain entities existing first.
 

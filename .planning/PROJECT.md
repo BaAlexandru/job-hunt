@@ -52,19 +52,22 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 - **Tech Stack (AI)**: Spring AI with flexible provider abstraction (Claude, OpenAI, swappable)
 - **Infrastructure**: Docker + Docker Compose for local dev first, Kubernetes (Helm) for production later
 - **Database**: PostgreSQL in container
-- **Deployment**: Docker Compose locally first, K8s + optional Vercel later
+- **Deployment**: Docker Compose for local dev (PostgreSQL in container, backend on host via Gradle). Production deployment deferred — evaluate VPS + Docker Compose vs K8s when backend API is complete (after Phase 6)
 - **Architecture**: Monorepo (`/backend`, `/frontend`, `/infra`), designed for eventual multi-user
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Kotlin over Java | More modern, learning opportunity, great Spring Boot support | — Pending |
+| Kotlin over Java | More modern, learning opportunity, great Spring Boot support | Confirmed (Phase 1) |
+| Spring Boot 4.0.4 over 3.5.9 | Access to Spring AI 2.0.0-M3, accept milestone risks | Confirmed (Phase 1) |
+| No API versioning | Monorepo means frontend/backend evolve in lockstep; flat `/api/` prefix | Confirmed (Audit) |
+| Spring Actuator for health monitoring | /actuator/health with DB, Flyway, disk indicators; expose health, info, flyway | Confirmed |
 | Next.js over Vite SPA | SSR capabilities, built-in routing, Turbopack bundler | — Pending |
-| Monorepo structure | Simpler management, one PR for full features, split later if needed | — Pending |
+| Monorepo structure | Simpler management, one PR for full features, split later if needed | Confirmed (Phase 1) |
 | Flexible AI provider | Avoid vendor lock-in, swap between Claude/OpenAI as needed | — Pending |
 | Upload-only documents | Simpler than building a rich text editor, covers the core need | — Pending |
-| Docker Compose first | Get running locally fast, add K8s when ready to deploy | — Pending |
+| Docker Compose first | Get running locally fast, evaluate production deployment after Phase 6 | Confirmed (Phase 1) |
 | Multi-user ready architecture | Design for one user but don't hardcode single-tenancy | — Pending |
 
 ---

@@ -6,7 +6,9 @@
 
 ## Validation Summary
 
-The user's chosen stack is solid and well-aligned for a 2025-2026 project. All core choices validated with minor version updates and gap-fills below. One significant decision point: **Spring Boot 3.5.x vs 4.0.x** -- recommendation is 3.5.x for stability.
+> **Decision Override (2026-03-19):** The user chose to keep **Spring Boot 4.0.4 + Kotlin 2.2.21 + Java 24 + Gradle 9.3.1 + Spring AI 2.0.0-M3** rather than the 3.5.9 stack recommended below. This accepts milestone risks for Spring AI 2.0 but gains access to Spring Boot 4.0 features (renamed starters, modular Flyway, Jackson 3). The "Backend Core" table below reflects the original research recommendation — for actual project versions, see the Phase 1 planning docs.
+
+The user's chosen stack is solid and well-aligned for a 2025-2026 project. All core choices validated with minor version updates and gap-fills below. ~~One significant decision point: **Spring Boot 3.5.x vs 4.0.x** -- recommendation is 3.5.x for stability.~~ **Decided: Spring Boot 4.0.4.**
 
 ---
 
@@ -194,8 +196,8 @@ npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| Spring Boot 4.0 (for now) | Still maturing; Spring AI 1.1 requires Boot 3.x; Jakarta EE 11 baseline means some library incompatibilities | Spring Boot 3.5.9 |
-| Spring AI 2.0.0-M2 | Milestone release, not GA. Requires Spring Boot 4.0. | Spring AI 1.1.1 GA |
+| ~~Spring Boot 4.0 (for now)~~ | ~~Still maturing~~ **Decision: using 4.0.4 — user accepts milestone risks for Spring AI 2.0.0-M3 access** | ~~Spring Boot 3.5.9~~ |
+| ~~Spring AI 2.0.0-M2~~ | ~~Milestone release~~ **Decision: using 2.0.0-M3 with Spring Boot 4.0.4** | ~~Spring AI 1.1.1 GA~~ |
 | JJWT library | Spring Security already includes Nimbus JOSE+JWT. Adding JJWT is redundant and adds a dependency. | `spring-boot-starter-oauth2-resource-server` (uses Nimbus internally) |
 | Mockito (with Kotlin) | Mockito struggles with Kotlin final classes (all classes final by default), suspend functions, and DSL syntax | MockK + SpringMockK |
 | H2 for integration tests | SQL dialect differences cause false positives/negatives. Tests pass on H2 but fail on PostgreSQL. | Testcontainers with PostgreSQL |
@@ -230,9 +232,10 @@ npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
 
 | Package A | Compatible With | Notes |
 |-----------|-----------------|-------|
-| Spring Boot 3.5.9 | Kotlin 2.3.x, Java 21, Gradle 8.14.x | Kotlin version auto-aligned by Spring Boot Gradle plugin |
-| Spring AI 1.1.1 | Spring Boot 3.5.x | Confirmed compatible. Uses Spring Boot 3.x baseline. |
-| Spring AI 2.0.0-M2 | Spring Boot 4.0 ONLY | NOT compatible with 3.5.x. Do not mix. |
+| Spring Boot 3.5.9 | Kotlin 2.3.x, Java 21, Gradle 8.14.x | Original recommendation — not used |
+| **Spring Boot 4.0.4 (ACTUAL)** | **Kotlin 2.2.21, Java 24, Gradle 9.3.1** | **Project uses this combination** |
+| Spring AI 1.1.1 | Spring Boot 3.5.x ONLY | NOT compatible with 4.0.x. |
+| **Spring AI 2.0.0-M3 (ACTUAL)** | **Spring Boot 4.0 ONLY** | **Project uses this — milestone, not GA** |
 | Next.js 16.2.x | React 19.x, Node 22 LTS | React version managed by Next.js. |
 | Tailwind CSS 4.1.x | Next.js 16.x | Requires PostCSS setup change from v3. `create-next-app` handles this. |
 | shadcn/ui CLI v4 | Tailwind CSS 4.x, Next.js 16.x | CLI auto-detects framework and Tailwind version. |

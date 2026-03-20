@@ -22,7 +22,7 @@ Base package: com.alex.job.hunt.jobhunt
 - Use Kotlin idioms: data classes, extension functions, null safety, when expressions
 - Entity classes: use @Entity annotation (allOpen plugin handles making them open)
 - No Lombok -- use Kotlin language features instead
-- API endpoints under /api/ prefix (e.g., /api/health, /api/users)
+- API endpoints under /api/ prefix (e.g., /api/users, /api/companies)
 - Return data classes from controllers (Jackson Kotlin module handles serialization)
 - Use constructor injection (Kotlin primary constructors), never @Autowired
 
@@ -38,6 +38,17 @@ Base package: com.alex.job.hunt.jobhunt
 - @SpringBootTest for integration tests (loads full context, starts Docker Compose)
 - @WebMvcTest for controller-only tests (no database)
 - Test command: ../gradlew test (from backend/) or ./gradlew :backend:test (from root)
+
+## Actuator
+
+- Spring Boot Actuator provides production-ready monitoring endpoints
+- Exposed endpoints (no auth required yet — add security in Phase 2):
+  - GET /actuator/health — application health with DB, Flyway, and disk space indicators
+  - GET /actuator/info — application info
+  - GET /actuator/flyway — applied Flyway migrations
+- Health details visible via `show-details: always` (safe for single-user local dev)
+- When Spring Security is added (Phase 2), restrict actuator to authenticated users
+- Do NOT expose /actuator/env or /actuator/configprops without auth (leak secrets)
 
 ## Spring Boot 4.0 Specifics
 

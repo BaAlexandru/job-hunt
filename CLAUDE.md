@@ -13,6 +13,7 @@ Gradle multi-project monorepo:
 - Build: `./gradlew :backend:classes`
 - Test: `./gradlew :backend:test`
 - Run: `./gradlew :backend:bootRun` (auto-starts PostgreSQL via Docker Compose)
+- Health: `curl http://localhost:8080/actuator/health` (DB, Flyway, disk space)
 - Format check: `./gradlew :backend:check`
 
 ## Conventions
@@ -23,6 +24,15 @@ Gradle multi-project monorepo:
 - JPA hibernate.ddl-auto=validate (Flyway manages schema)
 - No database connection properties in application.yml (docker-compose auto-configures)
 - Dependencies added only when their phase starts (no preloading)
+
+## Git Workflow
+
+- **Branch per phase**: Before executing any phase, create a branch `phase-{NN}-{slug}` from master (e.g., `phase-02-auth`)
+- **All phase work on the branch**: Every commit during phase execution goes to the phase branch, never directly to master
+- **PR to merge**: When phase execution completes, open a PR from the phase branch into master
+- **Review before merge**: PR must be reviewed — if changes are requested, apply them on the phase branch before merging
+- **Planning docs exception**: Planning artifacts (CONTEXT.md, RESEARCH.md, PLAN.md, VALIDATION.md) may be committed to master since they don't affect code
+- **Branch naming**: `phase-{NN}-{slug}` where NN is zero-padded phase number and slug is the phase name (e.g., `phase-02-auth`, `phase-03-company-crud`)
 
 ## Module-Specific Instructions
 

@@ -98,7 +98,7 @@ implementation("org.springframework.boot:spring-boot-starter-security")
 implementation("org.springframework.boot:spring-boot-starter-validation")
 implementation("io.jsonwebtoken:jjwt-api:0.12.6")
 runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
-runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+runtimeOnly("io.jsonwebtoken:jjwt-gson:0.12.6")
 
 // Redis for rate limiting
 implementation("org.springframework.boot:spring-boot-starter-data-redis")
@@ -107,9 +107,9 @@ implementation("org.springframework.boot:spring-boot-starter-data-redis")
 testImplementation("org.springframework.security:spring-security-test")
 testImplementation("io.mockk:mockk:1.14.2")
 testImplementation("com.ninja-squad:springmockk:4.0.2")
-testImplementation("org.testcontainers:junit-jupiter")
-testImplementation("org.testcontainers:postgresql")
 ```
+
+> **Audit fix:** Changed `jjwt-jackson` to `jjwt-gson` to avoid Jackson 2/3 classpath conflict. Removed Testcontainers (unused in Phase 2 — tests use Docker Compose).
 
 ## Architecture Patterns
 
@@ -400,7 +400,8 @@ CREATE TABLE token_blocklist (
     id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     token_id   VARCHAR(255) NOT NULL UNIQUE,
     expires_at TIMESTAMPTZ  NOT NULL,
-    created_at TIMESTAMPTZ  NOT NULL DEFAULT now()
+    created_at TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
 
 CREATE INDEX idx_token_blocklist_token_id ON token_blocklist(token_id);
@@ -416,7 +417,8 @@ CREATE TABLE email_verification_tokens (
     token      VARCHAR(255) NOT NULL UNIQUE,
     expires_at TIMESTAMPTZ  NOT NULL,
     used       BOOLEAN      NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMPTZ  NOT NULL DEFAULT now()
+    created_at TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
 
 CREATE TABLE password_reset_tokens (
@@ -425,7 +427,8 @@ CREATE TABLE password_reset_tokens (
     token      VARCHAR(255) NOT NULL UNIQUE,
     expires_at TIMESTAMPTZ  NOT NULL,
     used       BOOLEAN      NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMPTZ  NOT NULL DEFAULT now()
+    created_at TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
 ```
 
@@ -534,10 +537,9 @@ volumes:
    - What's unclear: Whether SpringMockK has released a version compatible with Spring Boot 4's new test infrastructure.
    - Recommendation: Try SpringMockK 4.0.2 first. If incompatible, fall back to MockK directly with manual context configuration, or use @MockitoBean with Mockito (less idiomatic Kotlin).
 
-2. **JJWT compatibility with Jackson 3 (Spring Boot 4)**
+2. **JJWT compatibility with Jackson 3 (Spring Boot 4)** — RESOLVED
    - What we know: JJWT 0.12.6 uses `jjwt-jackson` which depends on Jackson 2 (`com.fasterxml.jackson`). Spring Boot 4 uses Jackson 3 (`tools.jackson`).
-   - What's unclear: Whether Spring Boot 4's dependency management handles the Jackson 2/3 coexistence, or if jjwt-jackson conflicts.
-   - Recommendation: Test during Wave 0 setup. If conflicts arise, JJWT can use `jjwt-gson` instead of `jjwt-jackson`, or manually manage Jackson versions. Spring Boot 4 may still include Jackson 2 compatibility bridge.
+   - Resolution: Use `jjwt-gson` instead of `jjwt-jackson` to avoid Jackson 2/3 classpath conflict entirely. JJWT supports Gson as an alternative JSON processor with no API changes. Updated in installation block and Plan 01.
 
 3. **Blocklist cleanup strategy**
    - What we know: Expired tokens in the blocklist serve no purpose after their expiry time passes.
@@ -577,9 +579,10 @@ volumes:
 - **Phase gate:** Full suite green before verification
 
 ### Wave 0 Gaps
-- [ ] Add test dependencies to `backend/build.gradle.kts` (MockK, SpringMockK, spring-security-test, Testcontainers)
+- [ ] Add test dependencies to `backend/build.gradle.kts` (MockK, SpringMockK, spring-security-test)
 - [ ] Create `backend/src/test/kotlin/com/alex/job/hunt/jobhunt/auth/` test package
 - [ ] Verify Docker Compose test connectivity works with Redis (existing `skip.in-tests: false` config)
+- [ ] Verify JJWT with `jjwt-gson` serializes/deserializes tokens correctly (replaces jjwt-jackson to avoid Jackson 2/3 conflict)
 
 ## Sources
 

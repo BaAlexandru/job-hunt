@@ -22,6 +22,7 @@ Features users assume exist. Missing these = product feels incomplete.
 | Document upload and linking | Users need to know which CV and cover letter they sent for each application. Huntr, Eztrackr, Seekario all support this | MEDIUM | Upload PDF/DOCX, link docs to specific applications. Store per-job versions |
 | Search and filtering | With 50+ applications, finding specific ones is critical | LOW | Filter by status, company, date range. Full-text search on job title and company |
 | User authentication | Personal data requires login protection even for single-user | MEDIUM | JWT-based auth. Register/login flow. Protects sensitive job search data |
+| Interview scheduling and round tracking | Users go through multiple rounds (screening, technical, behavioral, final) per application. Need to track dates, types, locations, and notes per stage | MEDIUM | Interview entity linked to Application. Type enum (phone/video/onsite), round enum (screening/technical/behavioral/final). Timeline view aggregates interviews + status changes chronologically |
 | Responsive design | Users check their tracker on phones between interviews | LOW | Not a native app, but the web app must be usable on mobile viewports |
 
 ### Differentiators (Competitive Advantage)
@@ -74,6 +75,9 @@ Features that seem good but create problems.
     └──requires──> [Application Tracking + Status Flow]
 
 [List/Table View]
+    └──requires──> [Application Tracking + Status Flow]
+
+[Interview Management]
     └──requires──> [Application Tracking + Status Flow]
 
 [Document Upload]
