@@ -3,11 +3,72 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
+stopped_at: Phase 7 context gathered
+last_updated: "2026-03-20T03:01:17.243Z"
+last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
+progress:
+  total_phases: 9
+  completed_phases: 3
+  total_plans: 8
+  completed_plans: 8
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: completed
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-03-20T02:39:28.050Z"
+last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
+progress:
+  [██████████] 100%
+  completed_phases: 2
+  total_plans: 8
+  completed_plans: 7
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: completed
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-20T02:38:41.033Z"
+last_activity: 2026-03-20 -- Completed 03-01 foundation (UserDetails, migrations, error handling)
+progress:
+  total_phases: 8
+  completed_phases: 2
+  total_plans: 8
+  completed_plans: 7
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: completed
+stopped_at: Phase 3 context gathered
+last_updated: "2026-03-20T02:28:41.007Z"
+last_activity: 2026-03-20 -- Completed 02-03 auth verification, reset, and integration tests
+progress:
+  total_phases: 8
+  completed_phases: 2
+  total_plans: 8
+  completed_plans: 6
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: completed
 stopped_at: Completed 02-03-PLAN.md (Phase 02 complete)
 last_updated: "2026-03-20T01:08:04.959Z"
 last_activity: 2026-03-20 -- Completed 02-03 auth verification, reset, and integration tests
 progress:
-  total_phases: 8
+  total_phases: 9
   completed_phases: 2
   total_plans: 5
   completed_plans: 5
@@ -21,16 +82,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Track jobs you've applied to with their status, documents, and timeline so nothing falls through the cracks during a job search.
-**Current focus:** Phase 2: Authentication
+**Current focus:** Phase 3: Company & Job Domain
 
 ## Current Position
 
-Phase: 2 of 8 (Authentication) -- COMPLETE
-Plan: 3 of 3 in current phase (02-03 complete)
-Status: Phase Complete
-Last activity: 2026-03-20 -- Completed 02-03 auth verification, reset, and integration tests
+Phase: 3 of 8 (Company & Job Domain)
+Plan: 2 of 3 in current phase (03-02 complete)
+Status: In Progress
+Last activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
 
-Progress: [██████████] 100%
+Progress: [█████████░] 88%
 
 ## Performance Metrics
 
@@ -51,6 +112,9 @@ Progress: [██████████] 100%
 - Trend: fast
 
 *Updated after each plan completion*
+| Phase 03 P01 | 3 | 2 tasks | 10 files |
+| Phase 03 P02 | 6 | 2 tasks | 7 files |
+| Phase 03 P03 | 4 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -76,6 +140,14 @@ Recent decisions affecting current work:
 - [Phase 02]: @Transactional on services accessing lazy-loaded JPA relationships
 - [Phase 02]: AuthenticationEntryPoint returning 401 (not default 403) for unauthenticated REST API requests
 - [Phase 02]: Spring Boot 4 AutoConfigureMockMvc moved to spring-boot-webmvc-test module
+- [Phase 03]: Replaced AuthExceptionHandler with GlobalExceptionHandler for unified error handling
+- [Phase 03]: CAST(:name AS string) in JPQL to fix PostgreSQL lower(bytea) error with null parameters
+- [Phase 03]: Plain UUID for companyId (no @ManyToOne) to keep entity simple and avoid lazy-loading issues
+- [Phase 03]: Batch company name resolution in list queries via findAllByIdInAndUserId for N+1 prevention
+
+### Roadmap Evolution
+
+- Phase 6.1 inserted after Phase 6: Visibility & Sharing (INSERTED) — simple visibility enum (PRIVATE/PUBLIC/SHARED) + resource_shares junction table. NOT using Spring ACL or PostgreSQL RLS. Applies to all domain entities. Frontend phases (7, 8) can build visibility controls from day one.
 
 ### Pending Todos
 
@@ -90,6 +162,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-20T00:50:00Z
-Stopped at: Completed 02-03-PLAN.md (Phase 02 complete)
-Resume file: Phase 02 complete -- ready for Phase 03
+Last session: 2026-03-20T03:01:17.240Z
+Stopped at: Phase 7 context gathered
+Resume file: .planning/phases/07-frontend-shell-auth-ui/07-CONTEXT.md
