@@ -26,10 +26,11 @@
 
 ## API Rules
 
-1. All endpoints under /api/ prefix
+1. All domain endpoints under /api/ prefix
 2. RESTful resource naming: /api/companies, /api/jobs, /api/applications
 3. Return appropriate HTTP status codes: 201 for create, 204 for delete, 400 for validation, 404 for not found
 4. Use data classes for request/response bodies
+5. Actuator endpoints at /actuator/ (health, info, flyway) — do not create custom health endpoints
 
 ## Testing Rules
 
@@ -37,6 +38,16 @@
 2. @WebMvcTest(Controller::class) for controller unit tests
 3. Test files mirror source structure in src/test/kotlin/
 4. Test class naming: {ClassName}Tests.kt
+
+## Git Workflow Rules
+
+1. Each phase executes on its own branch: `phase-{NN}-{slug}` (e.g., `phase-02-auth`)
+2. Create the branch from master BEFORE `/gsd:execute-phase` begins
+3. All implementation commits go to the phase branch, never directly to master
+4. After phase execution, open a PR from the phase branch into master
+5. PR must be reviewed — apply requested changes before merging
+6. Planning docs (RESEARCH.md, PLAN.md, CONTEXT.md, VALIDATION.md) may commit to master
+7. Never force-push to master
 
 ## Docker Rules
 
