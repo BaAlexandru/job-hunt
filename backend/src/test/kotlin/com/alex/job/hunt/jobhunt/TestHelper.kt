@@ -1,8 +1,11 @@
 package com.alex.job.hunt.jobhunt
 
 import com.alex.job.hunt.jobhunt.dto.AuthRequest
+import com.alex.job.hunt.jobhunt.dto.CreateApplicationRequest
 import com.alex.job.hunt.jobhunt.dto.CreateCompanyRequest
+import com.alex.job.hunt.jobhunt.dto.CreateJobRequest
 import com.alex.job.hunt.jobhunt.dto.RegisterRequest
+import java.util.UUID
 import com.alex.job.hunt.jobhunt.repository.EmailVerificationTokenRepository
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
@@ -54,6 +57,46 @@ object TestHelper {
         val request = CreateCompanyRequest(name = name)
         val result = mockMvc.perform(
             post("/api/companies")
+                .header("Authorization", "Bearer $token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonMapper.writeValueAsString(request))
+        )
+            .andExpect(status().isCreated)
+            .andReturn()
+
+        return jsonMapper.readTree(result.response.contentAsString)
+            .get("id").textValue()
+    }
+
+    fun createJob(
+        mockMvc: MockMvc,
+        jsonMapper: JsonMapper,
+        token: String,
+        title: String
+    ): String {
+        val request = CreateJobRequest(title = title)
+        val result = mockMvc.perform(
+            post("/api/jobs")
+                .header("Authorization", "Bearer $token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonMapper.writeValueAsString(request))
+        )
+            .andExpect(status().isCreated)
+            .andReturn()
+
+        return jsonMapper.readTree(result.response.contentAsString)
+            .get("id").textValue()
+    }
+
+    fun createApplication(
+        mockMvc: MockMvc,
+        jsonMapper: JsonMapper,
+        token: String,
+        jobId: String
+    ): String {
+        val request = CreateApplicationRequest(jobId = UUID.fromString(jobId))
+        val result = mockMvc.perform(
+            post("/api/applications")
                 .header("Authorization", "Bearer $token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMapper.writeValueAsString(request))
