@@ -21,7 +21,7 @@ created: 2026-03-20
 | Preset | default — shadcn default preset with OKLCH colors (Tailwind v4) |
 | Component library | Radix UI (via shadcn) |
 | Icon library | lucide-react |
-| Font | Inter via `next/font/google` (weight 400, 500, 600) |
+| Font | Inter via `next/font/google` (weight 400, 600) |
 
 **Source:** CONTEXT.md locked shadcn/ui + Radix UI + Tailwind CSS. RESEARCH.md confirmed lucide-react as shadcn default icon library. Inter is the standard font for Linear/Notion-inspired aesthetics and pairs well with shadcn defaults.
 
@@ -53,17 +53,17 @@ Exceptions:
 | Role | Size | Weight | Line Height | Tailwind Class |
 |------|------|--------|-------------|----------------|
 | Body | 14px | 400 (regular) | 1.5 | `text-sm font-normal leading-normal` |
-| Label | 14px | 500 (medium) | 1.5 | `text-sm font-medium leading-normal` |
+| Label | 14px | 400 (regular) | 1.5 | `text-sm font-normal leading-normal` |
 | Heading | 20px | 600 (semibold) | 1.2 | `text-xl font-semibold leading-tight` |
 | Display | 28px | 600 (semibold) | 1.2 | `text-2xl font-semibold leading-tight` |
 
-**Rationale:** 14px body is the Linear/Notion standard for information-dense UIs. 3 sizes (14, 20, 28) keep the type scale minimal. Two weights only (400, 500, 600) -- medium reserved for labels/nav items, semibold for headings.
+**Rationale:** 14px body is the Linear/Notion standard for information-dense UIs. 3 sizes (14, 20, 28) keep the type scale minimal. Two weights only: 400 (body + labels) and 600 (headings + display).
 
 **Font loading:**
 ```typescript
 // app/layout.tsx
 import { Inter } from "next/font/google"
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+const inter = Inter({ subsets: ["latin"], weight: ["400", "600"], variable: "--font-inter" })
 ```
 
 ---
@@ -138,7 +138,7 @@ shadcn/ui default theme uses OKLCH colors in Tailwind v4. The contract uses shad
 |---------|------|
 | Heading | Track your job search |
 | Subheading | Keep every application, interview, and document organized in one place. |
-| Primary CTA | Get started |
+| Primary CTA | Start tracking jobs |
 | Secondary CTA | Sign in |
 
 ### Empty States (placeholder pages)
@@ -207,11 +207,21 @@ shadcn/ui components needed for Phase 7 (install via `npx shadcn@latest add`):
 
 ## Layout Contract
 
+### Landing Page Layout
+- **Primary visual anchor:** Heading ("Track your job search") + primary CTA ("Start tracking jobs"), centered vertically and horizontally on the viewport
+- Max-width container: 640px for content area, centered
+- Heading uses Display role (28px, semibold)
+- Subheading uses Body role (14px, regular), `--muted-foreground` color
+- CTAs stacked or side-by-side: primary button (`--primary`) + secondary button (outline variant)
+- Background: `--background` (dominant surface)
+
 ### Auth Pages Layout
-- Centered vertically and horizontally on the viewport
+- **Primary visual anchor:** The auth card (max-width 400px, centered vertically and horizontally on the viewport)
 - Card container: max-width 400px, padding 32px (p-8)
 - Background: `--background` (dominant surface)
 - Card: `--card` with `--border` and subtle shadow (`shadow-sm`)
+- Page heading inside card uses Heading role (20px, semibold)
+- Form fields stacked vertically with 16px gap (`space-y-4`)
 
 ### Dashboard Layout
 - Full viewport height (`h-screen`)
