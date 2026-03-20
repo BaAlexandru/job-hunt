@@ -8,6 +8,8 @@ import com.alex.job.hunt.jobhunt.service.InvalidTransitionException
 import com.alex.job.hunt.jobhunt.service.NotFoundException
 import com.alex.job.hunt.jobhunt.service.RateLimitException
 import com.alex.job.hunt.jobhunt.service.RegistrationException
+import com.alex.job.hunt.jobhunt.service.StorageException
+import com.alex.job.hunt.jobhunt.service.InvalidFileTypeException
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -16,6 +18,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingRequestCookieException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.multipart.MaxUploadSizeExceededException
 import org.springframework.http.converter.HttpMessageNotReadableException
 
 @RestControllerAdvice
@@ -94,6 +97,27 @@ class GlobalExceptionHandler {
         request: HttpServletRequest
     ): ResponseEntity<ErrorResponse> =
         buildResponse(HttpStatus.CONFLICT, ex.message ?: "Conflict", request)
+
+    @ExceptionHandler(StorageException::class)
+    fun handleStorageException(
+        ex: StorageException,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorResponse> =
+        buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.message ?: "Storage operation failed", request)
+
+    @ExceptionHandler(InvalidFileTypeException::class)
+    fun handleInvalidFileTypeException(
+        ex: InvalidFileTypeException,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorResponse> =
+        buildResponse(HttpStatus.BAD_REQUEST, ex.message ?: "Invalid file type", request)
+
+    @ExceptionHandler(MaxUploadSizeExceededException::class)
+    fun handleMaxUploadSizeExceededException(
+        ex: MaxUploadSizeExceededException,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorResponse> =
+        buildResponse(HttpStatus.BAD_REQUEST, "File size exceeds maximum allowed size of 25MB", request)
 
     @ExceptionHandler(Exception::class)
     fun handleGenericException(

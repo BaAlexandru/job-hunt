@@ -49,7 +49,7 @@ Users can upload, download, version, categorize, and link documents (CVs, cover 
 - Maximum file size: 25 MB
 - Single-request upload: multipart form with file + metadata (title, category, description) in one POST
 - Files stored via S3 API (MinIO locally, any S3-compatible provider in production) — MinIO added to Docker Compose stack
-- Download via API proxy: /api/documents/{id}/download — API checks auth, then streams from S3
+- Download via API proxy: /api/documents/{id}/versions/{versionId}/download — API checks auth, then streams from S3
 - UUID filenames in storage — path traversal prevention
 - Soft delete: archived boolean + archivedAt timestamp (same pattern as all entities)
 - User isolation: all queries filter by userId, 404 for unauthorized access

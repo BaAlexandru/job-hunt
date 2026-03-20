@@ -85,9 +85,9 @@ The implementation follows established project patterns exactly -- UUID PKs, sof
 ### Core
 | Library | Version | Purpose | Why Standard |
 |---------|---------|---------|--------------|
-| software.amazon.awssdk:bom | 2.31+ | AWS SDK v2 dependency management | BOM ensures consistent versions across AWS modules |
+| software.amazon.awssdk:bom | 2.42.16 | AWS SDK v2 dependency management | BOM ensures consistent versions across AWS modules |
 | software.amazon.awssdk:s3 | (managed by BOM) | S3 client for upload/download/delete | Universal S3-compatible client; works with MinIO, AWS, R2, etc. |
-| org.apache.tika:tika-core | 3.1+ | MIME type detection from file content | Industry standard for magic-byte detection; ~1.5MB, no transitive deps |
+| org.apache.tika:tika-core | 3.2.3 | MIME type detection from file content | Industry standard for magic-byte detection; ~1.5MB, no transitive deps |
 | minio/minio (Docker) | latest | S3-compatible object storage for local dev | Free, S3 API compatible, zero cloud account needed |
 
 ### Supporting
@@ -107,11 +107,11 @@ The implementation follows established project patterns exactly -- UUID PKs, sof
 **Installation (build.gradle.kts additions):**
 ```kotlin
 // AWS SDK v2 BOM + S3 client
-implementation(platform("software.amazon.awssdk:bom:2.31.3"))
+implementation(platform("software.amazon.awssdk:bom:2.42.16"))
 implementation("software.amazon.awssdk:s3")
 
 // MIME type detection
-implementation("org.apache.tika:tika-core:3.1.0")
+implementation("org.apache.tika:tika-core:3.2.3")
 ```
 
 ## Architecture Patterns
@@ -187,9 +187,15 @@ class StorageConfig(private val props: StorageProperties) {
 **When to use:** All file storage operations go through this interface
 
 ```kotlin
+data class StorageDownload(
+    val content: InputStream,
+    val contentType: String,
+    val contentLength: Long
+)
+
 interface StorageService {
     fun upload(key: String, content: InputStream, contentLength: Long, contentType: String)
-    fun download(key: String): ResponseInputStream<GetObjectResponse>
+    fun download(key: String): StorageDownload
     fun delete(key: String)
     fun exists(key: String): Boolean
 }
@@ -490,8 +496,8 @@ fun ensureBucketExists() {
 - [MinIO Docker health check](https://github.com/minio/minio/issues/18389) -- `mc ready local` replaces curl
 
 ### Secondary (MEDIUM confidence)
-- [AWS SDK v2 BOM on Maven Central](https://central.sonatype.com/artifact/software.amazon.awssdk/bom) -- version 2.42.16 latest; use 2.31+ minimum
-- [Apache Tika Core](https://central.sonatype.com/artifact/org.apache.tika/tika-core) -- version 3.2.3 latest
+- [AWS SDK v2 BOM on Maven Central](https://central.sonatype.com/artifact/software.amazon.awssdk/bom) -- version 2.42.16 (latest as of 2026-03-18)
+- [Apache Tika Core](https://central.sonatype.com/artifact/org.apache.tika/tika-core) -- version 3.2.3 (latest as of 2025-09-09)
 - [Spring Boot multipart configuration](https://spring.io/guides/gs/uploading-files/) -- spring.servlet.multipart.* properties
 - [S3Client forcePathStyle for MinIO](https://github.com/aws/aws-sdk-java-v2/discussions/3611) -- required since SDK v2.18.x
 

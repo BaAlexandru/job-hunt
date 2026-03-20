@@ -38,10 +38,10 @@ created: 2026-03-20
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 06-01-01 | 01 | 1 | DOCS-01 | unit+integration | `./gradlew :backend:test --tests "*Document*"` | ❌ W0 | ⬜ pending |
-| 06-01-02 | 01 | 1 | DOCS-04 | unit+integration | `./gradlew :backend:test --tests "*Document*"` | ❌ W0 | ⬜ pending |
-| 06-02-01 | 02 | 2 | DOCS-02 | integration | `./gradlew :backend:test --tests "*DocumentVersion*"` | ❌ W0 | ⬜ pending |
-| 06-02-02 | 02 | 2 | DOCS-03 | integration | `./gradlew :backend:test --tests "*DocumentApplication*"` | ❌ W0 | ⬜ pending |
+| 06-01-01 | 01 | 1 | DOCS-01 (infra) | compile | `./gradlew :backend:classes` | ❌ W0 | ⬜ pending |
+| 06-01-02 | 01 | 1 | DOCS-05 (infra) | compile | `./gradlew :backend:classes` | ❌ W0 | ⬜ pending |
+| 06-02-01 | 02 | 2 | DOCS-01, DOCS-04 | integration | `./gradlew :backend:test --tests "*Document*"` | ❌ W0 | ⬜ pending |
+| 06-02-02 | 02 | 2 | DOCS-02, DOCS-03 | integration | `./gradlew :backend:test --tests "*Document*"` | ❌ W0 | ⬜ pending |
 | 06-02-03 | 02 | 2 | DOCS-05 | integration | `./gradlew :backend:test --tests "*Document*"` | ❌ W0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
