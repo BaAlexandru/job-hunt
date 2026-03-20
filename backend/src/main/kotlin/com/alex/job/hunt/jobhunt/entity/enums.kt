@@ -15,3 +15,13 @@ enum class ApplicationStatus {
 enum class NoteType {
     GENERAL, PHONE_CALL, EMAIL, FOLLOW_UP, STATUS_CHANGE
 }
+
+enum class InterviewType { PHONE, VIDEO, ONSITE, TAKE_HOME }
+
+enum class InterviewStage { SCREENING, TECHNICAL, BEHAVIORAL, CULTURE_FIT, FINAL, SYSTEM_DESIGN, HOMEWORK, OTHER }
+
+enum class InterviewOutcome { SCHEDULED, COMPLETED, CANCELLED, NO_SHOW }
+
+enum class InterviewResult { PASSED, FAILED, PENDING, MIXED }
+
+enum class InterviewNoteType { PREPARATION, QUESTION_ASKED, FEEDBACK, FOLLOW_UP, GENERAL }
