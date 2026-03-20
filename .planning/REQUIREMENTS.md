@@ -52,14 +52,6 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **DOCS-04**: User can download previously uploaded documents
 - [x] **DOCS-05**: User can categorize documents by type (CV, cover letter, portfolio, other)
 
-### Visibility & Sharing
-
-- [ ] **VISI-01**: User can set visibility (PRIVATE/PUBLIC/SHARED) on companies and jobs
-- [ ] **VISI-02**: User can share specific companies or jobs with other users (by email)
-- [ ] **VISI-03**: User can browse public companies and jobs from other users
-- [ ] **VISI-04**: User can view items shared with them
-- [ ] **VISI-05**: Shared users can only VIEW (not edit/delete) unless granted EDIT permission
-
 ### Infrastructure
 
 - [x] **INFR-01**: Application runs in Docker containers via Docker Compose
@@ -76,6 +68,14 @@ Requirements for initial release. Each maps to roadmap phases.
 ## v2 Requirements
 
 Deferred to future release. Tracked but not in current roadmap. Data model designed to accommodate these without rewrites.
+
+### Visibility & Sharing
+
+- **VISI-01**: User can set visibility (PRIVATE/PUBLIC/SHARED) on companies and jobs
+- **VISI-02**: User can share specific companies or jobs with other users (by email)
+- **VISI-03**: User can browse public companies and jobs from other users
+- **VISI-04**: User can view items shared with them
+- **VISI-05**: Shared users can only VIEW (not edit/delete) unless granted EDIT permission
 
 ### Google Calendar Integration
 
@@ -115,7 +115,6 @@ Explicitly excluded. Documented to prevent scope creep.
 | Email integration/parsing | Unreliable, privacy concerns, OAuth complexity |
 | Real-time notifications/push | Single-user, self-entered data. Near-zero value |
 | Mobile native app | Responsive web sufficient. PWA if needed later |
-| Collaborative/sharing features | Single-user focus |
 | Gamification (streaks, achievements) | Job search is stressful. Clean analytics is better |
 
 ## Traceability
@@ -155,18 +154,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Complete |
 | INFR-04 | Phase 1 | Complete |
-| VISI-01 | Phase 6.1 | Pending |
-| VISI-02 | Phase 6.1 | Pending |
-| VISI-03 | Phase 6.1 | Pending |
-| VISI-04 | Phase 6.1 | Pending |
-| VISI-05 | Phase 6.1 | Pending |
 | INFR-05 | Phase 7 | Complete |
 | DEVX-01 | Phase 1 | Complete |
 | DEVX-02 | Phase 1 | Complete |
 
 **Coverage:**
-- v1 requirements: 39 total
-- Mapped to phases: 39
+- v1 requirements: 34 total (VISI-01..05 moved to v2)
+- Mapped to phases: 34
 - Unmapped: 0
 
 ---

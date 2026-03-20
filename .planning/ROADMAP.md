@@ -17,8 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Company & Job Domain** - Company CRUD and job posting CRUD with linking
 - [x] **Phase 4: Application Tracking** - Application CRUD, status state machine, notes, search, filtering
 - [x] **Phase 5: Interview Management** - Interview scheduling, round tracking, notes, timeline
-- [ ] **Phase 6: Document Management** - File upload/download, application linking, versioning, categorization
-- [ ] **Phase 6.1: Visibility & Sharing** (INSERTED) - Private/public/shared visibility on all domain entities
+- [x] **Phase 6: Document Management** - File upload/download, application linking, versioning, categorization
 - [x] **Phase 7: Frontend Shell & Auth UI** - Next.js setup, auth pages, API client, responsive layout
 - [ ] **Phase 8: Frontend Core Views** - Kanban board, list/table view, all feature pages
 
@@ -117,23 +116,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md -- Infrastructure, dependencies, Flyway migrations, JPA entities, repositories, DTOs, MinIO Docker Compose, S3 storage config and service
-- [ ] 06-02-PLAN.md -- DocumentService business logic, DocumentController REST endpoints, integration tests for all DOCS requirements
-
-### Phase 6.1: Visibility & Sharing (INSERTED)
-**Goal**: Users can control visibility of their companies, jobs, applications, interviews, and documents as PRIVATE (default), PUBLIC, or SHARED with specific users. Includes share management endpoints and query logic for browsing public/shared content.
-**Depends on**: Phase 6
-**Requirements**: VISI-01, VISI-02, VISI-03, VISI-04, VISI-05
-**Success Criteria** (what must be TRUE):
-  1. User can set visibility on any company or job to PRIVATE, PUBLIC, or SHARED
-  2. User can share a company/job with another user by email and the recipient can view it
-  3. User can browse public content from all users via API
-  4. Shared items appear in the recipient's list views with appropriate read-only/edit access
-  5. Default visibility is PRIVATE — no behavior change for existing data
-**Plans**: TBD
-
-Plans:
-- [ ] 06.1-01: TBD (run /gsd:plan-phase 06.1 to break down)
+- [x] 06-01-PLAN.md -- Infrastructure, dependencies, Flyway migrations, JPA entities, repositories, DTOs, MinIO Docker Compose, S3 storage config and service
+- [x] 06-02-PLAN.md -- DocumentService business logic, DocumentController REST endpoints, integration tests for all DOCS requirements
 
 ### Phase 7: Frontend Shell & Auth UI
 **Goal**: A working Next.js frontend with authentication pages, API client layer, and responsive layout shell
@@ -153,7 +137,7 @@ Plans:
 
 ### Phase 8: Frontend Core Views
 **Goal**: Users interact with all features through polished frontend pages including the kanban board and list views
-**Depends on**: Phase 3, Phase 4, Phase 5, Phase 6, Phase 6.1, Phase 7
+**Depends on**: Phase 3, Phase 4, Phase 5, Phase 6, Phase 7
 **Requirements**: APPL-03, APPL-04
 **Success Criteria** (what must be TRUE):
   1. User can view applications as a kanban board and drag-and-drop between status columns to change status
@@ -170,8 +154,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 6.1 -> 7 -> 8
-Note: Phase 7 depends on Phase 2 (not 6.1), so Phase 7 can start before 6.1 completes. Phase 8 depends on all phases including 6.1.
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -180,7 +163,12 @@ Note: Phase 7 depends on Phase 2 (not 6.1), so Phase 7 can start before 6.1 comp
 | 3. Company & Job Domain | 3/3 | Complete | 2026-03-20 |
 | 4. Application Tracking | 2/2 | Complete | 2026-03-20 |
 | 5. Interview Management | 2/2 | Complete | 2026-03-20 |
-| 6. Document Management | 0/2 | Not started | - |
-| 6.1. Visibility & Sharing | 0/0 | Not started | - |
+| 6. Document Management | 2/2 | Complete | 2026-03-21 |
 | 7. Frontend Shell & Auth UI | 3/3 | Complete | 2026-03-20 |
 | 8. Frontend Core Views | 0/0 | Not started | - |
+
+## Deferred to v2
+
+Phases planned and researched but deferred to keep v1 focused on a working app.
+
+- **Visibility & Sharing** — Private/public/shared visibility on companies and jobs, share management, public browse. Planning artifacts preserved in `.planning/phases/06.1-visibility-sharing/`.
