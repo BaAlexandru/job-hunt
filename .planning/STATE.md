@@ -2,114 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 04-02-PLAN.md (Phase 04 complete)
-last_updated: "2026-03-20T12:13:55.400Z"
-last_activity: 2026-03-20 -- Completed 04-02 Application search/filter and integration tests
+status: executing
+stopped_at: Completed 07-02-PLAN.md
+last_updated: "2026-03-20T13:41:16.815Z"
+last_activity: 2026-03-20 -- Completed 07-03 dashboard layout with responsive sidebar, topbar, and placeholder pages
 progress:
   total_phases: 9
   completed_phases: 4
   total_plans: 13
-  completed_plans: 10
-last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
-progress:
-  total_phases: 9
-  completed_phases: 3
-  total_plans: 13
-  completed_plans: 9
-  percent: 69
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: completed
-stopped_at: Phase 7 UI-SPEC approved
-last_updated: "2026-03-20T03:40:02.191Z"
-last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
-progress:
-  [███████░░░] 69%
-  completed_phases: 3
-  total_plans: 8
-  completed_plans: 8
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: completed
-stopped_at: Phase 7 context gathered
-last_updated: "2026-03-20T03:01:17.243Z"
-last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
-progress:
-  total_phases: 9
-  completed_phases: 3
-  total_plans: 8
-  completed_plans: 8
-  percent: 100
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: completed
-stopped_at: Completed 03-02-PLAN.md
-last_updated: "2026-03-20T02:39:28.050Z"
-last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
-progress:
-  [██████████] 100%
-  completed_phases: 2
-  total_plans: 8
-  completed_plans: 7
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: completed
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-03-20T02:38:41.033Z"
-last_activity: 2026-03-20 -- Completed 03-01 foundation (UserDetails, migrations, error handling)
-progress:
-  total_phases: 8
-  completed_phases: 2
-  total_plans: 8
-  completed_plans: 7
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: completed
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-20T02:28:41.007Z"
-last_activity: 2026-03-20 -- Completed 02-03 auth verification, reset, and integration tests
-progress:
-  total_phases: 8
-  completed_phases: 2
-  total_plans: 8
-  completed_plans: 6
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: completed
-stopped_at: Completed 02-03-PLAN.md (Phase 02 complete)
-last_updated: "2026-03-20T01:08:04.959Z"
-last_activity: 2026-03-20 -- Completed 02-03 auth verification, reset, and integration tests
-progress:
-  total_phases: 9
-  completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
-  percent: 100
+  completed_plans: 12
+  percent: 92
 ---
 
 # Project State
@@ -119,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Track jobs you've applied to with their status, documents, and timeline so nothing falls through the cracks during a job search.
-**Current focus:** Phase 4: Application Tracking
+**Current focus:** Phase 7: Frontend Shell & Auth UI
 
 ## Current Position
 
-Phase: 4 of 9 (Application Tracking)
-Plan: 2 of 2 in current phase (04-02 complete, Phase 04 complete)
+Phase: 7 of 9 (Frontend Shell & Auth UI)
+Plan: 3 of 3 in current phase (07-03 Task 1 complete, awaiting human-verify checkpoint)
 Status: In Progress
-Last activity: 2026-03-20 -- Completed 04-02 Application search/filter and integration tests
+Last activity: 2026-03-20 -- Completed 07-03 dashboard layout with responsive sidebar, topbar, and placeholder pages
 
-Progress: [██████████] 100%
+Progress: [█████████░] 92%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 5 min
-- Total execution time: 0.4 hours
+- Total plans completed: 12
+- Average duration: 7 min
+- Total execution time: 1.4 hours
 
 **By Phase:**
 
@@ -143,10 +45,13 @@ Progress: [██████████] 100%
 |-------|-------|-------|----------|
 | 01-foundation-infrastructure | 2 | 13 min | 7 min |
 | 02-authentication | 3 | 16 min | 5 min |
+| 03-company-crud | 3 | 13 min | 4 min |
+| 04-application-tracking | 2 | 40 min | 20 min |
+| 07-frontend-shell-auth-ui | 3 | 13 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (11 min), 01-02 (2 min), 02-01 (3 min), 02-02 (3 min), 02-03 (10 min)
-- Trend: fast
+- Last 5 plans: 04-01 (8 min), 04-02 (27 min), 07-01 (4 min), 07-02 (3 min), 07-03 (13 min)
+- Trend: variable
 
 *Updated after each plan completion*
 | Phase 03 P01 | 3 | 2 tasks | 10 files |
@@ -154,7 +59,9 @@ Progress: [██████████] 100%
 | Phase 03 P03 | 4 | 2 tasks | 7 files |
 | Phase 04 P01 | 8 | 2 tasks | 15 files |
 | Phase 04 P02 | 27 | 2 tasks | 9 files |
-| Phase 04 P01 | 5 | 2 tasks | 16 files |
+| Phase 07 P01 | 4 | 2 tasks | 43 files |
+| Phase 07 P02 | 3 | 1 task | 4 files |
+| Phase 07 P03 | 13 | 1 task | 9 files |
 
 ## Accumulated Context
 
@@ -169,8 +76,8 @@ Recent decisions affecting current work:
 - [Phase 01]: Added foojay-resolver-convention plugin to auto-download Java 24 toolchain
 - [Phase 01]: Set spring.docker.compose.skip.in-tests=false for test DB connectivity
 - [Phase 01]: CLAUDE.md content verified against actual build.gradle.kts and application.yml from Phase 01-01
-- [Audit]: No API versioning — flat `/api/` prefix for all endpoints. Monorepo means frontend/backend evolve in lockstep; add versioning only if needed later
-- [Audit]: Spring Actuator added — /actuator/health (DB, Flyway, disk), /actuator/info, /actuator/flyway exposed. Custom HealthController removed. Secure actuator endpoints when Spring Security is added in Phase 2
+- [Audit]: No API versioning -- flat `/api/` prefix for all endpoints
+- [Audit]: Spring Actuator added -- /actuator/health (DB, Flyway, disk), /actuator/info, /actuator/flyway exposed
 - [Phase 02]: Used jjwt-gson instead of jjwt-jackson to avoid Jackson 2/3 classpath conflict with Spring Boot 4
 - [Phase 02]: JWT config as custom properties (jwt.secret, jwt.access-expiration-ms) not under spring namespace
 - [Phase 02]: Redis auto-configured via Docker Compose integration, no explicit host/port properties
@@ -189,24 +96,29 @@ Recent decisions affecting current work:
 - [Phase 04]: FK-safe test cleanup order: delete child tables before parent tables in @BeforeEach
 - [Phase 04]: Status state machine uses Map-based transition validation with InvalidTransitionException (422)
 - [Phase 04]: Terminal statuses (REJECTED, ACCEPTED, WITHDRAWN) can reopen to any active status
+- [Phase 07]: Better Auth with own PostgreSQL tables (user, session, account, verification) via Flyway V9
+- [Phase 07]: Sidebar exports navItems array reused by MobileNav for single source of truth
+- [Phase 07]: Route group (dashboard) for shared layout without URL prefix
+- [Phase 07]: Controlled Sheet state so mobile nav closes on link click
 
 ### Roadmap Evolution
 
-- Phase 6.1 inserted after Phase 6: Visibility & Sharing (INSERTED) — simple visibility enum (PRIVATE/PUBLIC/SHARED) + resource_shares junction table. NOT using Spring ACL or PostgreSQL RLS. Applies to all domain entities. Frontend phases (7, 8) can build visibility controls from day one.
+- Phase 6.1 inserted after Phase 6: Visibility & Sharing (INSERTED)
 
 ### Pending Todos
 
-- RESOLVED: No API versioning — flat `/api/` prefix. ARCHITECTURE.md examples updated.
-- RESOLVED: MockK and SpringMockK added in 02-01. Testcontainers deferred -- Phase 2 tests use Docker Compose.
-- RESOLVED: Interview Management added to FEATURES.md (table stakes + dependency graph) and ARCHITECTURE.md (component table, package structure, build order)
+- RESOLVED: No API versioning -- flat `/api/` prefix
+- RESOLVED: MockK and SpringMockK added in 02-01
+- RESOLVED: Interview Management added to FEATURES.md and ARCHITECTURE.md
+- RESOLVED: Auth.js vs custom JWT -- chose Better Auth with own DB tables
 
 ### Blockers/Concerns
 
 - [01-01]: RESOLVED -- Restructured project into /backend monorepo layout
-- [Research]: Decide Auth.js vs custom JWT handling before building frontend auth (Phase 7)
+- [Research]: RESOLVED -- Chose Better Auth over Auth.js for frontend auth
 
 ## Session Continuity
 
-Last session: 2026-03-20T12:07:25Z
-Stopped at: Completed 04-02-PLAN.md (Phase 04 complete)
-Resume file: .planning/phases/04-application-tracking/04-02-SUMMARY.md
+Last session: 2026-03-20T13:41:16.811Z
+Stopped at: Completed 07-02-PLAN.md
+Resume file: None

@@ -144,7 +144,7 @@ Plans:
   2. User can log out from any page in the frontend
   3. The application layout is responsive and usable on mobile viewports
   4. The API client handles JWT tokens automatically (attach to requests, handle 401 redirects)
-**Plans:** 3 plans
+**Plans:** 2/3 plans executed
 
 Plans:
 - [ ] 07-01-PLAN.md -- Next.js init, all deps, shadcn/ui, Better Auth server/client config, pg Pool, providers, API client, Vitest, Flyway V7 migration
@@ -181,5 +181,5 @@ Note: Phase 7 depends on Phase 2 (not 6.1), so Phase 7 can start before 6.1 comp
 | 4. Application Tracking | 0/2 | Not started | - |
 | 5. Interview Management | 0/0 | Not started | - |
 | 6. Document Management | 0/0 | Not started | - |
-| 7. Frontend Shell & Auth UI | 0/3 | Not started | - |
+| 7. Frontend Shell & Auth UI | 2/3 | In Progress|  |
 | 8. Frontend Core Views | 0/0 | Not started | - |
