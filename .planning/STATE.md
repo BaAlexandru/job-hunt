@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-20T11:47:09.279Z"
+last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
+progress:
+  total_phases: 9
+  completed_phases: 3
+  total_plans: 13
+  completed_plans: 9
+  percent: 69
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: completed
 stopped_at: Phase 7 UI-SPEC approved
 last_updated: "2026-03-20T03:40:02.191Z"
 last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
 progress:
-  total_phases: 9
+  [███████░░░] 69%
   completed_phases: 3
   total_plans: 8
   completed_plans: 8
@@ -130,6 +146,7 @@ Progress: [█████████░] 88%
 | Phase 03 P01 | 3 | 2 tasks | 10 files |
 | Phase 03 P02 | 6 | 2 tasks | 7 files |
 | Phase 03 P03 | 4 | 2 tasks | 7 files |
+| Phase 04 P01 | 5 | 2 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -159,6 +176,8 @@ Recent decisions affecting current work:
 - [Phase 03]: CAST(:name AS string) in JPQL to fix PostgreSQL lower(bytea) error with null parameters
 - [Phase 03]: Plain UUID for companyId (no @ManyToOne) to keep entity simple and avoid lazy-loading issues
 - [Phase 03]: Batch company name resolution in list queries via findAllByIdInAndUserId for N+1 prevention
+- [Phase 04]: Status state machine uses Map-based transition validation with InvalidTransitionException (422)
+- [Phase 04]: Terminal statuses (REJECTED, ACCEPTED, WITHDRAWN) can reopen to any active status
 
 ### Roadmap Evolution
 
@@ -177,6 +196,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-20T03:40:02.188Z
-Stopped at: Phase 7 UI-SPEC approved
-Resume file: .planning/phases/07-frontend-shell-auth-ui/07-UI-SPEC.md
+Last session: 2026-03-20T11:47:09.275Z
+Stopped at: Completed 04-01-PLAN.md
+Resume file: None
