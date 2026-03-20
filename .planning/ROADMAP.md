@@ -114,11 +114,11 @@ Plans:
   3. User can upload multiple versions of the same document and retrieve any version
   4. User can download previously uploaded documents
   5. User can categorize documents by type (CV, cover letter, portfolio, other)
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [ ] 06-01-PLAN.md -- Infrastructure, dependencies, Flyway migrations, JPA entities, repositories, DTOs, MinIO Docker Compose, S3 storage config and service
+- [ ] 06-02-PLAN.md -- DocumentService business logic, DocumentController REST endpoints, integration tests for all DOCS requirements
 
 ### Phase 6.1: Visibility & Sharing (INSERTED)
 **Goal**: Users can control visibility of their companies, jobs, applications, interviews, and documents as PRIVATE (default), PUBLIC, or SHARED with specific users. Includes share management endpoints and query logic for browsing public/shared content.
@@ -180,7 +180,7 @@ Note: Phase 7 depends on Phase 2 (not 6.1), so Phase 7 can start before 6.1 comp
 | 3. Company & Job Domain | 3/3 | Complete | 2026-03-20 |
 | 4. Application Tracking | 2/2 | Complete | 2026-03-20 |
 | 5. Interview Management | 2/2 | Complete | 2026-03-20 |
-| 6. Document Management | 0/0 | Not started | - |
+| 6. Document Management | 0/2 | Not started | - |
 | 6.1. Visibility & Sharing | 0/0 | Not started | - |
 | 7. Frontend Shell & Auth UI | 3/3 | Complete | 2026-03-20 |
 | 8. Frontend Core Views | 0/0 | Not started | - |
