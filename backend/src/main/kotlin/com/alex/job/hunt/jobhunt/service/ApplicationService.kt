@@ -6,6 +6,9 @@ import com.alex.job.hunt.jobhunt.dto.UpdateApplicationRequest
 import com.alex.job.hunt.jobhunt.dto.UpdateStatusRequest
 import com.alex.job.hunt.jobhunt.entity.ApplicationEntity
 import com.alex.job.hunt.jobhunt.entity.ApplicationStatus
+import com.alex.job.hunt.jobhunt.entity.JobType
+import com.alex.job.hunt.jobhunt.entity.NoteType
+import com.alex.job.hunt.jobhunt.entity.WorkMode
 import com.alex.job.hunt.jobhunt.repository.ApplicationRepository
 import com.alex.job.hunt.jobhunt.repository.CompanyRepository
 import com.alex.job.hunt.jobhunt.repository.JobRepository
@@ -105,6 +108,48 @@ class ApplicationService(
             val job = jobMap[entity.jobId]
             val companyName = job?.companyId?.let { companyNameMap[it] }
             entity.toResponse(job?.title ?: "Unknown", companyName)
+        }
+    }
+
+    @Transactional(readOnly = true)
+    fun listFiltered(
+        userId: UUID,
+        statuses: List<ApplicationStatus>?,
+        companyId: UUID?,
+        jobType: JobType?,
+        workMode: WorkMode?,
+        search: String?,
+        dateFrom: LocalDate?,
+        dateTo: LocalDate?,
+        hasNextAction: Boolean?,
+        noteType: NoteType?,
+        includeArchived: Boolean,
+        pageable: Pageable
+    ): Page<ApplicationResponse> {
+        val effectiveStatuses = if (statuses.isNullOrEmpty()) null else statuses
+
+        val page = applicationRepository.findFiltered(
+            userId, effectiveStatuses, companyId, jobType, workMode,
+            search, dateFrom, dateTo, hasNextAction, noteType,
+            includeArchived, pageable
+        )
+
+        val jobIds = page.content.map { it.jobId }.toSet()
+        val jobMap = if (jobIds.isNotEmpty()) {
+            jobRepository.findAllByIdIn(jobIds).associateBy { it.id!! }
+        } else emptyMap()
+        val companyIds = jobMap.values.mapNotNull { it.companyId }.toSet()
+        val companyNameMap = if (companyIds.isNotEmpty()) {
+            companyRepository.findAllByIdInAndUserId(companyIds, userId)
+                .associate { it.id!! to it.name }
+        } else emptyMap()
+
+        return page.map { entity ->
+            val job = jobMap[entity.jobId]
+            entity.toResponse(
+                jobTitle = job?.title ?: "Unknown",
+                companyName = job?.companyId?.let { companyNameMap[it] }
+            )
         }
     }
 
