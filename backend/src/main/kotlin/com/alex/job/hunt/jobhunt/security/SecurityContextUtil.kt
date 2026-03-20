@@ -8,7 +8,8 @@ object SecurityContextUtil {
     fun getCurrentUserId(): UUID {
         val authentication = SecurityContextHolder.getContext().authentication
             ?: throw IllegalStateException("No authenticated user in SecurityContext")
-        val principal = authentication.principal as AppUserDetails
+        val principal = authentication.principal as? AppUserDetails
+            ?: throw IllegalStateException("Expected AppUserDetails but got ${authentication.principal!!::class}")
         return principal.getUserId()
     }
 }

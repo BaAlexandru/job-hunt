@@ -4,10 +4,13 @@ import com.alex.job.hunt.jobhunt.dto.AuthRequest
 import com.alex.job.hunt.jobhunt.dto.PasswordResetConfirmRequest
 import com.alex.job.hunt.jobhunt.dto.PasswordResetRequest
 import com.alex.job.hunt.jobhunt.dto.RegisterRequest
+import com.alex.job.hunt.jobhunt.repository.CompanyRepository
 import com.alex.job.hunt.jobhunt.repository.EmailVerificationTokenRepository
+import com.alex.job.hunt.jobhunt.repository.JobRepository
 import com.alex.job.hunt.jobhunt.repository.PasswordResetTokenRepository
 import com.alex.job.hunt.jobhunt.repository.TokenBlocklistRepository
 import com.alex.job.hunt.jobhunt.repository.UserRepository
+import org.springframework.data.redis.core.StringRedisTemplate
 import jakarta.servlet.http.Cookie
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -44,14 +47,26 @@ class AuthControllerIntegrationTests {
     lateinit var tokenBlocklistRepository: TokenBlocklistRepository
 
     @Autowired
+    lateinit var jobRepository: JobRepository
+
+    @Autowired
+    lateinit var companyRepository: CompanyRepository
+
+    @Autowired
+    lateinit var redisTemplate: StringRedisTemplate
+
+    @Autowired
     lateinit var jsonMapper: JsonMapper
 
     @BeforeEach
     fun setUp() {
+        jobRepository.deleteAll()
+        companyRepository.deleteAll()
         tokenBlocklistRepository.deleteAll()
         passwordResetTokenRepository.deleteAll()
         emailVerificationTokenRepository.deleteAll()
         userRepository.deleteAll()
+        redisTemplate.connectionFactory?.connection?.serverCommands()?.flushAll()
     }
 
     @Test

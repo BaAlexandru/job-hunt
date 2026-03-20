@@ -1,9 +1,7 @@
 package com.alex.job.hunt.jobhunt.job
 
-import com.alex.job.hunt.jobhunt.dto.AuthRequest
-import com.alex.job.hunt.jobhunt.dto.CreateCompanyRequest
+import com.alex.job.hunt.jobhunt.TestHelper
 import com.alex.job.hunt.jobhunt.dto.CreateJobRequest
-import com.alex.job.hunt.jobhunt.dto.RegisterRequest
 import com.alex.job.hunt.jobhunt.dto.UpdateJobRequest
 import com.alex.job.hunt.jobhunt.entity.JobType
 import com.alex.job.hunt.jobhunt.entity.SalaryPeriod
@@ -566,46 +564,11 @@ class JobControllerIntegrationTests {
 
     // --- Helpers ---
 
-    private fun registerAndGetToken(email: String = "test@example.com", password: String = "Password123!"): String {
-        mockMvc.perform(
-            post("/api/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonMapper.writeValueAsString(RegisterRequest(email, password)))
-        )
-            .andExpect(status().isCreated)
+    private fun registerAndGetToken(email: String = "test@example.com", password: String = "Password123!"): String =
+        TestHelper.registerAndGetToken(mockMvc, jsonMapper, emailVerificationTokenRepository, email, password)
 
-        val verificationToken = emailVerificationTokenRepository.findAll()
-            .last().token
-
-        mockMvc.perform(get("/api/auth/verify").param("token", verificationToken))
-            .andExpect(status().isOk)
-
-        val loginResult = mockMvc.perform(
-            post("/api/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonMapper.writeValueAsString(AuthRequest(email, password)))
-        )
-            .andExpect(status().isOk)
-            .andReturn()
-
-        return jsonMapper.readTree(loginResult.response.contentAsString)
-            .get("accessToken").textValue()
-    }
-
-    private fun createCompany(token: String, name: String): String {
-        val request = CreateCompanyRequest(name = name)
-        val result = mockMvc.perform(
-            post("/api/companies")
-                .header("Authorization", "Bearer $token")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonMapper.writeValueAsString(request))
-        )
-            .andExpect(status().isCreated)
-            .andReturn()
-
-        return jsonMapper.readTree(result.response.contentAsString)
-            .get("id").textValue()
-    }
+    private fun createCompany(token: String, name: String): String =
+        TestHelper.createCompany(mockMvc, jsonMapper, token, name)
 
     private fun createJob(token: String, title: String): String {
         val request = CreateJobRequest(title = title)

@@ -1,11 +1,11 @@
 package com.alex.job.hunt.jobhunt.company
 
-import com.alex.job.hunt.jobhunt.dto.AuthRequest
+import com.alex.job.hunt.jobhunt.TestHelper
 import com.alex.job.hunt.jobhunt.dto.CreateCompanyRequest
-import com.alex.job.hunt.jobhunt.dto.RegisterRequest
 import com.alex.job.hunt.jobhunt.dto.UpdateCompanyRequest
 import com.alex.job.hunt.jobhunt.repository.CompanyRepository
 import com.alex.job.hunt.jobhunt.repository.EmailVerificationTokenRepository
+import com.alex.job.hunt.jobhunt.repository.JobRepository
 import com.alex.job.hunt.jobhunt.repository.PasswordResetTokenRepository
 import com.alex.job.hunt.jobhunt.repository.TokenBlocklistRepository
 import com.alex.job.hunt.jobhunt.repository.UserRepository
@@ -39,6 +39,9 @@ class CompanyControllerIntegrationTests {
     lateinit var companyRepository: CompanyRepository
 
     @Autowired
+    lateinit var jobRepository: JobRepository
+
+    @Autowired
     lateinit var userRepository: UserRepository
 
     @Autowired
@@ -52,6 +55,7 @@ class CompanyControllerIntegrationTests {
 
     @BeforeEach
     fun setUp() {
+        jobRepository.deleteAll()
         companyRepository.deleteAll()
         tokenBlocklistRepository.deleteAll()
         passwordResetTokenRepository.deleteAll()
@@ -335,48 +339,9 @@ class CompanyControllerIntegrationTests {
 
     // --- Helpers ---
 
-    private fun registerAndGetToken(email: String = "test@example.com", password: String = "Password123!"): String {
-        // Register
-        mockMvc.perform(
-            post("/api/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonMapper.writeValueAsString(RegisterRequest(email, password)))
-        )
-            .andExpect(status().isCreated)
+    private fun registerAndGetToken(email: String = "test@example.com", password: String = "Password123!"): String =
+        TestHelper.registerAndGetToken(mockMvc, jsonMapper, emailVerificationTokenRepository, email, password)
 
-        // Get verification token from DB (latest one created for this registration)
-        val verificationToken = emailVerificationTokenRepository.findAll()
-            .last().token
-
-        // Verify email
-        mockMvc.perform(get("/api/auth/verify").param("token", verificationToken))
-            .andExpect(status().isOk)
-
-        // Login and extract access token
-        val loginResult = mockMvc.perform(
-            post("/api/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonMapper.writeValueAsString(AuthRequest(email, password)))
-        )
-            .andExpect(status().isOk)
-            .andReturn()
-
-        return jsonMapper.readTree(loginResult.response.contentAsString)
-            .get("accessToken").textValue()
-    }
-
-    private fun createCompany(token: String, name: String): String {
-        val request = CreateCompanyRequest(name = name)
-        val result = mockMvc.perform(
-            post("/api/companies")
-                .header("Authorization", "Bearer $token")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonMapper.writeValueAsString(request))
-        )
-            .andExpect(status().isCreated)
-            .andReturn()
-
-        return jsonMapper.readTree(result.response.contentAsString)
-            .get("id").textValue()
-    }
+    private fun createCompany(token: String, name: String): String =
+        TestHelper.createCompany(mockMvc, jsonMapper, token, name)
 }
