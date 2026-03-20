@@ -46,11 +46,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Document Management
 
-- [ ] **DOCS-01**: User can upload PDF and DOCX files (CVs, cover letters, other documents)
+- [x] **DOCS-01**: User can upload PDF and DOCX files (CVs, cover letters, other documents)
 - [ ] **DOCS-02**: User can link uploaded documents to specific job applications
-- [ ] **DOCS-03**: User can keep multiple versions of the same document
+- [x] **DOCS-03**: User can keep multiple versions of the same document
 - [ ] **DOCS-04**: User can download previously uploaded documents
-- [ ] **DOCS-05**: User can categorize documents by type (CV, cover letter, portfolio, other)
+- [x] **DOCS-05**: User can categorize documents by type (CV, cover letter, portfolio, other)
 
 ### Visibility & Sharing
 
@@ -146,11 +146,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INTV-02 | Phase 5 | Complete |
 | INTV-03 | Phase 5 | Complete |
 | INTV-04 | Phase 5 | Complete |
-| DOCS-01 | Phase 6 | Pending |
+| DOCS-01 | Phase 6 | Complete |
 | DOCS-02 | Phase 6 | Pending |
-| DOCS-03 | Phase 6 | Pending |
+| DOCS-03 | Phase 6 | Complete |
 | DOCS-04 | Phase 6 | Pending |
-| DOCS-05 | Phase 6 | Pending |
+| DOCS-05 | Phase 6 | Complete |
 | INFR-01 | Phase 1 | Complete |
 | INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Complete |
