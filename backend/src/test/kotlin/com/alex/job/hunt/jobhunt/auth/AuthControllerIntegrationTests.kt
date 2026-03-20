@@ -26,7 +26,7 @@ import tools.jackson.databind.json.JsonMapper
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-class AuthControllerIntegrationTest {
+class AuthControllerIntegrationTests {
 
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -200,11 +200,16 @@ class AuthControllerIntegrationTest {
         )
             .andExpect(status().isOk)
 
-        // Try using the old access token -- should be rejected by the filter
-        // Since there's no protected endpoint yet, we verify the token is blocklisted
-        // by checking that the blocklist repository has entries
+        // Verify tokens are blocklisted
         val blocklistEntries = tokenBlocklistRepository.findAll()
         assert(blocklistEntries.size >= 1) { "Expected blocklisted tokens after logout" }
+
+        // Verify the old access token is rejected on a protected endpoint
+        mockMvc.perform(
+            get("/api/protected")
+                .header("Authorization", "Bearer $accessToken")
+        )
+            .andExpect(status().isUnauthorized)
     }
 
     @Test

@@ -83,7 +83,6 @@ class AuthController(
         val accessToken = request.getHeader("Authorization")
             ?.takeIf { it.startsWith("Bearer ") }
             ?.substring(7)
-            ?: ""
 
         val refreshToken = request.cookies
             ?.firstOrNull { it.name == "refresh_token" }

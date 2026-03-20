@@ -14,6 +14,7 @@ import com.alex.job.hunt.jobhunt.security.JwtTokenProvider
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID
@@ -32,6 +33,7 @@ class AuthService(
 
     private val logger = LoggerFactory.getLogger(AuthService::class.java)
 
+    @Transactional
     fun register(request: RegisterRequest): MessageResponse {
         if (userRepository.existsByEmail(request.email)) {
             throw RegistrationException("Registration failed")
@@ -113,8 +115,9 @@ class AuthService(
         )
     }
 
-    fun logout(accessToken: String, refreshToken: String?) {
-        if (jwtTokenProvider.validateToken(accessToken)) {
+    @Transactional
+    fun logout(accessToken: String?, refreshToken: String?) {
+        if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
             tokenBlocklistRepository.save(
                 TokenBlocklistEntry(
                     tokenId = jwtTokenProvider.getTokenId(accessToken),
