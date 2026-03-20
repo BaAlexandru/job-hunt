@@ -147,9 +147,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 07-01-PLAN.md -- Next.js project init, dependencies, shadcn/ui, API client, auth context, providers
-- [ ] 07-02-PLAN.md -- Auth pages (login, register, verify, forgot password, reset password)
-- [ ] 07-03-PLAN.md -- Landing page, dashboard layout (sidebar, topbar, mobile nav), placeholder pages, route protection
+- [ ] 07-01-PLAN.md -- Next.js init, all deps, shadcn/ui, Better Auth server/client config, pg Pool, providers, API client, Vitest, Flyway V7 migration
+- [ ] 07-02-PLAN.md -- Dynamic auth route with AuthView (login, register, forgot-password, reset-password), landing page, shared components
+- [ ] 07-03-PLAN.md -- Dashboard layout (sidebar, topbar, mobile hamburger nav), placeholder pages, human verification of auth flow + responsive
 
 ### Phase 8: Frontend Core Views
 **Goal**: Users interact with all features through polished frontend pages including the kanban board and list views
