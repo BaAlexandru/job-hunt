@@ -157,14 +157,14 @@ class InterviewEntity(
 **Example:**
 ```kotlin
 // In InterviewService.create():
-val nextRound = interviewRepository.countByApplicationId(applicationId) + 1
+val nextRound = interviewRepository.findMaxRoundNumberByApplicationId(applicationId) + 1
 val entity = InterviewEntity(
     applicationId = applicationId,
     roundNumber = nextRound,
     // ...
 )
 ```
-**Note:** Use `countByApplicationId` (not max+1) to handle gaps from deletions cleanly. Alternatively, use `findMaxRoundNumberByApplicationId` JPQL query returning `(maxRound ?: 0) + 1` if gap-free numbering after deletes matters -- but for informational ordering, count+1 is sufficient.
+**Note:** Use `findMaxRoundNumberByApplicationId` JPQL query returning `COALESCE(MAX(roundNumber), 0) + 1` to ensure unique round numbers even after archiving or deletion. Do NOT use `countByApplicationIdAndArchivedFalse` as it produces duplicate round numbers when interviews are archived (count decreases but existing round numbers remain).
 
 ### Pattern 3: Timeline Composition in Service Layer (Recommended)
 **What:** Query three repositories independently, merge results into a unified list sorted by date

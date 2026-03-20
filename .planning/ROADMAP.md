@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Authentication** - User registration, JWT login/logout, password reset API
 - [ ] **Phase 3: Company & Job Domain** - Company CRUD and job posting CRUD with linking
 - [ ] **Phase 4: Application Tracking** - Application CRUD, status state machine, notes, search, filtering
-- [ ] **Phase 5: Interview Management** - Interview scheduling, round tracking, notes, timeline
+- [x] **Phase 5: Interview Management** - Interview scheduling, round tracking, notes, timeline
 - [ ] **Phase 6: Document Management** - File upload/download, application linking, versioning, categorization
 - [ ] **Phase 6.1: Visibility & Sharing** (INSERTED) - Private/public/shared visibility on all domain entities
 - [ ] **Phase 7: Frontend Shell & Auth UI** - Next.js setup, auth pages, API client, responsive layout
@@ -101,8 +101,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 05-01-PLAN.md -- Flyway migrations (interviews + interview_notes), enums, JPA entities, repositories, DTO contracts
-- [ ] 05-02-PLAN.md -- Interview CRUD service/controller, interview note CRUD, timeline aggregation service/controller, integration tests
+- [x] 05-01-PLAN.md -- Flyway migrations (interviews + interview_notes), enums, JPA entities, repositories, DTO contracts
+- [x] 05-02-PLAN.md -- Interview CRUD service/controller, interview note CRUD, timeline aggregation service/controller, integration tests
 
 ### Phase 6: Document Management
 **Goal**: Users can upload, download, version, categorize, and link documents to job applications
@@ -177,9 +177,9 @@ Note: Phase 7 depends on Phase 2 (not 6.1), so Phase 7 can start before 6.1 comp
 |-------|----------------|--------|-----------|
 | 1. Foundation & Infrastructure | 2/2 | Complete | 2026-03-19 |
 | 2. Authentication | 3/3 | Complete | 2026-03-20 |
-| 3. Company & Job Domain | 2/3 | In Progress|  |
-| 4. Application Tracking | 0/2 | Not started | - |
-| 5. Interview Management | 0/2 | Not started | - |
+| 3. Company & Job Domain | 3/3 | Complete | 2026-03-20 |
+| 4. Application Tracking | 2/2 | Complete | 2026-03-20 |
+| 5. Interview Management | 2/2 | Complete | 2026-03-20 |
 | 6. Document Management | 0/0 | Not started | - |
-| 7. Frontend Shell & Auth UI | 2/3 | In Progress|  |
+| 7. Frontend Shell & Auth UI | 3/3 | Complete | 2026-03-20 |
 | 8. Frontend Core Views | 0/0 | Not started | - |

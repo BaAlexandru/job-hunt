@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 
+@Suppress("LongParameterList")
 object TestHelper {
 
     fun registerAndGetToken(
@@ -106,5 +107,46 @@ object TestHelper {
 
         return jsonMapper.readTree(result.response.contentAsString)
             .get("id").textValue()
+    }
+
+    fun createInterview(
+        mockMvc: MockMvc,
+        jsonMapper: JsonMapper,
+        token: String,
+        applicationId: String,
+        scheduledAt: String = "2026-04-01T10:00:00Z",
+        interviewType: String = "VIDEO",
+        stage: String = "SCREENING"
+    ): String {
+        val body = """{"applicationId":"$applicationId","scheduledAt":"$scheduledAt","interviewType":"$interviewType","stage":"$stage"}"""
+        val result = mockMvc.perform(
+            post("/api/interviews")
+                .header("Authorization", "Bearer $token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+        )
+            .andExpect(status().isCreated)
+            .andReturn()
+        return jsonMapper.readTree(result.response.contentAsString).get("id").textValue()
+    }
+
+    fun createInterviewNote(
+        mockMvc: MockMvc,
+        jsonMapper: JsonMapper,
+        token: String,
+        interviewId: String,
+        content: String = "Test interview note",
+        noteType: String = "GENERAL"
+    ): String {
+        val body = """{"content":"$content","noteType":"$noteType"}"""
+        val result = mockMvc.perform(
+            post("/api/interviews/$interviewId/notes")
+                .header("Authorization", "Bearer $token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+        )
+            .andExpect(status().isCreated)
+            .andReturn()
+        return jsonMapper.readTree(result.response.contentAsString).get("id").textValue()
     }
 }
