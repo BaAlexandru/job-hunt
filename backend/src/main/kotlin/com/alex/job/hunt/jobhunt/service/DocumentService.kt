@@ -57,7 +57,7 @@ class DocumentService(
         description: String?
     ): DocumentResponse {
         val fileBytes = file.bytes
-        val detectedType = tika.detect(fileBytes)
+        val detectedType = tika.detect(fileBytes, file.originalFilename)
         validateFileType(detectedType)
 
         val doc = DocumentEntity(
@@ -137,7 +137,7 @@ class DocumentService(
     ): DocumentVersionResponse {
         val doc = findDocumentOrThrow(documentId, userId)
         val fileBytes = file.bytes
-        val detectedType = tika.detect(fileBytes)
+        val detectedType = tika.detect(fileBytes, file.originalFilename)
         validateFileType(detectedType)
 
         val nextVersionNumber = documentVersionRepository.countByDocumentId(documentId) + 1

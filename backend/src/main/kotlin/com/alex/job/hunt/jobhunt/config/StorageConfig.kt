@@ -1,7 +1,7 @@
 package com.alex.job.hunt.jobhunt.config
 
-import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
+import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -32,14 +32,13 @@ class StorageConfig(private val props: StorageProperties) {
         .forcePathStyle(true) // Required for MinIO
         .build()
 
-    @PostConstruct
-    fun ensureBucketExists() {
-        val client = s3Client()
+    @Bean
+    fun ensureBucketExists(s3Client: S3Client): CommandLineRunner = CommandLineRunner {
         try {
-            client.headBucket(HeadBucketRequest.builder().bucket(props.bucket).build())
+            s3Client.headBucket(HeadBucketRequest.builder().bucket(props.bucket).build())
             logger.info("S3 bucket '{}' exists", props.bucket)
         } catch (e: NoSuchBucketException) {
-            client.createBucket(CreateBucketRequest.builder().bucket(props.bucket).build())
+            s3Client.createBucket(CreateBucketRequest.builder().bucket(props.bucket).build())
             logger.info("Created S3 bucket: {}", props.bucket)
         }
     }
