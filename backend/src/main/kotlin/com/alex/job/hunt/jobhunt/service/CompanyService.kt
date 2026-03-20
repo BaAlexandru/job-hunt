@@ -5,6 +5,7 @@ import com.alex.job.hunt.jobhunt.dto.CreateCompanyRequest
 import com.alex.job.hunt.jobhunt.dto.UpdateCompanyRequest
 import com.alex.job.hunt.jobhunt.entity.CompanyEntity
 import com.alex.job.hunt.jobhunt.repository.CompanyRepository
+import com.alex.job.hunt.jobhunt.repository.JobRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -14,7 +15,10 @@ import java.util.UUID
 
 @Service
 @Transactional
-class CompanyService(private val companyRepository: CompanyRepository) {
+class CompanyService(
+    private val companyRepository: CompanyRepository,
+    private val jobRepository: JobRepository
+) {
 
     fun create(request: CreateCompanyRequest, userId: UUID): CompanyResponse {
         val entity = CompanyEntity(
@@ -54,6 +58,9 @@ class CompanyService(private val companyRepository: CompanyRepository) {
     fun archive(id: UUID, userId: UUID) {
         val entity = companyRepository.findByIdAndUserId(id, userId)
             ?: throw NotFoundException("Company not found")
+        if (jobRepository.existsByCompanyIdAndUserIdAndArchivedFalse(id, userId)) {
+            throw ConflictException("Cannot archive company with active job postings")
+        }
         entity.archived = true
         entity.archivedAt = Instant.now()
         entity.updatedAt = Instant.now()
