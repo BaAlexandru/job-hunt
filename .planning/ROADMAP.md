@@ -66,11 +66,12 @@ Plans:
   3. User can create a job posting with title, description, URL, salary range, location, and job type
   4. User can link a job posting to an existing company
   5. User can store and retrieve the full job description text for any job posting
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01-PLAN.md -- Custom UserDetails, SecurityContextUtil, Flyway migrations (companies + jobs), domain enums, global exception handler
+- [ ] 03-02-PLAN.md -- Company entity, repository, service, controller, DTOs, integration tests
+- [ ] 03-03-PLAN.md -- Job entity, repository, service, controller, DTOs, company archive guard, integration tests
 
 ### Phase 4: Application Tracking
 **Goal**: Users can track job applications through a full status lifecycle with notes, dates, and search/filter capabilities
@@ -159,7 +160,7 @@ Note: Phase 6 and Phase 7 can run in parallel (both depend on earlier phases, no
 |-------|----------------|--------|-----------|
 | 1. Foundation & Infrastructure | 2/2 | Complete | 2026-03-19 |
 | 2. Authentication | 3/3 | Complete | 2026-03-20 |
-| 3. Company & Job Domain | 0/0 | Not started | - |
+| 3. Company & Job Domain | 0/3 | Planned | - |
 | 4. Application Tracking | 0/0 | Not started | - |
 | 5. Interview Management | 0/0 | Not started | - |
 | 6. Document Management | 0/0 | Not started | - |
