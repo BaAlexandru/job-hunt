@@ -12,8 +12,8 @@ JobHunt is built backend-first: the Kotlin/Spring Boot API is developed and test
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Infrastructure** - Monorepo structure, Docker Compose, PostgreSQL, Flyway, CLAUDE.md files
-- [ ] **Phase 2: Authentication** - User registration, JWT login/logout, password reset API
+- [x] **Phase 1: Foundation & Infrastructure** - Monorepo structure, Docker Compose, PostgreSQL, Flyway, CLAUDE.md files
+- [x] **Phase 2: Authentication** - User registration, JWT login/logout, password reset API
 - [ ] **Phase 3: Company & Job Domain** - Company CRUD and job posting CRUD with linking
 - [ ] **Phase 4: Application Tracking** - Application CRUD, status state machine, notes, search, filtering
 - [ ] **Phase 5: Interview Management** - Interview scheduling, round tracking, notes, timeline
@@ -157,8 +157,8 @@ Note: Phase 6 and Phase 7 can run in parallel (both depend on earlier phases, no
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Infrastructure | 0/2 | Planning complete | - |
-| 2. Authentication | 0/3 | Planning complete | - |
+| 1. Foundation & Infrastructure | 2/2 | Complete | 2026-03-19 |
+| 2. Authentication | 3/3 | Complete | 2026-03-20 |
 | 3. Company & Job Domain | 0/0 | Not started | - |
 | 4. Application Tracking | 0/0 | Not started | - |
 | 5. Interview Management | 0/0 | Not started | - |
