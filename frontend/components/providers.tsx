@@ -22,12 +22,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
         replace={router.replace}
         onSessionChange={() => router.refresh()}
         Link={Link}
-        viewPaths={{
-          SIGN_IN: "login",
-          SIGN_UP: "register",
-          FORGOT_PASSWORD: "forgot-password",
-          RESET_PASSWORD: "reset-password",
-        }}
       >
         <ThemeProvider
           attribute="class"

@@ -33,10 +33,10 @@ export default function LandingPage() {
           </div>
           <div className="flex gap-4">
             <Button asChild>
-              <Link href="/auth/register">Start tracking jobs</Link>
+              <Link href="/auth/sign-up">Start tracking jobs</Link>
             </Button>
             <Button variant="outline" asChild>
-              <Link href="/auth/login">Sign in</Link>
+              <Link href="/auth/sign-in">Sign in</Link>
             </Button>
           </div>
         </main>
