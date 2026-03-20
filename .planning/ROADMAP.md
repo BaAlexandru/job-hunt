@@ -83,11 +83,11 @@ Plans:
   2. User can track applied date, last activity date, and next action date per application
   3. User can add and edit free-text notes on any application
   4. User can search applications by text and filter by status, company, and date range via API
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md -- Application CRUD, status state machine, notes subsystem, all REST endpoints, Flyway migrations, enums, entities, DTOs
+- [ ] 04-02-PLAN.md -- Cross-table search/filter JPQL query, search endpoint wiring, integration tests for all APPL requirements
 
 ### Phase 5: Interview Management
 **Goal**: Users can schedule interviews, track multiple rounds per application, add notes per stage, and view the full interaction timeline
@@ -178,7 +178,7 @@ Note: Phase 7 depends on Phase 2 (not 6.1), so Phase 7 can start before 6.1 comp
 | 1. Foundation & Infrastructure | 2/2 | Complete | 2026-03-19 |
 | 2. Authentication | 3/3 | Complete | 2026-03-20 |
 | 3. Company & Job Domain | 2/3 | In Progress|  |
-| 4. Application Tracking | 0/0 | Not started | - |
+| 4. Application Tracking | 0/2 | Not started | - |
 | 5. Interview Management | 0/0 | Not started | - |
 | 6. Document Management | 0/0 | Not started | - |
 | 7. Frontend Shell & Auth UI | 0/3 | Not started | - |
