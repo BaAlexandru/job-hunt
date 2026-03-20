@@ -99,8 +99,11 @@ class DocumentService(
     ): Page<DocumentResponse> {
         val page = documentRepository.findAllByFilters(userId, category, search, pageable)
         val docIds = page.content.map { it.id!! }
-        val currentVersions = docIds.associateWith { docId ->
-            documentVersionRepository.findByDocumentIdAndIsCurrent(docId, true)
+        val currentVersions = if (docIds.isNotEmpty()) {
+            documentVersionRepository.findByDocumentIdInAndIsCurrent(docIds, true)
+                .associateBy { it.documentId }
+        } else {
+            emptyMap()
         }
         return page.map { doc ->
             toDocumentResponse(doc, currentVersions[doc.id!!])
@@ -140,7 +143,7 @@ class DocumentService(
         val detectedType = tika.detect(fileBytes, file.originalFilename)
         validateFileType(detectedType)
 
-        val nextVersionNumber = documentVersionRepository.countByDocumentId(documentId) + 1
+        val nextVersionNumber = documentVersionRepository.findMaxVersionNumberByDocumentId(documentId) + 1
         documentVersionRepository.clearCurrentFlag(documentId)
 
         val version = DocumentVersionEntity(

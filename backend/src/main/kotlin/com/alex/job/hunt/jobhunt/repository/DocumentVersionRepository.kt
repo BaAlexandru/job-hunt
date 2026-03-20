@@ -13,6 +13,11 @@ interface DocumentVersionRepository : JpaRepository<DocumentVersionEntity, UUID>
     fun findByIdAndDocumentId(id: UUID, documentId: UUID): DocumentVersionEntity?
     fun countByDocumentId(documentId: UUID): Int
 
+    @Query("SELECT COALESCE(MAX(v.versionNumber), 0) FROM DocumentVersionEntity v WHERE v.documentId = :documentId")
+    fun findMaxVersionNumberByDocumentId(@Param("documentId") documentId: UUID): Int
+
+    fun findByDocumentIdInAndIsCurrent(documentIds: Collection<UUID>, isCurrent: Boolean): List<DocumentVersionEntity>
+
     @Modifying
     @Query("UPDATE DocumentVersionEntity v SET v.isCurrent = false WHERE v.documentId = :documentId AND v.isCurrent = true")
     fun clearCurrentFlag(@Param("documentId") documentId: UUID)
