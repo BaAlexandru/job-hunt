@@ -1,7 +1,7 @@
 package com.alex.job.hunt.jobhunt.security
 
 import com.alex.job.hunt.jobhunt.repository.UserRepository
-import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -16,11 +16,12 @@ class UserDetailsServiceImpl(
         val user = userRepository.findByEmail(username)
             ?: throw UsernameNotFoundException("User not found")
 
-        return User.builder()
-            .username(user.email)
-            .password(user.password)
-            .roles(user.role.name)
-            .disabled(!user.enabled)
-            .build()
+        return AppUserDetails(
+            userId = user.id!!,
+            email = user.email,
+            password = user.password,
+            authorities = listOf(SimpleGrantedAuthority("ROLE_${user.role.name}")),
+            enabled = user.enabled
+        )
     }
 }
