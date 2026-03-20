@@ -14,12 +14,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Infrastructure** - Monorepo structure, Docker Compose, PostgreSQL, Flyway, CLAUDE.md files
 - [x] **Phase 2: Authentication** - User registration, JWT login/logout, password reset API
-- [ ] **Phase 3: Company & Job Domain** - Company CRUD and job posting CRUD with linking
-- [ ] **Phase 4: Application Tracking** - Application CRUD, status state machine, notes, search, filtering
+- [x] **Phase 3: Company & Job Domain** - Company CRUD and job posting CRUD with linking
+- [x] **Phase 4: Application Tracking** - Application CRUD, status state machine, notes, search, filtering
 - [x] **Phase 5: Interview Management** - Interview scheduling, round tracking, notes, timeline
 - [ ] **Phase 6: Document Management** - File upload/download, application linking, versioning, categorization
 - [ ] **Phase 6.1: Visibility & Sharing** (INSERTED) - Private/public/shared visibility on all domain entities
-- [ ] **Phase 7: Frontend Shell & Auth UI** - Next.js setup, auth pages, API client, responsive layout
+- [x] **Phase 7: Frontend Shell & Auth UI** - Next.js setup, auth pages, API client, responsive layout
 - [ ] **Phase 8: Frontend Core Views** - Kanban board, list/table view, all feature pages
 
 ## Phase Details
@@ -37,8 +37,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md -- Monorepo restructure, Gradle multi-project, Docker Compose, Flyway, health endpoint
-- [ ] 01-02-PLAN.md -- CLAUDE.md files per module and .claude/skills/ project conventions
+- [x] 01-01-PLAN.md -- Monorepo restructure, Gradle multi-project, Docker Compose, Flyway, health endpoint
+- [x] 01-02-PLAN.md -- CLAUDE.md files per module and .claude/skills/ project conventions
 
 ### Phase 2: Authentication
 **Goal**: Users can create accounts, log in with persistent sessions, log out, and reset forgotten passwords via the REST API
@@ -53,9 +53,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md -- Dependencies, Redis Docker Compose, Flyway migrations, JPA entities, repositories, DTOs
-- [ ] 02-02-PLAN.md -- Spring Security config, JWT provider/filter, auth endpoints (register, login, refresh, logout)
-- [ ] 02-03-PLAN.md -- Email verification, password reset, rate limiting, integration tests
+- [x] 02-01-PLAN.md -- Dependencies, Redis Docker Compose, Flyway migrations, JPA entities, repositories, DTOs
+- [x] 02-02-PLAN.md -- Spring Security config, JWT provider/filter, auth endpoints (register, login, refresh, logout)
+- [x] 02-03-PLAN.md -- Email verification, password reset, rate limiting, integration tests
 
 ### Phase 3: Company & Job Domain
 **Goal**: Users can manage companies and job postings through the API, with jobs linked to companies
@@ -67,12 +67,12 @@ Plans:
   3. User can create a job posting with title, description, URL, salary range, location, and job type
   4. User can link a job posting to an existing company
   5. User can store and retrieve the full job description text for any job posting
-**Plans:** 2/3 plans executed
+**Plans:** 3 plans
 
 Plans:
-- [ ] 03-01-PLAN.md -- Custom UserDetails, SecurityContextUtil, Flyway migrations (companies + jobs), domain enums, global exception handler
-- [ ] 03-02-PLAN.md -- Company entity, repository, service, controller, DTOs, integration tests
-- [ ] 03-03-PLAN.md -- Job entity, repository, service, controller, DTOs, company archive guard, integration tests
+- [x] 03-01-PLAN.md -- Custom UserDetails, SecurityContextUtil, Flyway migrations (companies + jobs), domain enums, global exception handler
+- [x] 03-02-PLAN.md -- Company entity, repository, service, controller, DTOs, integration tests
+- [x] 03-03-PLAN.md -- Job entity, repository, service, controller, DTOs, company archive guard, integration tests
 
 ### Phase 4: Application Tracking
 **Goal**: Users can track job applications through a full status lifecycle with notes, dates, and search/filter capabilities
@@ -86,8 +86,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md -- Application CRUD, status state machine, notes subsystem, all REST endpoints, Flyway migrations, enums, entities, DTOs
-- [ ] 04-02-PLAN.md -- Cross-table search/filter JPQL query, search endpoint wiring, integration tests for all APPL requirements
+- [x] 04-01-PLAN.md -- Application CRUD, status state machine, notes subsystem, all REST endpoints, Flyway migrations, enums, entities, DTOs
+- [x] 04-02-PLAN.md -- Cross-table search/filter JPQL query, search endpoint wiring, integration tests for all APPL requirements
 
 ### Phase 5: Interview Management
 **Goal**: Users can schedule interviews, track multiple rounds per application, add notes per stage, and view the full interaction timeline
@@ -144,12 +144,12 @@ Plans:
   2. User can log out from any page in the frontend
   3. The application layout is responsive and usable on mobile viewports
   4. The API client handles JWT tokens automatically (attach to requests, handle 401 redirects)
-**Plans:** 2/3 plans executed
+**Plans:** 3 plans
 
 Plans:
-- [ ] 07-01-PLAN.md -- Next.js init, all deps, shadcn/ui, Better Auth server/client config, pg Pool, providers, API client, Vitest, Flyway V7 migration
-- [ ] 07-02-PLAN.md -- Dynamic auth route with AuthView (login, register, forgot-password, reset-password), landing page, shared components
-- [ ] 07-03-PLAN.md -- Dashboard layout (sidebar, topbar, mobile hamburger nav), placeholder pages, human verification of auth flow + responsive
+- [x] 07-01-PLAN.md -- Next.js init, all deps, shadcn/ui, Better Auth server/client config, pg Pool, providers, API client, Vitest, Flyway V7 migration
+- [x] 07-02-PLAN.md -- Dynamic auth route with AuthView (login, register, forgot-password, reset-password), landing page, shared components
+- [x] 07-03-PLAN.md -- Dashboard layout (sidebar, topbar, mobile hamburger nav), placeholder pages, human verification of auth flow + responsive
 
 ### Phase 8: Frontend Core Views
 **Goal**: Users interact with all features through polished frontend pages including the kanban board and list views
@@ -181,5 +181,6 @@ Note: Phase 7 depends on Phase 2 (not 6.1), so Phase 7 can start before 6.1 comp
 | 4. Application Tracking | 2/2 | Complete | 2026-03-20 |
 | 5. Interview Management | 2/2 | Complete | 2026-03-20 |
 | 6. Document Management | 0/0 | Not started | - |
+| 6.1. Visibility & Sharing | 0/0 | Not started | - |
 | 7. Frontend Shell & Auth UI | 3/3 | Complete | 2026-03-20 |
 | 8. Frontend Core Views | 0/0 | Not started | - |

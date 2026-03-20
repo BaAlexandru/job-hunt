@@ -155,15 +155,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Complete |
 | INFR-04 | Phase 1 | Complete |
+| VISI-01 | Phase 6.1 | Pending |
+| VISI-02 | Phase 6.1 | Pending |
+| VISI-03 | Phase 6.1 | Pending |
+| VISI-04 | Phase 6.1 | Pending |
+| VISI-05 | Phase 6.1 | Pending |
 | INFR-05 | Phase 7 | Complete |
 | DEVX-01 | Phase 1 | Complete |
 | DEVX-02 | Phase 1 | Complete |
 
 **Coverage:**
-- v1 requirements: 34 total
-- Mapped to phases: 34
+- v1 requirements: 39 total
+- Mapped to phases: 39
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-19*
-*Last updated: 2026-03-19 after roadmap creation*
+*Last updated: 2026-03-20 after phase 5 completion audit*

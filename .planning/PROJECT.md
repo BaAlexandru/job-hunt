@@ -63,7 +63,7 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 | Spring Boot 4.0.4 over 3.5.9 | Access to Spring AI 2.0.0-M3, accept milestone risks | Confirmed (Phase 1) |
 | No API versioning | Monorepo means frontend/backend evolve in lockstep; flat `/api/` prefix | Confirmed (Audit) |
 | Spring Actuator for health monitoring | /actuator/health with DB, Flyway, disk indicators; expose health, info, flyway | Confirmed |
-| Next.js over Vite SPA | SSR capabilities, built-in routing, Turbopack bundler | — Pending |
+| Next.js over Vite SPA | SSR capabilities, built-in routing, Turbopack bundler | Confirmed (Phase 7) |
 | Monorepo structure | Simpler management, one PR for full features, split later if needed | Confirmed (Phase 1) |
 | Flexible AI provider | Avoid vendor lock-in, swap between Claude/OpenAI as needed | — Pending |
 | Upload-only documents | Simpler than building a rich text editor, covers the core need | — Pending |
@@ -71,4 +71,4 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 | Multi-user ready architecture | Design for one user but don't hardcode single-tenancy | — Pending |
 
 ---
-*Last updated: 2026-03-19 after initialization*
+*Last updated: 2026-03-20 after phase 5 completion audit*
