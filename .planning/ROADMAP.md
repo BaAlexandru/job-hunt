@@ -66,7 +66,7 @@ Plans:
   3. User can create a job posting with title, description, URL, salary range, location, and job type
   4. User can link a job posting to an existing company
   5. User can store and retrieve the full job description text for any job posting
-**Plans:** 3 plans
+**Plans:** 2/3 plans executed
 
 Plans:
 - [ ] 03-01-PLAN.md -- Custom UserDetails, SecurityContextUtil, Flyway migrations (companies + jobs), domain enums, global exception handler
@@ -160,7 +160,7 @@ Note: Phase 6 and Phase 7 can run in parallel (both depend on earlier phases, no
 |-------|----------------|--------|-----------|
 | 1. Foundation & Infrastructure | 2/2 | Complete | 2026-03-19 |
 | 2. Authentication | 3/3 | Complete | 2026-03-20 |
-| 3. Company & Job Domain | 0/3 | Planned | - |
+| 3. Company & Job Domain | 2/3 | In Progress|  |
 | 4. Application Tracking | 0/0 | Not started | - |
 | 5. Interview Management | 0/0 | Not started | - |
 | 6. Document Management | 0/0 | Not started | - |

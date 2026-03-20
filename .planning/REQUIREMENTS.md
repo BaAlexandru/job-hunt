@@ -17,8 +17,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Company Management
 
 - [x] **COMP-01**: User can add a company with name, website, location, and notes
-- [ ] **COMP-02**: User can edit and delete companies
-- [ ] **COMP-03**: User can view all companies in a list
+- [x] **COMP-02**: User can edit and delete companies
+- [x] **COMP-03**: User can view all companies in a list
 
 ### Job Posting Management
 
@@ -121,8 +121,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-03 | Phase 2 | Complete |
 | AUTH-04 | Phase 2 | Complete |
 | COMP-01 | Phase 3 | Complete |
-| COMP-02 | Phase 3 | Pending |
-| COMP-03 | Phase 3 | Pending |
+| COMP-02 | Phase 3 | Complete |
+| COMP-03 | Phase 3 | Complete |
 | JOBS-01 | Phase 3 | Complete |
 | JOBS-02 | Phase 3 | Pending |
 | JOBS-03 | Phase 3 | Pending |
