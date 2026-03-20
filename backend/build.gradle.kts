@@ -38,6 +38,13 @@ dependencies {
     // Redis for rate limiting
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
+    // S3-compatible storage (AWS SDK v2)
+    implementation(platform("software.amazon.awssdk:bom:2.42.16"))
+    implementation("software.amazon.awssdk:s3")
+
+    // MIME type detection
+    implementation("org.apache.tika:tika-core:3.2.3")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("org.postgresql:postgresql")
