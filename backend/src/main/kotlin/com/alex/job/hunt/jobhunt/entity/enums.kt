@@ -25,3 +25,5 @@ enum class InterviewOutcome { SCHEDULED, COMPLETED, CANCELLED, NO_SHOW }
 enum class InterviewResult { PASSED, FAILED, PENDING, MIXED }
 
 enum class InterviewNoteType { PREPARATION, QUESTION_ASKED, FEEDBACK, FOLLOW_UP, GENERAL }
+
+enum class DocumentCategory { CV, COVER_LETTER, PORTFOLIO, OTHER }
