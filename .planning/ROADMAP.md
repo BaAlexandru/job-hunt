@@ -98,11 +98,11 @@ Plans:
   2. User can track multiple interview rounds per application (screening, technical, behavioral, final)
   3. User can add notes and conversation details to each interview stage
   4. User can retrieve a chronological timeline of all interactions and interview stages for an application
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md -- Flyway migrations (interviews + interview_notes), enums, JPA entities, repositories, DTO contracts
+- [ ] 05-02-PLAN.md -- Interview CRUD service/controller, interview note CRUD, timeline aggregation service/controller, integration tests
 
 ### Phase 6: Document Management
 **Goal**: Users can upload, download, version, categorize, and link documents to job applications
@@ -179,7 +179,7 @@ Note: Phase 7 depends on Phase 2 (not 6.1), so Phase 7 can start before 6.1 comp
 | 2. Authentication | 3/3 | Complete | 2026-03-20 |
 | 3. Company & Job Domain | 2/3 | In Progress|  |
 | 4. Application Tracking | 0/2 | Not started | - |
-| 5. Interview Management | 0/0 | Not started | - |
+| 5. Interview Management | 0/2 | Not started | - |
 | 6. Document Management | 0/0 | Not started | - |
 | 7. Frontend Shell & Auth UI | 2/3 | In Progress|  |
 | 8. Frontend Core Views | 0/0 | Not started | - |
