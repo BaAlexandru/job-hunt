@@ -29,13 +29,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Application Tracking
 
-- [ ] **APPL-01**: User can create an application linked to a job posting
-- [ ] **APPL-02**: User can set and change application status (Interested, Applied, Phone Screen, Interview, Offer, Rejected, Accepted, Withdrawn)
+- [x] **APPL-01**: User can create an application linked to a job posting
+- [x] **APPL-02**: User can set and change application status (Interested, Applied, Phone Screen, Interview, Offer, Rejected, Accepted, Withdrawn)
 - [ ] **APPL-03**: User can view applications as a kanban board with drag-and-drop between status columns
 - [ ] **APPL-04**: User can view applications as a sortable, filterable table/list
-- [ ] **APPL-05**: User can track application dates (applied date, last activity, next action date)
-- [ ] **APPL-06**: User can add free-text notes to each application
-- [ ] **APPL-07**: User can search applications by text and filter by status, company, and date range
+- [x] **APPL-05**: User can track application dates (applied date, last activity, next action date)
+- [x] **APPL-06**: User can add free-text notes to each application
+- [x] **APPL-07**: User can search applications by text and filter by status, company, and date range
 
 ### Interview Management
 
@@ -135,13 +135,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | JOBS-02 | Phase 3 | Complete |
 | JOBS-03 | Phase 3 | Complete |
 | JOBS-04 | Phase 3 | Complete |
-| APPL-01 | Phase 4 | Pending |
-| APPL-02 | Phase 4 | Pending |
+| APPL-01 | Phase 4 | Complete |
+| APPL-02 | Phase 4 | Complete |
 | APPL-03 | Phase 8 | Pending |
 | APPL-04 | Phase 8 | Pending |
-| APPL-05 | Phase 4 | Pending |
-| APPL-06 | Phase 4 | Pending |
-| APPL-07 | Phase 4 | Pending |
+| APPL-05 | Phase 4 | Complete |
+| APPL-06 | Phase 4 | Complete |
+| APPL-07 | Phase 4 | Complete |
 | INTV-01 | Phase 5 | Pending |
 | INTV-02 | Phase 5 | Pending |
 | INTV-03 | Phase 5 | Pending |

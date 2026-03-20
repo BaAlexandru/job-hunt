@@ -117,7 +117,7 @@ Users can track job applications through a full status lifecycle with notes, dat
 - Plain UUID foreign keys (no @ManyToOne) to keep entities simple -- use for jobId on ApplicationEntity
 - Batch name resolution via findAllByIdInAndUserId for N+1 prevention in list queries
 - JPQL @Query with CAST(:param AS string) for nullable search parameters
-- Flyway: next migration number is V8 (V5-V7 used in Phase 3)
+- Flyway: next migration number is V7 (V5-V6 used in Phase 3)
 - Soft delete with archived boolean + archivedAt timestamp
 
 ### Integration Points

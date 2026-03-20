@@ -121,8 +121,10 @@ backend/src/main/kotlin/com/alex/job/hunt/jobhunt/
 ```kotlin
 interface CompanyRepository : JpaRepository<CompanyEntity, UUID> {
     fun findByIdAndUserId(id: UUID, userId: UUID): CompanyEntity?
+    fun findByIdAndUserIdAndArchivedFalse(id: UUID, userId: UUID): CompanyEntity?
     fun findByUserIdAndArchivedFalse(userId: UUID, pageable: Pageable): Page<CompanyEntity>
     fun existsByIdAndUserIdAndArchivedFalse(id: UUID, userId: UUID): Boolean
+    fun findAllByIdInAndUserId(ids: Collection<UUID>, userId: UUID): List<CompanyEntity>
 }
 ```
 
@@ -508,7 +510,7 @@ data class ErrorResponse(
 
 1. **Company-Job relationship: JPA @ManyToOne vs plain UUID column?**
    - What we know: Job responses need companyId + companyName. Using `@ManyToOne` gives ORM navigation but risks N+1. Plain UUID column with JOIN queries is simpler.
-   - Recommendation: Use plain `companyId: UUID?` column on JobEntity (no JPA relationship). For list queries that need companyName, use a JPQL JOIN. This avoids lazy-loading complexity and keeps the entity simple. For the delete guard (checking if company has jobs), a simple `existsByCompanyIdAndArchivedFalse` query suffices.
+   - Recommendation: Use plain `companyId: UUID?` column on JobEntity (no JPA relationship). For list queries that need companyName, batch-load via `companyRepository.findAllByIdInAndUserId(companyIds, userId)` and build a name map. This avoids lazy-loading complexity and keeps the entity simple. For the delete guard, use `existsByCompanyIdAndUserIdAndArchivedFalse(companyId, userId)` (userId-scoped for defense in depth).
 
 2. **Should UserDetailsServiceImpl modification go in Phase 3 or be a separate concern?**
    - What we know: Phase 3 is the first phase that needs userId in controllers. Phase 2 never needed it (auth endpoints use email).

@@ -39,21 +39,20 @@ created: 2026-03-20
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
 | 07-01-01 | 01 | 1 | INFR-05 | smoke | `pnpm build` | No — W0 | ⬜ pending |
-| 07-01-02 | 01 | 1 | SC-4 | unit | `pnpm test -- --grep "api-client"` | No — W0 | ⬜ pending |
-| 07-02-01 | 02 | 2 | SC-1 | integration | `pnpm test -- --grep "auth flow"` | No — W0 | ⬜ pending |
-| 07-02-02 | 02 | 2 | SC-2 | integration | `pnpm test -- --grep "logout"` | No — W0 | ⬜ pending |
-| 07-02-03 | 02 | 2 | SC-3 | manual-only | Visual check at 375px, 768px, 1280px | N/A | ⬜ pending |
+| 07-01-02 | 01 | 1 | SC-4 | unit | `pnpm test -- api-client` | No — W0 | ⬜ pending |
+| 07-02-01 | 02 | 2 | SC-1 | smoke | `pnpm build` (AuthView renders) | No — W0 | ⬜ pending |
+| 07-03-01 | 03 | 3 | SC-2/SC-3 | manual | Human verification (Plan 03 Task 2) | N/A | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+
+**Note:** Auth UI is provided by Better Auth UI pre-built components (AuthView, UserButton). Unit testing third-party components has low value. Testing focuses on custom code (api-client wrapper) and manual verification of auth flow + responsive layout.
 
 ---
 
 ## Wave 0 Requirements
 
 - [ ] Test framework setup (Vitest + React Testing Library + jsdom)
-- [ ] `__tests__/lib/api-client.test.ts` — stubs for SC-4 (JWT auto-attach, 401 refresh retry)
-- [ ] `__tests__/components/auth/login-form.test.tsx` — stubs for SC-1 (form validation, submission)
-- [ ] `__tests__/components/layout/sidebar.test.tsx` — stubs for SC-2 (logout button present)
+- [ ] `__tests__/lib/api-client.test.ts` — covers SC-4 (fetch wrapper, error handling, 204 response)
 
 ---
 

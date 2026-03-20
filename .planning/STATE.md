@@ -3,11 +3,42 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 4 context gathered
-last_updated: "2026-03-20T03:33:20.136Z"
+stopped_at: Completed 04-02-PLAN.md (Phase 04 complete)
+last_updated: "2026-03-20T12:13:55.400Z"
+last_activity: 2026-03-20 -- Completed 04-02 Application search/filter and integration tests
+progress:
+  total_phases: 9
+  completed_phases: 4
+  total_plans: 13
+  completed_plans: 10
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: completed
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-20T11:47:09.279Z"
 last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
 progress:
   total_phases: 9
+  completed_phases: 3
+  total_plans: 13
+  completed_plans: 9
+  percent: 69
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: completed
+stopped_at: Phase 7 UI-SPEC approved
+last_updated: "2026-03-20T03:40:02.191Z"
+last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
+progress:
+  [███████░░░] 69%
   completed_phases: 3
   total_plans: 8
   completed_plans: 8
@@ -97,16 +128,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Track jobs you've applied to with their status, documents, and timeline so nothing falls through the cracks during a job search.
-**Current focus:** Phase 3: Company & Job Domain
+**Current focus:** Phase 4: Application Tracking
 
 ## Current Position
 
-Phase: 3 of 8 (Company & Job Domain)
-Plan: 2 of 3 in current phase (03-02 complete)
+Phase: 4 of 9 (Application Tracking)
+Plan: 2 of 2 in current phase (04-02 complete, Phase 04 complete)
 Status: In Progress
-Last activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
+Last activity: 2026-03-20 -- Completed 04-02 Application search/filter and integration tests
 
-Progress: [█████████░] 88%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -130,6 +161,9 @@ Progress: [█████████░] 88%
 | Phase 03 P01 | 3 | 2 tasks | 10 files |
 | Phase 03 P02 | 6 | 2 tasks | 7 files |
 | Phase 03 P03 | 4 | 2 tasks | 7 files |
+| Phase 04 P01 | 8 | 2 tasks | 15 files |
+| Phase 04 P02 | 27 | 2 tasks | 9 files |
+| Phase 04 P01 | 5 | 2 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -159,6 +193,11 @@ Recent decisions affecting current work:
 - [Phase 03]: CAST(:name AS string) in JPQL to fix PostgreSQL lower(bytea) error with null parameters
 - [Phase 03]: Plain UUID for companyId (no @ManyToOne) to keep entity simple and avoid lazy-loading issues
 - [Phase 03]: Batch company name resolution in list queries via findAllByIdInAndUserId for N+1 prevention
+- [Phase 04]: JPQL with LEFT JOINs and EXISTS subquery for 4-table cross-entity search
+- [Phase 04]: CAST(:param AS type) IS NULL pattern for null-safe optional JPQL parameters
+- [Phase 04]: FK-safe test cleanup order: delete child tables before parent tables in @BeforeEach
+- [Phase 04]: Status state machine uses Map-based transition validation with InvalidTransitionException (422)
+- [Phase 04]: Terminal statuses (REJECTED, ACCEPTED, WITHDRAWN) can reopen to any active status
 
 ### Roadmap Evolution
 
@@ -177,6 +216,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-20T03:33:20.133Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-application-tracking/04-CONTEXT.md
+Last session: 2026-03-20T12:07:25Z
+Stopped at: Completed 04-02-PLAN.md (Phase 04 complete)
+Resume file: .planning/phases/04-application-tracking/04-02-SUMMARY.md

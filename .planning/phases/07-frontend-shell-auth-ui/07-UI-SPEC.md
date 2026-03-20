@@ -97,7 +97,9 @@ shadcn/ui default theme uses OKLCH colors in Tailwind v4. The contract uses shad
 
 ### Auth Pages
 
-| Element | Copy |
+**Note:** Auth page UI is now rendered by Better Auth UI's `AuthView` component, which provides its own default copy, form layout, and validation. The copy below serves as a reference for the intended tone. Actual copy may differ from these specifications since Better Auth UI manages it internally.
+
+| Element | Copy (reference — Better Auth UI defaults may differ) |
 |---------|------|
 | Login page heading | Sign in to JobHunt |
 | Login CTA | Sign in |

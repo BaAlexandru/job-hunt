@@ -6,7 +6,7 @@
 <domain>
 ## Phase Boundary
 
-A working Next.js frontend with authentication pages (register, login, email verification, password reset, logout), an API client layer that handles JWT tokens automatically, and a responsive layout shell with sidebar navigation. All nav links present with placeholder pages for features built in later phases. No CRUD feature pages — those are Phase 8.
+A working Next.js frontend with authentication pages (register, login, email verification, password reset, logout) via Better Auth UI pre-built components, an API client layer for backend calls, and a responsive layout shell with sidebar navigation. Auth state managed by Better Auth session cookies. All nav links present with placeholder pages for features built in later phases. No CRUD feature pages — those are Phase 8.
 
 </domain>
 
@@ -14,10 +14,16 @@ A working Next.js frontend with authentication pages (register, login, email ver
 ## Implementation Decisions
 
 ### Authentication approach
-- NextAuth.js (Auth.js) as the auth framework
-- Wrap existing backend JWT API as a "credentials" provider
-- Access token managed by NextAuth session; refresh token via HTTP-only cookie from backend
-- Full auth UI pages: login, register, email verification, password reset request, password reset confirm
+- Better Auth as the auth framework (replaces NextAuth.js — Auth.js v5 never left beta, absorbed by Better Auth Sep 2025)
+- Full Better Auth with its own PostgreSQL database tables (not proxy/stateless mode)
+- Better Auth manages users, sessions, passwords, email verification, and password reset in its own tables (`user`, `session`, `account`, `verification`) in the same PostgreSQL database
+- `@daveyplate/better-auth-ui` provides pre-built shadcn/ui auth components: AuthView for sign-in/sign-up/forgot-password/reset-password/verify-email, UserButton for the top bar
+- viewPaths configured to map Better Auth routes to project URLs: SIGN_IN="login", SIGN_UP="register", FORGOT_PASSWORD="forgot-password", RESET_PASSWORD="reset-password"
+- Better Auth's `emailAndPassword: { enabled: true }` with its own user/account tables
+- Session management via Better Auth cookies (not backend JWT)
+- For backend API calls (Phase 8+), backend security will be updated to accept Better Auth session tokens — this is a Phase 8 concern
+- Backend auth endpoints (Phase 2) remain functional but are not used by the frontend; they serve as the backend's own auth layer until Phase 8 unifies auth
+- Flyway migration added to backend for Better Auth tables (convention: V{N}__phase07_better_auth_tables.sql)
 - Unauthenticated users see a simple landing page with login/register buttons
 - After login, user lands on a Dashboard / Home page (placeholder content in Phase 7)
 
@@ -31,8 +37,10 @@ A working Next.js frontend with authentication pages (register, login, email ver
 
 ### API client design
 - Native fetch with a thin wrapper function (no axios/ky dependency)
+- apiClient (wrapper) is kept for non-auth API calls (companies, jobs, etc. in Phase 8+)
+- Auth operations go through Better Auth client (authClient), NOT through apiClient
 - Wrapper handles: base URL (`http://localhost:8080/api`), auth headers, JSON parsing, error standardization
-- 401 handling: auto-refresh via `/api/auth/refresh`, then retry the original request seamlessly
+- 401 handling in apiClient will be updated in Phase 8 to work with Better Auth sessions
 - TanStack Query set up in Phase 7 — provider configured, auth mutations use it from the start
 - Establishes query/mutation patterns that Phase 8 builds on
 
@@ -45,7 +53,7 @@ A working Next.js frontend with authentication pages (register, login, email ver
 
 ### Claude's Discretion
 - Next.js App Router vs Pages Router (App Router recommended for new projects)
-- Exact NextAuth.js configuration and session strategy
+- Better Auth database ID format (text vs UUID)
 - File/folder structure within frontend/
 - Tailwind theme customization details
 - TanStack Query default options (staleTime, retry)
@@ -119,6 +127,7 @@ A working Next.js frontend with authentication pages (register, login, email ver
 - OAuth2 social login (Google, GitHub) — backend doesn't support it yet, would need backend changes
 - PWA support — could add service worker and manifest later for mobile experience
 - Real dashboard content (stats, charts, recent activity) — needs data from Phases 4-6 first
+- NextAuth.js / Auth.js — originally considered but Auth.js v5 never left beta, absorbed by Better Auth Sep 2025; replaced by Better Auth with full DB setup (own tables in PostgreSQL)
 
 </deferred>
 
@@ -126,3 +135,4 @@ A working Next.js frontend with authentication pages (register, login, email ver
 
 *Phase: 07-frontend-shell-auth-ui*
 *Context gathered: 2026-03-20*
+*Updated: 2026-03-20 — switched from Better Auth proxy mode to full Better Auth with own database tables and Better Auth UI pre-built components*
