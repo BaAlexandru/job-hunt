@@ -44,7 +44,7 @@ Plans:
 **Depends on**: Phase 1
 **Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04
 **Success Criteria** (what must be TRUE):
-  1. User can register with email and password and receive a JWT token
+  1. User can register with email and password, verify their email, and receive a JWT token on login
   2. User can log in and the JWT persists across requests (validated via Swagger/Postman)
   3. User can log out and the token is invalidated
   4. User can request a password reset and complete the reset flow via email link

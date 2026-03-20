@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Phase 2 context gathered
-last_updated: "2026-03-19T23:45:32.419Z"
-last_activity: 2026-03-20 -- Completed 01-02 developer experience tooling
+status: in-progress
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-03-20T00:28:47Z"
+last_activity: 2026-03-20 -- Completed 02-01 auth data layer
 progress:
   total_phases: 8
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
-  percent: 100
+  total_plans: 5
+  completed_plans: 3
+  percent: 60
 ---
 
 # Project State
@@ -21,33 +21,34 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Track jobs you've applied to with their status, documents, and timeline so nothing falls through the cracks during a job search.
-**Current focus:** Phase 1: Foundation & Infrastructure
+**Current focus:** Phase 2: Authentication
 
 ## Current Position
 
-Phase: 1 of 8 (Foundation & Infrastructure) -- COMPLETE
-Plan: 2 of 2 in current phase
-Status: Phase Complete
-Last activity: 2026-03-20 -- Completed 01-02 developer experience tooling
+Phase: 2 of 8 (Authentication) -- IN PROGRESS
+Plan: 1 of 3 in current phase (02-01 complete)
+Status: Executing
+Last activity: 2026-03-20 -- Completed 02-01 auth data layer
 
-Progress: [██████████] 100%
+Progress: [██████░░░░] 60%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 7 min
-- Total execution time: 0.2 hours
+- Total plans completed: 3
+- Average duration: 6 min
+- Total execution time: 0.3 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation-infrastructure | 2 | 13 min | 7 min |
+| 02-authentication | 1 | 3 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (11 min), 01-02 (2 min)
-- Trend: accelerating
+- Last 5 plans: 01-01 (11 min), 01-02 (2 min), 02-01 (3 min)
+- Trend: fast
 
 *Updated after each plan completion*
 
@@ -66,11 +67,14 @@ Recent decisions affecting current work:
 - [Phase 01]: CLAUDE.md content verified against actual build.gradle.kts and application.yml from Phase 01-01
 - [Audit]: No API versioning — flat `/api/` prefix for all endpoints. Monorepo means frontend/backend evolve in lockstep; add versioning only if needed later
 - [Audit]: Spring Actuator added — /actuator/health (DB, Flyway, disk), /actuator/info, /actuator/flyway exposed. Custom HealthController removed. Secure actuator endpoints when Spring Security is added in Phase 2
+- [Phase 02]: Used jjwt-gson instead of jjwt-jackson to avoid Jackson 2/3 classpath conflict with Spring Boot 4
+- [Phase 02]: JWT config as custom properties (jwt.secret, jwt.access-expiration-ms) not under spring namespace
+- [Phase 02]: Redis auto-configured via Docker Compose integration, no explicit host/port properties
 
 ### Pending Todos
 
 - RESOLVED: No API versioning — flat `/api/` prefix. ARCHITECTURE.md examples updated.
-- Add MockK, SpringMockK, and Testcontainers to backend dependencies when Phase 2 planning starts (STACK.md recommends them; Phase 1 doesn't need them yet)
+- RESOLVED: MockK and SpringMockK added in 02-01. Testcontainers deferred -- Phase 2 tests use Docker Compose.
 - RESOLVED: Interview Management added to FEATURES.md (table stakes + dependency graph) and ARCHITECTURE.md (component table, package structure, build order)
 
 ### Blockers/Concerns
@@ -80,6 +84,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-19T23:45:32.416Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-authentication/02-CONTEXT.md
+Last session: 2026-03-20T00:28:47Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: .planning/phases/02-authentication/02-02-PLAN.md
