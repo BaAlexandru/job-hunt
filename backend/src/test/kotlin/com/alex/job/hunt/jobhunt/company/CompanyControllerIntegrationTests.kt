@@ -3,6 +3,8 @@ package com.alex.job.hunt.jobhunt.company
 import com.alex.job.hunt.jobhunt.TestHelper
 import com.alex.job.hunt.jobhunt.dto.CreateCompanyRequest
 import com.alex.job.hunt.jobhunt.dto.UpdateCompanyRequest
+import com.alex.job.hunt.jobhunt.repository.ApplicationNoteRepository
+import com.alex.job.hunt.jobhunt.repository.ApplicationRepository
 import com.alex.job.hunt.jobhunt.repository.CompanyRepository
 import com.alex.job.hunt.jobhunt.repository.EmailVerificationTokenRepository
 import com.alex.job.hunt.jobhunt.repository.JobRepository
@@ -36,6 +38,12 @@ class CompanyControllerIntegrationTests {
     lateinit var jsonMapper: JsonMapper
 
     @Autowired
+    lateinit var applicationNoteRepository: ApplicationNoteRepository
+
+    @Autowired
+    lateinit var applicationRepository: ApplicationRepository
+
+    @Autowired
     lateinit var companyRepository: CompanyRepository
 
     @Autowired
@@ -55,6 +63,8 @@ class CompanyControllerIntegrationTests {
 
     @BeforeEach
     fun setUp() {
+        applicationNoteRepository.deleteAll()
+        applicationRepository.deleteAll()
         jobRepository.deleteAll()
         companyRepository.deleteAll()
         tokenBlocklistRepository.deleteAll()
