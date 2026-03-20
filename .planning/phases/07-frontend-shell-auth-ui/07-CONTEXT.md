@@ -6,7 +6,7 @@
 <domain>
 ## Phase Boundary
 
-A working Next.js frontend with authentication pages (register, login, email verification, password reset, logout), an API client layer that handles JWT tokens automatically, and a responsive layout shell with sidebar navigation. All nav links present with placeholder pages for features built in later phases. No CRUD feature pages — those are Phase 8.
+A working Next.js frontend with authentication pages (register, login, email verification, password reset, logout) via Better Auth UI pre-built components, an API client layer for backend calls, and a responsive layout shell with sidebar navigation. Auth state managed by Better Auth session cookies. All nav links present with placeholder pages for features built in later phases. No CRUD feature pages — those are Phase 8.
 
 </domain>
 
