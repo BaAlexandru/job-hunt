@@ -1,0 +1,23 @@
+import { NextRequest, NextResponse } from "next/server"
+import { getSessionCookie } from "better-auth/cookies"
+
+const publicPaths = ["/", "/auth"]
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  if (publicPaths.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
+    return NextResponse.next()
+  }
+
+  const sessionCookie = getSessionCookie(request)
+  if (!sessionCookie) {
+    return NextResponse.redirect(new URL("/auth/sign-in", request.url))
+  }
+
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|api|.*\.png$).*)"],
+}
