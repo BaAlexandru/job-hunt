@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
+stopped_at: Completed 03-03-PLAN.md (Phase 03 complete)
+last_updated: "2026-03-20T02:46:36.526Z"
+last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
+progress:
+  total_phases: 9
+  completed_phases: 3
+  total_plans: 8
+  completed_plans: 8
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: completed
 stopped_at: Completed 03-02-PLAN.md
 last_updated: "2026-03-20T02:39:28.050Z"
 last_activity: 2026-03-20 -- Completed 03-02 Company CRUD (entity, repository, service, controller, tests)
 progress:
-  total_phases: 8
+  [██████████] 100%
   completed_phases: 2
   total_plans: 8
   completed_plans: 7
@@ -52,7 +68,7 @@ stopped_at: Completed 02-03-PLAN.md (Phase 02 complete)
 last_updated: "2026-03-20T01:08:04.959Z"
 last_activity: 2026-03-20 -- Completed 02-03 auth verification, reset, and integration tests
 progress:
-  total_phases: 8
+  total_phases: 9
   completed_phases: 2
   total_plans: 5
   completed_plans: 5
@@ -98,6 +114,7 @@ Progress: [█████████░] 88%
 *Updated after each plan completion*
 | Phase 03 P01 | 3 | 2 tasks | 10 files |
 | Phase 03 P02 | 6 | 2 tasks | 7 files |
+| Phase 03 P03 | 4 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -125,6 +142,12 @@ Recent decisions affecting current work:
 - [Phase 02]: Spring Boot 4 AutoConfigureMockMvc moved to spring-boot-webmvc-test module
 - [Phase 03]: Replaced AuthExceptionHandler with GlobalExceptionHandler for unified error handling
 - [Phase 03]: CAST(:name AS string) in JPQL to fix PostgreSQL lower(bytea) error with null parameters
+- [Phase 03]: Plain UUID for companyId (no @ManyToOne) to keep entity simple and avoid lazy-loading issues
+- [Phase 03]: Batch company name resolution in list queries via findAllByIdInAndUserId for N+1 prevention
+
+### Roadmap Evolution
+
+- Phase 6.1 inserted after Phase 6: Visibility & Sharing (INSERTED) — simple visibility enum (PRIVATE/PUBLIC/SHARED) + resource_shares junction table. NOT using Spring ACL or PostgreSQL RLS. Applies to all domain entities. Frontend phases (7, 8) can build visibility controls from day one.
 
 ### Pending Todos
 
@@ -139,6 +162,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-20T02:39:28.047Z
-Stopped at: Completed 03-02-PLAN.md
+Last session: 2026-03-20T02:46:36.523Z
+Stopped at: Completed 03-03-PLAN.md (Phase 03 complete)
 Resume file: None
