@@ -24,7 +24,7 @@ interface CompanyRepository : JpaRepository<CompanyEntity, UUID> {
         SELECT c FROM CompanyEntity c
         WHERE c.userId = :userId
         AND (:includeArchived = true OR c.archived = false)
-        AND (:name IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%')))
+        AND (:name IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%')))
         """
     )
     fun findFiltered(
