@@ -193,7 +193,6 @@ class ApplicationNoteControllerIntegrationTests {
         ).andReturn()
         val dateBefore = jsonMapper.readTree(before.response.contentAsString).get("lastActivityDate").textValue()
 
-        Thread.sleep(50)
         addNote(token, appId, "A new note")
 
         val after = mockMvc.perform(

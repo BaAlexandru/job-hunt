@@ -304,8 +304,6 @@ class ApplicationControllerIntegrationTests {
         ).andReturn()
         val dateBefore = jsonMapper.readTree(before.response.contentAsString).get("lastActivityDate").textValue()
 
-        Thread.sleep(50)
-
         updateStatus(token, appId, "APPLIED")
 
         val after = mockMvc.perform(
