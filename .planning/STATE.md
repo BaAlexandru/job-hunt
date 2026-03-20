@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in-progress
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-03-20T00:28:47Z"
-last_activity: 2026-03-20 -- Completed 02-01 auth data layer
+status: executing
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-03-20T00:36:00Z"
+last_activity: 2026-03-20 -- Completed 02-02 auth security layer
 progress:
   total_phases: 8
   completed_phases: 1
   total_plans: 5
-  completed_plans: 3
-  percent: 60
+  completed_plans: 4
+  percent: 80
 ---
 
 # Project State
@@ -26,28 +26,28 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 ## Current Position
 
 Phase: 2 of 8 (Authentication) -- IN PROGRESS
-Plan: 1 of 3 in current phase (02-01 complete)
+Plan: 2 of 3 in current phase (02-02 complete)
 Status: Executing
-Last activity: 2026-03-20 -- Completed 02-01 auth data layer
+Last activity: 2026-03-20 -- Completed 02-02 auth security layer
 
-Progress: [██████░░░░] 60%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 6 min
-- Total execution time: 0.3 hours
+- Total plans completed: 4
+- Average duration: 5 min
+- Total execution time: 0.4 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation-infrastructure | 2 | 13 min | 7 min |
-| 02-authentication | 1 | 3 min | 3 min |
+| 02-authentication | 2 | 6 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (11 min), 01-02 (2 min), 02-01 (3 min)
+- Last 5 plans: 01-01 (11 min), 01-02 (2 min), 02-01 (3 min), 02-02 (3 min)
 - Trend: fast
 
 *Updated after each plan completion*
@@ -70,6 +70,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Used jjwt-gson instead of jjwt-jackson to avoid Jackson 2/3 classpath conflict with Spring Boot 4
 - [Phase 02]: JWT config as custom properties (jwt.secret, jwt.access-expiration-ms) not under spring namespace
 - [Phase 02]: Redis auto-configured via Docker Compose integration, no explicit host/port properties
+- [Phase 02]: Used PasswordEncoderFactories.createDelegatingPasswordEncoder() for future-proof password hashing
+- [Phase 02]: Refresh cookie scoped to /api/auth/refresh path for security
+- [Phase 02]: Custom AuthenticationException to avoid name collision with Spring Security's AuthenticationException
 
 ### Pending Todos
 
@@ -84,6 +87,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-20T00:28:47Z
-Stopped at: Completed 02-01-PLAN.md
-Resume file: .planning/phases/02-authentication/02-02-PLAN.md
+Last session: 2026-03-20T00:36:00Z
+Stopped at: Completed 02-02-PLAN.md
+Resume file: .planning/phases/02-authentication/02-03-PLAN.md
