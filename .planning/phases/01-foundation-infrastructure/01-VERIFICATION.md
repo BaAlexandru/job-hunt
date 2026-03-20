@@ -26,7 +26,7 @@ Verified across both plans (01-01 and 01-02). Must-haves drawn from plan frontma
 | 1  | Running `./gradlew :backend:bootRun` starts Spring Boot and auto-starts PostgreSQL via Docker Compose | VERIFIED | `spring-boot-docker-compose` in `testAndDevelopmentOnly`; `spring.docker.compose.file: ../compose.yaml` and `skip.in-tests: false` in `application.yml`; compose.yaml has postgres:17 service |
 | 2  | Monorepo has /backend, /frontend, /infra directories with Spring Boot app in /backend | VERIFIED | `settings.gradle.kts` contains `include(":backend")`; `frontend/.gitkeep` and `infra/docker/.gitkeep` confirmed present; old `src/` deleted |
 | 3  | Flyway executes V1__phase01_baseline.sql on startup and pgcrypto extension is installed | VERIFIED | `V1__phase01_baseline.sql` exists with `CREATE EXTENSION IF NOT EXISTS "pgcrypto"`; `application.yml` has `flyway.enabled: true` and `locations: classpath:db/migration`; `ddl-auto: validate` confirms Flyway owns schema |
-| 4  | GET /api/health returns JSON {status: UP} | VERIFIED | `HealthController.kt` has `@GetMapping("/api/health")` returning `mapOf("status" to "UP")`; `@RestController` present |
+| 4  | Health endpoint available | VERIFIED | ~~Custom `HealthController.kt` at `/api/health`~~ **Post-phase update:** Replaced by Spring Boot Actuator at `/actuator/health` with DB, Flyway, and disk space indicators. Custom HealthController deleted. |
 | 5  | `./gradlew :backend:test` passes with application context loading | VERIFIED | `JobHuntApplicationTests.kt` has `@SpringBootTest` with `contextLoads()` test; commits 940ad36 and ac4e8c8 document BUILD SUCCESSFUL |
 | 6  | CLAUDE.md exists at project root with monorepo-wide guidance | VERIFIED | `CLAUDE.md` contains `./gradlew :backend:bootRun` and `backend/CLAUDE.md` reference |
 | 7  | CLAUDE.md exists in /backend with Spring Boot + Kotlin conventions | VERIFIED | `backend/CLAUDE.md` contains `Spring Boot 4.0.4`, `Kotlin 2.2.21`, `spring-boot-starter-webmvc`, `gen_random_uuid()` |
@@ -48,7 +48,7 @@ Verified across both plans (01-01 and 01-02). Must-haves drawn from plan frontma
 | `backend/src/main/resources/application.yml` | Spring Boot config with Flyway and JPA | VERIFIED | Contains `ddl-auto: validate`, `open-in-view: false`, `flyway.enabled: true`, `docker.compose.file: ../compose.yaml`, `skip.in-tests: false` |
 | `backend/src/main/resources/db/migration/V1__phase01_baseline.sql` | Baseline Flyway migration enabling pgcrypto | VERIFIED | Contains `CREATE EXTENSION IF NOT EXISTS "pgcrypto"` |
 | `compose.yaml` | PostgreSQL 17 container with fixed port and named volume | VERIFIED | `image: 'postgres:17'`, `POSTGRES_DB: jobhunt`, `5432:5432`, `pgdata:/var/lib/postgresql/data`, top-level `volumes: pgdata:` |
-| `backend/src/main/kotlin/.../HealthController.kt` | Health check endpoint at /api/health | VERIFIED | `@GetMapping("/api/health")` returning `mapOf("status" to "UP")` |
+| ~~`backend/src/main/kotlin/.../HealthController.kt`~~ | ~~Health check endpoint~~ | **SUPERSEDED** | Deleted post-phase. Replaced by `spring-boot-starter-actuator` providing `/actuator/health` with DB, Flyway, and disk health indicators |
 | `backend/src/main/kotlin/.../JobHuntApplication.kt` | Spring Boot entry point | VERIFIED | `@SpringBootApplication` with `runApplication<JobHuntApplication>()` |
 | `backend/src/test/kotlin/.../JobHuntApplicationTests.kt` | Context load test | VERIFIED | `@SpringBootTest` with `contextLoads()` |
 | `CLAUDE.md` | Root-level Claude instructions | VERIFIED | Contains `backend`, `./gradlew :backend:bootRun`, module references |
@@ -133,7 +133,7 @@ Two items require a running environment to fully confirm:
 #### 1. Spring Boot boot-run with Docker Compose
 
 **Test:** With Docker running, execute `./gradlew :backend:bootRun` from the project root.
-**Expected:** PostgreSQL container starts automatically, Flyway runs V1 migration, Spring Boot starts on port 8080, `GET http://localhost:8080/api/health` returns `{"status":"UP"}`.
+**Expected:** PostgreSQL container starts automatically, Flyway runs V1 migration, Spring Boot starts on port 8080, `GET http://localhost:8080/actuator/health` returns `{"status":"UP","components":{"db":...,"diskSpace":...,"flyway":...}}`.
 **Why human:** Cannot verify Docker daemon state or actual network connectivity programmatically in this context.
 
 #### 2. pgcrypto extension installed in live PostgreSQL
@@ -154,5 +154,22 @@ The two human verification items above are confidence checks on runtime behavior
 
 ---
 
+## Post-Phase Changes
+
+Changes made after Phase 1 completion during audit review (2026-03-20):
+
+| Change | Rationale | Impact |
+|--------|-----------|--------|
+| Added `spring-boot-starter-actuator` to backend/build.gradle.kts | User requested actuator for production-ready health monitoring | /actuator/health now shows DB, Flyway, disk space status |
+| Deleted `HealthController.kt` | Replaced by actuator's richer `/actuator/health` endpoint | No custom health controller needed |
+| Added `management` config to application.yml | Expose health, info, flyway actuator endpoints with full details | Endpoints visible at /actuator/* |
+| Updated CLAUDE.md, backend/CLAUDE.md, project-conventions.md | Document actuator endpoints and conventions | All docs current |
+| Fixed `developmentOnly` → `testAndDevelopmentOnly` for docker-compose | Pre-execution plan fix: tests need DB access via docker-compose | Tests pass with DB connectivity |
+
+All changes verified: `./gradlew :backend:test` BUILD SUCCESSFUL.
+
+---
+
 _Verified: 2026-03-20_
-_Verifier: Claude (gsd-verifier)_
+_Re-verified after post-phase changes: 2026-03-20_
+_Verifier: Claude (gsd-verifier), Claude Opus 4.6 (audit)_
