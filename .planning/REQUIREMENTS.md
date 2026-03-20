@@ -16,13 +16,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Company Management
 
-- [ ] **COMP-01**: User can add a company with name, website, location, and notes
+- [x] **COMP-01**: User can add a company with name, website, location, and notes
 - [ ] **COMP-02**: User can edit and delete companies
 - [ ] **COMP-03**: User can view all companies in a list
 
 ### Job Posting Management
 
-- [ ] **JOBS-01**: User can add a job posting with title, description, URL, salary range, location, and job type
+- [x] **JOBS-01**: User can add a job posting with title, description, URL, salary range, location, and job type
 - [ ] **JOBS-02**: User can link a job posting to a company
 - [ ] **JOBS-03**: User can edit and delete job postings
 - [ ] **JOBS-04**: User can store the full job description text
@@ -120,10 +120,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-02 | Phase 2 | Complete |
 | AUTH-03 | Phase 2 | Complete |
 | AUTH-04 | Phase 2 | Complete |
-| COMP-01 | Phase 3 | Pending |
+| COMP-01 | Phase 3 | Complete |
 | COMP-02 | Phase 3 | Pending |
 | COMP-03 | Phase 3 | Pending |
-| JOBS-01 | Phase 3 | Pending |
+| JOBS-01 | Phase 3 | Complete |
 | JOBS-02 | Phase 3 | Pending |
 | JOBS-03 | Phase 3 | Pending |
 | JOBS-04 | Phase 3 | Pending |
