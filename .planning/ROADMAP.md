@@ -49,11 +49,12 @@ Plans:
   3. User can log out and the token is invalidated
   4. User can request a password reset and complete the reset flow via email link
   5. CORS is configured correctly with JWT filter chain ordering (OPTIONS requests pass without auth)
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
+- [ ] 02-01-PLAN.md -- Dependencies, Redis Docker Compose, Flyway migrations, JPA entities, repositories, DTOs
+- [ ] 02-02-PLAN.md -- Spring Security config, JWT provider/filter, auth endpoints (register, login, refresh, logout)
+- [ ] 02-03-PLAN.md -- Email verification, password reset, rate limiting, integration tests
 
 ### Phase 3: Company & Job Domain
 **Goal**: Users can manage companies and job postings through the API, with jobs linked to companies
@@ -157,7 +158,7 @@ Note: Phase 6 and Phase 7 can run in parallel (both depend on earlier phases, no
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Infrastructure | 0/2 | Planning complete | - |
-| 2. Authentication | 0/0 | Not started | - |
+| 2. Authentication | 0/3 | Planning complete | - |
 | 3. Company & Job Domain | 0/0 | Not started | - |
 | 4. Application Tracking | 0/0 | Not started | - |
 | 5. Interview Management | 0/0 | Not started | - |
