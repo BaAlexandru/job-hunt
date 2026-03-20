@@ -39,10 +39,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Interview Management
 
-- [ ] **INTV-01**: User can schedule an interview with date, time, type (phone/video/onsite), and location or meeting link
-- [ ] **INTV-02**: User can track multiple interview rounds per application (screening, technical, behavioral, final)
-- [ ] **INTV-03**: User can add notes and conversation details per interview stage
-- [ ] **INTV-04**: User can view a timeline of all interactions and interview stages per application
+- [x] **INTV-01**: User can schedule an interview with date, time, type (phone/video/onsite), and location or meeting link
+- [x] **INTV-02**: User can track multiple interview rounds per application (screening, technical, behavioral, final)
+- [x] **INTV-03**: User can add notes and conversation details per interview stage
+- [x] **INTV-04**: User can view a timeline of all interactions and interview stages per application
 
 ### Document Management
 
@@ -142,10 +142,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | APPL-05 | Phase 4 | Complete |
 | APPL-06 | Phase 4 | Complete |
 | APPL-07 | Phase 4 | Complete |
-| INTV-01 | Phase 5 | Pending |
-| INTV-02 | Phase 5 | Pending |
-| INTV-03 | Phase 5 | Pending |
-| INTV-04 | Phase 5 | Pending |
+| INTV-01 | Phase 5 | Complete |
+| INTV-02 | Phase 5 | Complete |
+| INTV-03 | Phase 5 | Complete |
+| INTV-04 | Phase 5 | Complete |
 | DOCS-01 | Phase 6 | Pending |
 | DOCS-02 | Phase 6 | Pending |
 | DOCS-03 | Phase 6 | Pending |
