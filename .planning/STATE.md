@@ -145,7 +145,7 @@ Recent decisions affecting current work:
 
 ### Roadmap Evolution
 
-- Phase 6.1 inserted after Phase 6: Visibility & Sharing (INSERTED)
+- Phase 6.1 inserted after Phase 6: Visibility & Sharing (INSERTED) — deferred to v2 on 2026-03-21 (not needed for current milestone)
 
 ### Pending Todos
 
