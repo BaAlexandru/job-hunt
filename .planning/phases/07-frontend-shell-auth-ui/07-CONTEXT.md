@@ -14,9 +14,9 @@ A working Next.js frontend with authentication pages (register, login, email ver
 ## Implementation Decisions
 
 ### Authentication approach
-- NextAuth.js (Auth.js) as the auth framework
-- Wrap existing backend JWT API as a "credentials" provider
-- Access token managed by NextAuth session; refresh token via HTTP-only cookie from backend
+- Better Auth as the auth framework (replaces NextAuth.js — Auth.js v5 never left beta, absorbed by Better Auth Sep 2025)
+- Wrap existing backend JWT API via Better Auth's custom provider/plugin system
+- Access token managed client-side; refresh token via HTTP-only cookie from backend
 - Full auth UI pages: login, register, email verification, password reset request, password reset confirm
 - Unauthenticated users see a simple landing page with login/register buttons
 - After login, user lands on a Dashboard / Home page (placeholder content in Phase 7)
@@ -45,7 +45,7 @@ A working Next.js frontend with authentication pages (register, login, email ver
 
 ### Claude's Discretion
 - Next.js App Router vs Pages Router (App Router recommended for new projects)
-- Exact NextAuth.js configuration and session strategy
+- Exact Better Auth configuration and session strategy
 - File/folder structure within frontend/
 - Tailwind theme customization details
 - TanStack Query default options (staleTime, retry)
@@ -119,6 +119,7 @@ A working Next.js frontend with authentication pages (register, login, email ver
 - OAuth2 social login (Google, GitHub) — backend doesn't support it yet, would need backend changes
 - PWA support — could add service worker and manifest later for mobile experience
 - Real dashboard content (stats, charts, recent activity) — needs data from Phases 4-6 first
+- NextAuth.js / Auth.js — originally considered but Auth.js v5 never left beta, absorbed by Better Auth Sep 2025
 
 </deferred>
 
@@ -126,3 +127,4 @@ A working Next.js frontend with authentication pages (register, login, email ver
 
 *Phase: 07-frontend-shell-auth-ui*
 *Context gathered: 2026-03-20*
+*Updated: 2026-03-20 — switched auth framework from NextAuth.js to Better Auth per user decision*
