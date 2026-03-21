@@ -36,10 +36,10 @@ Declared values (must be multiples of 4):
 | md | 16px | Default element spacing, form field gaps, card padding |
 | lg | 24px | Section padding, filter bar padding, panel inner margins |
 | xl | 32px | Layout gaps between major sections |
-| 2xl | 48px | Page-level vertical padding, empty state spacing |
+| 2xl | 48px | Page-level vertical padding, empty state spacing, touch target minimum |
 | 3xl | 64px | Not used in this phase |
 
-Exceptions: Kanban column width fixed at 280px. Slide-over panel width at 480px (sm:max-w-lg). Touch targets minimum 44px for mobile drag handles and action buttons.
+Exceptions: Kanban column width fixed at 280px. Slide-over panel width at 480px (sm:max-w-lg). Touch targets minimum 48px for mobile drag handles and action buttons (exceeds WCAG 2.5.5 minimum of 44px).
 
 ---
 
@@ -92,6 +92,12 @@ Status badges use semantic coloring via Tailwind utility classes. These are the 
 | ACCEPTED | `bg-green-100 text-green-800` | dark variant | Positive outcome |
 | REJECTED | `bg-red-100 text-red-800` | dark variant | Negative outcome |
 | WITHDRAWN | `bg-gray-100 text-gray-800` | dark variant | Neutral, inactive |
+
+---
+
+## Visual Hierarchy
+
+**Primary focal point:** The kanban board column group is the primary visual anchor on the Applications page. In Board view, the 8 status columns occupy the full content width and draw the eye through their card density and status badge color coding. In List view, the data table assumes the focal role.
 
 ---
 
@@ -176,9 +182,17 @@ Status badges use semantic coloring via Tailwind utility classes. These are the 
 
 | Element | Copy |
 |---------|------|
-| Form save action (create) | "Create" |
-| Form save action (edit) | "Save Changes" |
-| Form cancel action | "Cancel" |
+| Form create action (application) | "Create Application" |
+| Form create action (company) | "Add Company" |
+| Form create action (job) | "Add Job" |
+| Form create action (interview) | "Add Interview" |
+| Form create action (document) | "Upload Document" |
+| Form edit action (application) | "Update Application" |
+| Form edit action (company) | "Update Company" |
+| Form edit action (job) | "Update Job" |
+| Form edit action (interview) | "Update Interview" |
+| Form cancel action (create dialog) | "Close" |
+| Form cancel action (edit dialog) | "Discard Changes" |
 | Generic error fallback | "Something went wrong. Please try again." |
 | Loading text (not shown, skeleton used) | N/A -- use Skeleton components, no text |
 
@@ -232,7 +246,8 @@ Status badges use semantic coloring via Tailwind utility classes. These are the 
 | Validation | Inline field-level errors via React Hook Form + Zod; shown on blur and submit |
 | Submit (create) | Mutation via TanStack Query; toast on success; dialog closes; list refreshes |
 | Submit (edit) | Same pattern; form pre-populated with existing data |
-| Cancel | Dialog closes; no save; form state discarded |
+| Dismiss (create) | "Close" button; dialog closes; form state discarded |
+| Dismiss (edit) | "Discard Changes" button; dialog closes; no save |
 
 ### Document Upload
 
@@ -261,20 +276,27 @@ Status badges use semantic coloring via Tailwind utility classes. These are the 
 | Registry | Blocks Used | Safety Gate |
 |----------|-------------|-------------|
 | shadcn official | dialog, badge, table, popover, calendar, textarea, skeleton, scroll-area, command | not required |
-| @diceui | kanban | view required -- see below |
+| @diceui | kanban | view passed -- no flags -- 2026-03-21 |
 
 ### Dice UI Kanban Vetting
 
-The `@diceui/kanban` block is installed via the shadcn CLI (`npx shadcn@latest add @diceui/kanban`). This is a third-party registry component.
+The `@diceui/kanban` block was vetted via `npx shadcn@latest view @diceui/kanban` on 2026-03-21.
 
-**Vetting procedure:** Before installation, run `npx shadcn@latest view @diceui/kanban` and scan for:
-- `fetch(`, `XMLHttpRequest`, `navigator.sendBeacon` -- network access
-- `process.env` -- environment variable access
-- `eval(`, `Function(`, `new Function` -- dynamic code execution
-- Dynamic imports from external URLs
-- Obfuscated variable names
+**Scan results:**
+- `fetch(` -- not found
+- `XMLHttpRequest` -- not found
+- `navigator.sendBeacon` -- not found
+- `process.env` -- not found
+- `eval(` -- not found
+- `Function(` / `new Function` -- not found
+- Dynamic imports from external URLs -- not found
+- Obfuscated variable names -- not found
 
-**Status:** Pending -- executor must run the view command and record the result before installing. If any flags are found, the executor must flag for developer review before proceeding.
+**Dependencies:** `@dnd-kit/core`, `@dnd-kit/modifiers`, `@dnd-kit/sortable`, `@dnd-kit/utilities`, `radix-ui` -- all expected and already planned for installation.
+
+**Files:** Single file `ui/kanban.tsx` containing composable React components wrapping @dnd-kit primitives with Radix Slot and standard React patterns. No network access, no environment variable reads, no dynamic code execution.
+
+**Verdict:** SAFE -- approved for inclusion.
 
 ---
 
