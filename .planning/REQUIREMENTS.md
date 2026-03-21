@@ -31,8 +31,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **APPL-01**: User can create an application linked to a job posting
 - [x] **APPL-02**: User can set and change application status (Interested, Applied, Phone Screen, Interview, Offer, Rejected, Accepted, Withdrawn)
-- [ ] **APPL-03**: User can view applications as a kanban board with drag-and-drop between status columns
-- [ ] **APPL-04**: User can view applications as a sortable, filterable table/list
+- [x] **APPL-03**: User can view applications as a kanban board with drag-and-drop between status columns
+- [x] **APPL-04**: User can view applications as a sortable, filterable table/list
 - [x] **APPL-05**: User can track application dates (applied date, last activity, next action date)
 - [x] **APPL-06**: User can add free-text notes to each application
 - [x] **APPL-07**: User can search applications by text and filter by status, company, and date range
@@ -136,8 +136,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | JOBS-04 | Phase 3 | Complete |
 | APPL-01 | Phase 4 | Complete |
 | APPL-02 | Phase 4 | Complete |
-| APPL-03 | Phase 8 | Pending |
-| APPL-04 | Phase 8 | Pending |
+| APPL-03 | Phase 8 | Complete |
+| APPL-04 | Phase 8 | Complete |
 | APPL-05 | Phase 4 | Complete |
 | APPL-06 | Phase 4 | Complete |
 | APPL-07 | Phase 4 | Complete |

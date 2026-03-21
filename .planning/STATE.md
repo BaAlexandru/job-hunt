@@ -3,60 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 8 context gathered
-last_updated: "2026-03-20T23:58:53.460Z"
-last_activity: 2026-03-20 -- Completed 06-02 document service, controller, and integration tests
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-03-21T01:34:39Z"
+last_activity: 2026-03-21 -- Completed 08-01 foundation layer (types, hooks, shared components, auth bridge)
 progress:
   total_phases: 8
   completed_phases: 7
-  total_plans: 17
-  completed_plans: 17
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: executing
-stopped_at: Phase 6.1 context gathered
-last_updated: "2026-03-20T23:09:36.435Z"
-last_activity: 2026-03-20 -- Completed 06-02 document service, controller, and integration tests
-progress:
-  total_phases: 9
-  completed_phases: 7
-  total_plans: 17
-  completed_plans: 17
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: executing
-stopped_at: Completed 06-02-PLAN.md (Phase 6 complete)
-last_updated: "2026-03-20T20:58:16.047Z"
-last_activity: 2026-03-20 -- Completed 06-02 document service, controller, and integration tests
-progress:
-  total_phases: 9
-  completed_phases: 7
-  total_plans: 17
-  completed_plans: 17
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: executing
-stopped_at: Completed 06-01-PLAN.md
-last_updated: "2026-03-20T20:32:35.516Z"
-last_activity: 2026-03-20 -- Completed 06-01 document management foundation (infra, schema, storage)
-progress:
-  total_phases: 9
-  completed_phases: 6
-  total_plans: 17
-  completed_plans: 17
-  percent: 100
+  total_plans: 21
+  completed_plans: 18
 ---
 
 # Project State
@@ -66,16 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Track jobs you've applied to with their status, documents, and timeline so nothing falls through the cracks during a job search.
-**Current focus:** Phase 6: Document Management (next up)
+**Current focus:** Phase 8: Frontend Core Views
 
 ## Current Position
 
-Phase: 6 of 9 (Document Management)
-Plan: 2 of 2 in current phase
-Status: Phase Complete
-Last activity: 2026-03-20 -- Completed 06-02 document service, controller, and integration tests
+Phase: 8 of 8 (Frontend Core Views)
+Plan: 1 of 4 in current phase
+Status: Executing
+Last activity: 2026-03-21 -- Completed 08-01 foundation layer (types, hooks, shared components, auth bridge)
 
-Progress: [██████████] 17/17 plans complete
+Progress: [████████░░] 18/21 plans complete
 
 ## Performance Metrics
 
@@ -111,6 +65,7 @@ Progress: [██████████] 17/17 plans complete
 | Phase 05 P02 | 8 | 2 tasks | 10 files |
 | Phase 06 P01 | 4 | 2 tasks | 20 files |
 | Phase 06 P02 | 13 | 2 tasks | 6 files |
+| Phase 08 P01 | 10 | 3 tasks | 26 files |
 
 ## Accumulated Context
 
@@ -157,6 +112,9 @@ Recent decisions affecting current work:
 - [Phase 06]: StorageService interface abstracts S3 for testability and future provider swap
 - [Phase 06]: Tika detect(bytes, filename) for accurate OOXML MIME detection
 - [Phase 06]: CommandLineRunner instead of PostConstruct for S3 bucket creation to avoid circular bean dependency
+- [Phase 08]: BetterAuthSessionFilter queries Better Auth tables via JdbcTemplate (not JPA entities)
+- [Phase 08]: Session filter before JWT filter -- cookie auth tried first, JWT as fallback
+- [Phase 08]: Companies hook returns PaginatedResponse matching actual backend Page API
 
 ### Roadmap Evolution
 
@@ -176,6 +134,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-20T23:58:53.456Z
-Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-frontend-core-views/08-CONTEXT.md
+Last session: 2026-03-21T01:34:39Z
+Stopped at: Completed 08-01-PLAN.md
+Resume file: .planning/phases/08-frontend-core-views/08-02-PLAN.md
