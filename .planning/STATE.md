@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 08-01-PLAN.md
-last_updated: "2026-03-21T01:34:39Z"
-last_activity: 2026-03-21 -- Completed 08-01 foundation layer (types, hooks, shared components, auth bridge)
+stopped_at: Completed 08-03-PLAN.md
+last_updated: "2026-03-21T06:47:37Z"
+last_activity: 2026-03-21 -- Completed 08-03 companies & jobs pages (card grid, data table, CRUD forms)
 progress:
   total_phases: 8
   completed_phases: 7
   total_plans: 21
-  completed_plans: 18
+  completed_plans: 20
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 ## Current Position
 
 Phase: 8 of 8 (Frontend Core Views)
-Plan: 1 of 4 in current phase
+Plan: 3 of 4 in current phase
 Status: Executing
-Last activity: 2026-03-21 -- Completed 08-01 foundation layer (types, hooks, shared components, auth bridge)
+Last activity: 2026-03-21 -- Completed 08-03 companies & jobs pages (card grid, data table, CRUD forms)
 
-Progress: [████████░░] 18/21 plans complete
+Progress: [█████████░] 20/21 plans complete
 
 ## Performance Metrics
 
@@ -66,6 +66,7 @@ Progress: [████████░░] 18/21 plans complete
 | Phase 06 P01 | 4 | 2 tasks | 20 files |
 | Phase 06 P02 | 13 | 2 tasks | 6 files |
 | Phase 08 P01 | 10 | 3 tasks | 26 files |
+| Phase 08 P03 | 8 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -115,6 +116,8 @@ Recent decisions affecting current work:
 - [Phase 08]: BetterAuthSessionFilter queries Better Auth tables via JdbcTemplate (not JPA entities)
 - [Phase 08]: Session filter before JWT filter -- cookie auth tried first, JWT as fallback
 - [Phase 08]: Companies hook returns PaginatedResponse matching actual backend Page API
+- [Phase 08]: Used standardSchemaResolver instead of zodResolver for Zod v4 compatibility with react-hook-form
+- [Phase 08]: Salary fields as strings in forms, converted to numbers on submit (z.coerce.number() incompatible with Standard Schema)
 
 ### Roadmap Evolution
 
@@ -134,6 +137,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-21T01:34:39Z
-Stopped at: Completed 08-01-PLAN.md
-Resume file: .planning/phases/08-frontend-core-views/08-02-PLAN.md
+Last session: 2026-03-21T06:47:37Z
+Stopped at: Completed 08-03-PLAN.md
+Resume file: .planning/phases/08-frontend-core-views/08-04-PLAN.md

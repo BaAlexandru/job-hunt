@@ -144,7 +144,7 @@ Plans:
   2. User can view applications as a sortable, filterable table/list
   3. User can manage companies, jobs, applications, interviews, and documents through the frontend UI
   4. All CRUD operations from phases 3-6 are accessible through frontend pages
-**Plans:** 4 plans
+**Plans:** 2/4 plans executed
 
 Plans:
 - [ ] 08-01-PLAN.md -- Install dependencies, shadcn/ui components, TypeScript types, TanStack Query hooks, shared components
@@ -166,7 +166,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 5. Interview Management | 2/2 | Complete | 2026-03-20 |
 | 6. Document Management | 2/2 | Complete | 2026-03-21 |
 | 7. Frontend Shell & Auth UI | 3/3 | Complete | 2026-03-20 |
-| 8. Frontend Core Views | 0/4 | Not started | - |
+| 8. Frontend Core Views | 2/4 | In Progress|  |
 
 ## Deferred to v2
 
