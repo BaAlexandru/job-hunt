@@ -1,7 +1,15 @@
 "use client"
 
 import { useMemo, useState, useCallback } from "react"
-import type { DragStartEvent, UniqueIdentifier } from "@dnd-kit/core"
+import {
+  useSensor,
+  useSensors,
+  MouseSensor,
+  TouchSensor,
+  KeyboardSensor,
+  type DragStartEvent,
+  type UniqueIdentifier,
+} from "@dnd-kit/core"
 import { toast } from "sonner"
 import {
   Kanban,
@@ -43,6 +51,17 @@ export function ApplicationBoard({
   const updateStatus = useUpdateApplicationStatus()
   const [draggingStatus, setDraggingStatus] = useState<ApplicationStatus | null>(
     null,
+  )
+
+  // Custom sensors with activation constraints so clicks pass through to card onClick
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: { distance: 5 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 200, tolerance: 5 },
+    }),
+    useSensor(KeyboardSensor),
   )
 
   // Group applications by status, ensuring all 8 columns always exist
@@ -158,6 +177,7 @@ export function ApplicationBoard({
             getItemValue={(item) => item.id}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
+            sensors={sensors}
             flatCursor
           >
             <KanbanBoard>
