@@ -118,9 +118,9 @@ class BetterAuthSessionFilter(
                 userDetails, null, userDetails.authorities
             )
             SecurityContextHolder.getContext().authentication = auth
-        } catch (_: Exception) {
-            // Session not found or DB error
-            // — let the filter chain continue unauthenticated
+        } catch (ex: Exception) {
+            log.warn("Better Auth session authentication failed: {}", ex.message, ex)
+            // Let the filter chain continue unauthenticated
         }
     }
 }
