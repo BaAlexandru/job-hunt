@@ -87,7 +87,7 @@ const JOB_TYPES = [
 ]
 
 const SALARY_TYPES = [
-  { value: "EXACT", label: "Exact" },
+  { value: "FIXED", label: "Fixed" },
   { value: "RANGE", label: "Range" },
   { value: "TEXT", label: "Text" },
 ]
@@ -406,11 +406,11 @@ export function JobForm({
             />
           </div>
 
-          {(salaryType === "EXACT" || salaryType === "RANGE") && (
+          {(salaryType === "FIXED" || salaryType === "RANGE") && (
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
                 <Label htmlFor="salaryMin">
-                  {salaryType === "EXACT" ? "Salary" : "Min"}
+                  {salaryType === "FIXED" ? "Salary" : "Min"}
                 </Label>
                 <Input
                   id="salaryMin"
@@ -444,7 +444,7 @@ export function JobForm({
             </div>
           )}
 
-          {(salaryType === "EXACT" || salaryType === "RANGE") && (
+          {(salaryType === "FIXED" || salaryType === "RANGE") && (
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
                 <Label htmlFor="currency">Currency</Label>
