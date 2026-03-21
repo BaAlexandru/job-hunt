@@ -265,10 +265,16 @@ No gaps remain. All 7 previously-identified gaps (GAP-09 through GAP-15) are con
 
 **Plan 08-11 (Status Dropdown + Deep Link):** `DropdownMenu modal={false}` removes the Radix viewport overlay that blocked all pointer events; `min-w-[180px]` and `collisionPadding={8}` ensure full status text is readable. Dashboard recent activity links updated to `/applications?applicationId=${app.id}`; `applications/page.tsx` wrapped in Suspense, reads param via `useSearchParams` in `useEffect`, auto-opens detail panel, cleans up URL on close via `router.replace`.
 
-The phase status remains `human_needed` because the goal — users interacting with polished frontend pages — requires human confirmation of visual polish and interactive behaviors. All automated evidence confirms the implementation is complete, correct, and wired.
+**Post-UAT fixes (after human testing of plans 08-09 through 08-11):**
+
+**Layout overflow containment (GAP-17):** The outer flex container and content column in `layout.tsx` lacked overflow containment. Wide content (kanban board's `min-w-max` = ~2000px) propagated its intrinsic minimum width up through flex items with default `min-width: auto`, blowing out the entire page width on mobile. Fixed by adding `overflow-hidden` to the outer container and `min-w-0` to the content column flex item. This resolved: Applications/Jobs pages appearing in "desktop mode" on mobile, topbar elements being pushed off-screen, hamburger menu unreachable, and dialogs opening outside the viewport.
+
+**Kanban touch scroll (GAP-18):** The `KanbanItem` and `KanbanColumn` components applied `touch-action: none` (via `touch-none` class) when `asHandle` was true, blocking ALL native touch gestures including scrolling. Since cards fill most of the board, users could only scroll by finding empty spaces between cards. Fixed by removing `touch-none` from both components in `kanban.tsx`, relying on the existing `TouchSensor` with `delay: 200, tolerance: 5` activation constraint to distinguish scroll (immediate swipe) from drag (200ms hold).
+
+**Human testing status:** User confirmed all pages behave correctly on mobile after these fixes. Phase 08 is complete.
 
 ---
 
-_Verified: 2026-03-21T20:30:00Z_
+_Verified: 2026-03-21T22:00:00Z_
 _Verifier: Claude (gsd-verifier)_
-_Re-verification: third pass, after gap closure plans 08-09, 08-10, 08-11_
+_Final pass: after human UAT confirmation of all fixes_
