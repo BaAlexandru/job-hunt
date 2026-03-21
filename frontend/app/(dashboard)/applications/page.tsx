@@ -76,7 +76,7 @@ export default function ApplicationsPage() {
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className="flex w-[280px] shrink-0 flex-col gap-2 rounded-lg bg-secondary p-2.5"
+                className="flex w-[240px] shrink-0 flex-col gap-2 rounded-lg bg-secondary p-2.5 sm:w-[280px]"
               >
                 <Skeleton className="h-6 w-24" />
                 <Skeleton className="h-20 w-full" />

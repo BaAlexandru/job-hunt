@@ -56,7 +56,7 @@ function MetricCard({
 }) {
   return (
     <Card>
-      <CardContent className="flex flex-col items-center justify-center py-6">
+      <CardContent className="flex flex-col items-center justify-center py-3 sm:py-6">
         {isLoading ? (
           <Skeleton className="mb-2 h-8 w-16" />
         ) : (
@@ -128,12 +128,12 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-8">
       {/* Page heading */}
       <h1 className="text-xl font-semibold">Dashboard</h1>
 
       {/* Top metric cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <MetricCard
           label="Total Applications"
           value={metrics.total}
@@ -159,8 +159,8 @@ export default function DashboardPage() {
       {/* Status breakdown */}
       {!isLoading && metrics.byStatus.length > 0 && (
         <section>
-          <CardHeader className="px-0">
-            <CardTitle>Status Breakdown</CardTitle>
+          <CardHeader className="px-0 pb-2 sm:pb-4">
+            <CardTitle className="text-base sm:text-lg">Status Breakdown</CardTitle>
           </CardHeader>
           <div className="space-y-2">
             {metrics.byStatus.map(({ status, label, count }) => (
@@ -182,15 +182,15 @@ export default function DashboardPage() {
       {/* Recent activity */}
       {!isLoading && metrics.recent.length > 0 && (
         <section>
-          <CardHeader className="px-0">
-            <CardTitle>Recent Activity</CardTitle>
+          <CardHeader className="px-0 pb-2 sm:pb-4">
+            <CardTitle className="text-base sm:text-lg">Recent Activity</CardTitle>
           </CardHeader>
           <div className="space-y-2">
             {metrics.recent.map((app) => (
               <Link
                 key={app.id}
                 href="/applications"
-                className="flex items-center justify-between rounded-md border px-3 py-2 transition-colors hover:bg-muted/50"
+                className="flex flex-col gap-1 rounded-md border px-3 py-2 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex items-center gap-3">
                   <div>

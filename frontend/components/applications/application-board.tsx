@@ -135,11 +135,11 @@ export function ApplicationBoard({
 
   if (isLoading) {
     return (
-      <div className="flex gap-4 overflow-x-auto p-4">
+      <div className="flex gap-3 overflow-x-auto p-2 sm:gap-4 sm:p-4">
         {APPLICATION_STATUSES.map((status) => (
           <div
             key={status}
-            className="flex w-[280px] shrink-0 flex-col gap-2 rounded-lg bg-secondary p-2.5"
+            className="flex w-[240px] shrink-0 flex-col gap-2 rounded-lg bg-secondary p-2.5 sm:w-[280px]"
           >
             <Skeleton className="h-6 w-24" />
             <Skeleton className="h-20 w-full" />
@@ -163,14 +163,14 @@ export function ApplicationBoard({
         />
         <label
           htmlFor="show-archived"
-          className="cursor-pointer text-sm text-muted-foreground"
+          className="cursor-pointer text-xs text-muted-foreground sm:text-sm"
         >
           Show archived
         </label>
       </div>
 
       <ScrollArea className="w-full">
-        <div className="min-w-max p-4 pt-0">
+        <div className="min-w-max p-2 pt-0 sm:p-4 sm:pt-0">
           <Kanban<ApplicationResponse>
             value={columns}
             onValueChange={handleValueChange}
@@ -190,7 +190,7 @@ export function ApplicationBoard({
                   <div
                     key={status}
                     className={cn(
-                      "flex w-[280px] shrink-0 flex-col transition-opacity",
+                      "flex w-[240px] shrink-0 flex-col transition-opacity sm:w-[280px]",
                       isDimmed && "opacity-40 pointer-events-none",
                     )}
                   >
