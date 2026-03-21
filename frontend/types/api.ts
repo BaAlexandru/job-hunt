@@ -230,15 +230,19 @@ export interface UpdateJobRequest {
 export interface InterviewResponse {
   id: string
   applicationId: string
+  roundNumber: number
   scheduledAt: string
+  durationMinutes: number | null
   interviewType: string
   stage: string
   stageLabel: string | null
+  outcome: string
+  result: string
   location: string | null
-  meetingLink: string | null
-  notes: string | null
+  interviewerNames: string | null
+  candidateFeedback: string | null
+  companyFeedback: string | null
   archived: boolean
-  archivedAt: string | null
   createdAt: string
   updatedAt: string
 }
@@ -249,19 +253,23 @@ export interface CreateInterviewRequest {
   interviewType: string
   stage: string
   stageLabel?: string
+  durationMinutes?: number
   location?: string
-  meetingLink?: string
-  notes?: string
+  interviewerNames?: string
 }
 
 export interface UpdateInterviewRequest {
-  scheduledAt: string
-  interviewType: string
-  stage: string
+  scheduledAt?: string
+  interviewType?: string
+  stage?: string
   stageLabel?: string
+  durationMinutes?: number
   location?: string
-  meetingLink?: string
-  notes?: string
+  interviewerNames?: string
+  outcome?: string
+  result?: string
+  candidateFeedback?: string
+  companyFeedback?: string
 }
 
 // ============================================================================

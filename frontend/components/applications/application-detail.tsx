@@ -11,7 +11,6 @@ import {
   LinkIcon,
   UnlinkIcon,
   MapPinIcon,
-  VideoIcon,
 } from "lucide-react"
 import {
   Sheet,
@@ -506,23 +505,9 @@ function InterviewsTab({ applicationId }: { applicationId: string }) {
               {interview.location}
             </div>
           )}
-          {interview.meetingLink && (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <VideoIcon className="size-3" />
-              <a
-                href={interview.meetingLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline"
-                onClick={(e) => e.stopPropagation()}
-              >
-                Meeting link
-              </a>
-            </div>
-          )}
-          {interview.notes && (
-            <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">
-              {interview.notes}
+          {interview.durationMinutes && (
+            <p className="text-xs text-muted-foreground">
+              {interview.durationMinutes} min
             </p>
           )}
         </div>
@@ -582,9 +567,8 @@ function InterviewFormDialog({
     interviewType: string
     stage: string
     stageLabel?: string
+    durationMinutes?: number
     location?: string
-    meetingLink?: string
-    notes?: string
   }) => void
   isPending: boolean
 }) {
@@ -592,9 +576,8 @@ function InterviewFormDialog({
   const [interviewType, setInterviewType] = useState("PHONE")
   const [stage, setStage] = useState("SCREENING")
   const [stageLabel, setStageLabel] = useState("")
+  const [durationMinutes, setDurationMinutes] = useState("60")
   const [location, setLocation] = useState("")
-  const [meetingLink, setMeetingLink] = useState("")
-  const [notes, setNotes] = useState("")
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -605,9 +588,8 @@ function InterviewFormDialog({
       interviewType,
       stage,
       stageLabel: stageLabel || undefined,
+      durationMinutes: durationMinutes ? parseInt(durationMinutes, 10) : undefined,
       location: location || undefined,
-      meetingLink: meetingLink || undefined,
-      notes: notes || undefined,
     })
   }
 
@@ -673,30 +655,22 @@ function InterviewFormDialog({
             />
           </div>
           <div className="flex flex-col gap-2">
+            <Label htmlFor="duration">Duration (minutes)</Label>
+            <Input
+              id="duration"
+              type="number"
+              value={durationMinutes}
+              onChange={(e) => setDurationMinutes(e.target.value)}
+              placeholder="60"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
             <Label htmlFor="location">Location</Label>
             <Input
               id="location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="Office address..."
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="meeting-link">Meeting Link</Label>
-            <Input
-              id="meeting-link"
-              value={meetingLink}
-              onChange={(e) => setMeetingLink(e.target.value)}
-              placeholder="https://zoom.us/j/..."
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="interview-notes">Notes</Label>
-            <Textarea
-              id="interview-notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Preparation notes..."
+              placeholder="Office address or meeting link..."
             />
           </div>
           <DialogFooter>

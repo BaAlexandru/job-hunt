@@ -292,7 +292,7 @@ export function useUnlinkDocument() {
       applicationId: string
     }) =>
       apiClient<void>(
-        `/documents/links?documentVersionId=${documentVersionId}&applicationId=${applicationId}`,
+        `/documents/links?${new URLSearchParams({ documentVersionId, applicationId })}`,
         { method: "DELETE" },
       ),
     onSuccess: (_data, { applicationId }) => {
