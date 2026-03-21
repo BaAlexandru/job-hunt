@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Interview Management** - Interview scheduling, round tracking, notes, timeline
 - [x] **Phase 6: Document Management** - File upload/download, application linking, versioning, categorization
 - [x] **Phase 7: Frontend Shell & Auth UI** - Next.js setup, auth pages, API client, responsive layout
-- [ ] **Phase 8: Frontend Core Views** - Kanban board, list/table view, all feature pages
+- [x] **Phase 8: Frontend Core Views** - Kanban board, list/table view, all feature pages
 
 ## Phase Details
 
@@ -144,13 +144,13 @@ Plans:
   2. User can view applications as a sortable, filterable table/list
   3. User can manage companies, jobs, applications, interviews, and documents through the frontend UI
   4. All CRUD operations from phases 3-6 are accessible through frontend pages
-**Plans:** 2/4 plans executed
+**Plans:** 4/4 plans executed
 
 Plans:
-- [ ] 08-01-PLAN.md -- Install dependencies, shadcn/ui components, TypeScript types, TanStack Query hooks, shared components
-- [ ] 08-02-PLAN.md -- Applications page with kanban board, list/table view, detail panel, application form
-- [ ] 08-03-PLAN.md -- Companies card grid with detail page, Jobs filterable table, CRUD forms for both
-- [ ] 08-04-PLAN.md -- Documents page with drag-and-drop upload, Dashboard metrics, end-to-end verification
+- [x] 08-01-PLAN.md -- Install dependencies, shadcn/ui components, TypeScript types, TanStack Query hooks, shared components
+- [x] 08-02-PLAN.md -- Applications page with kanban board, list/table view, detail panel, application form
+- [x] 08-03-PLAN.md -- Companies card grid with detail page, Jobs filterable table, CRUD forms for both
+- [x] 08-04-PLAN.md -- Documents page with drag-and-drop upload, Dashboard metrics, end-to-end verification
 
 ## Progress
 
@@ -166,7 +166,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 5. Interview Management | 2/2 | Complete | 2026-03-20 |
 | 6. Document Management | 2/2 | Complete | 2026-03-21 |
 | 7. Frontend Shell & Auth UI | 3/3 | Complete | 2026-03-20 |
-| 8. Frontend Core Views | 2/4 | In Progress|  |
+| 8. Frontend Core Views | 4/4 | Complete | 2026-03-21 |
 
 ## Deferred to v2
 
