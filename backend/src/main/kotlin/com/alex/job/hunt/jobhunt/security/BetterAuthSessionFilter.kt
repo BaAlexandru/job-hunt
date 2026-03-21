@@ -3,6 +3,8 @@ package com.alex.job.hunt.jobhunt.security
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.LoggerFactory
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -28,6 +30,8 @@ import java.util.UUID
 class BetterAuthSessionFilter(
     private val jdbcTemplate: JdbcTemplate
 ) : OncePerRequestFilter() {
+
+    private val log = LoggerFactory.getLogger(BetterAuthSessionFilter::class.java)
 
     companion object {
         private const val COOKIE_NAME = "better-auth.session_token"
@@ -63,29 +67,48 @@ class BetterAuthSessionFilter(
 
     private fun authenticateFromSession(token: String) {
         try {
-            // Join Better Auth session → Better Auth user → backend users (via email)
-            // Better Auth uses camelCase columns; backend users table uses snake_case
-            val result = jdbcTemplate.queryForMap(
+            // Step 1: Validate Better Auth session and get the user's email
+            val sessionResult = jdbcTemplate.queryForMap(
                 """
-                SELECT bu.id AS backend_user_id, bu.email, bu.enabled
+                SELECT u.email
                 FROM session s
                 JOIN "user" u ON u.id = s."userId"
-                JOIN users bu ON bu.email = u.email
                 WHERE s.token = ?
                   AND s."expiresAt" > NOW()
                 """.trimIndent(),
                 token
             )
 
-            val backendUserId = result["backend_user_id"] as UUID
-            val email = result["email"] as String
-            val enabled = result["enabled"] as Boolean
+            val email = sessionResult["email"] as String
+
+            // Step 2: Look up or auto-create the backend user
+            val backendUser = try {
+                jdbcTemplate.queryForMap(
+                    "SELECT id, email, enabled FROM users WHERE email = ?",
+                    email
+                )
+            } catch (_: EmptyResultDataAccessException) {
+                // No backend user exists — auto-provision one
+                log.info("Auto-provisioned backend user for Better Auth email: {}", email)
+                jdbcTemplate.queryForMap(
+                    """
+                    INSERT INTO users (id, email, password, role, enabled, created_at, updated_at)
+                    VALUES (gen_random_uuid(), ?, '', 'USER', true, NOW(), NOW())
+                    RETURNING id, email, enabled
+                    """.trimIndent(),
+                    email
+                )
+            }
+
+            val backendUserId = backendUser["id"] as UUID
+            val backendEmail = backendUser["email"] as String
+            val enabled = backendUser["enabled"] as Boolean
 
             if (!enabled) return
 
             val userDetails = AppUserDetails(
                 userId = backendUserId,
-                email = email,
+                email = backendEmail,
                 password = "",
                 authorities = listOf(SimpleGrantedAuthority("ROLE_USER")),
                 enabled = true
@@ -96,7 +119,7 @@ class BetterAuthSessionFilter(
             )
             SecurityContextHolder.getContext().authentication = auth
         } catch (_: Exception) {
-            // Session not found, no matching backend user, or DB error
+            // Session not found or DB error
             // — let the filter chain continue unauthenticated
         }
     }
