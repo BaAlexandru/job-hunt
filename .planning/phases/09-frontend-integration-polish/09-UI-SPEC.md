@@ -115,9 +115,9 @@ Source: Pre-populated from `frontend/app/globals.css` existing OKLCH token defin
 
 | State | Visual |
 |-------|--------|
-| Loading | 3 Skeleton blocks (h-16 w-full), stacked vertically with 12px gap, 16px top padding |
+| Loading | 3 Skeleton blocks (h-16 w-full), stacked vertically with 16px gap, 16px top padding |
 | Empty | "No timeline entries yet." in text-sm text-muted-foreground, 16px top padding |
-| Populated | Vertical feed of entry cards, most-recent-first, 12px gap between entries |
+| Populated | Vertical feed of entry cards, most-recent-first, 16px gap between entries |
 | Error | TanStack Query default error -- no custom error UI (consistent with Notes/Interviews tabs) |
 
 **Timeline Entry Card Layout:**
