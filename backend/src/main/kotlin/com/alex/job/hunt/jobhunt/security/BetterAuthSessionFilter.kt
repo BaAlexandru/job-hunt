@@ -19,6 +19,10 @@ import java.util.UUID
  * This filter reads the cookie, validates the session against the DB, and sets
  * the Spring Security context so downstream code (SecurityContextUtil) works
  * identically whether the request came via JWT or session cookie.
+ *
+ * Note: Better Auth uses camelCase column names (userId, expiresAt) and TEXT
+ * user IDs. The backend uses UUID user IDs in the `users` table. This filter
+ * bridges the two by looking up the backend user via email.
  */
 @Component
 class BetterAuthSessionFilter(
@@ -49,37 +53,40 @@ class BetterAuthSessionFilter(
     }
 
     private fun extractSessionToken(request: HttpServletRequest): String? {
-        return request.cookies
+        val cookieValue = request.cookies
             ?.firstOrNull { it.name == COOKIE_NAME }
-            ?.value
+            ?.value ?: return null
+
+        // Better Auth cookie format is "token.hash" — DB stores just the token part
+        return cookieValue.substringBefore(".")
     }
 
     private fun authenticateFromSession(token: String) {
         try {
-            // Query session + user in one join. Better Auth session.token is the cookie value.
+            // Join Better Auth session → Better Auth user → backend users (via email)
+            // Better Auth uses camelCase columns; backend users table uses snake_case
             val result = jdbcTemplate.queryForMap(
                 """
-                SELECT s.user_id, s.expires_at, u.email, u.name
+                SELECT bu.id AS backend_user_id, bu.email, bu.enabled
                 FROM session s
-                JOIN "user" u ON u.id = s.user_id
+                JOIN "user" u ON u.id = s."userId"
+                JOIN users bu ON bu.email = u.email
                 WHERE s.token = ?
+                  AND s."expiresAt" > NOW()
                 """.trimIndent(),
                 token
             )
 
-            val expiresAt = (result["expires_at"] as java.sql.Timestamp).toInstant()
-            if (expiresAt.isBefore(Instant.now())) {
-                return // Session expired
-            }
-
-            val userId = UUID.fromString(result["user_id"] as String)
+            val backendUserId = result["backend_user_id"] as UUID
             val email = result["email"] as String
+            val enabled = result["enabled"] as Boolean
 
-            // Create AppUserDetails so SecurityContextUtil.getCurrentUserId() works
+            if (!enabled) return
+
             val userDetails = AppUserDetails(
-                userId = userId,
+                userId = backendUserId,
                 email = email,
-                password = "", // Not needed for session-based auth
+                password = "",
                 authorities = listOf(SimpleGrantedAuthority("ROLE_USER")),
                 enabled = true
             )
@@ -89,7 +96,8 @@ class BetterAuthSessionFilter(
             )
             SecurityContextHolder.getContext().authentication = auth
         } catch (_: Exception) {
-            // Session not found or DB error -- let the filter chain continue unauthenticated
+            // Session not found, no matching backend user, or DB error
+            // — let the filter chain continue unauthenticated
         }
     }
 }
