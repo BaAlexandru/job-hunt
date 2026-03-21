@@ -67,7 +67,7 @@ export default function ApplicationsPage() {
 
       {/* Content */}
       {isError ? (
-        <div className="px-6 py-12 text-center text-sm text-destructive">
+        <div className="px-6 py-12 text-center text-sm text-muted-foreground">
           Could not load applications. Check your connection and try again.
         </div>
       ) : isLoading ? (

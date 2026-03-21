@@ -53,7 +53,7 @@ export default function DocumentsPage() {
   if (isError) {
     return (
       <div className="flex flex-col items-center gap-2 py-12 text-center">
-        <p className="text-sm text-destructive">
+        <p className="text-sm text-muted-foreground">
           Could not load documents. Check your connection and try again.
         </p>
       </div>
