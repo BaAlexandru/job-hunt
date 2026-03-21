@@ -95,9 +95,8 @@ const SALARY_TYPES = [
 const SALARY_PERIODS = [
   { value: "HOURLY", label: "Hourly" },
   { value: "DAILY", label: "Daily" },
-  { value: "WEEKLY", label: "Weekly" },
   { value: "MONTHLY", label: "Monthly" },
-  { value: "YEARLY", label: "Yearly" },
+  { value: "ANNUAL", label: "Annual" },
 ]
 
 export function JobForm({
