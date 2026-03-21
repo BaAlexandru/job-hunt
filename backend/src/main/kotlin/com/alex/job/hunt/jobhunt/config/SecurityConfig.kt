@@ -1,5 +1,6 @@
 package com.alex.job.hunt.jobhunt.config
 
+import com.alex.job.hunt.jobhunt.security.BetterAuthSessionFilter
 import com.alex.job.hunt.jobhunt.security.JwtAuthenticationFilter
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
@@ -23,6 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 @EnableMethodSecurity
 class SecurityConfig(
+    private val betterAuthSessionFilter: BetterAuthSessionFilter,
     private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
 
@@ -44,6 +46,7 @@ class SecurityConfig(
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
                 }
             }
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(betterAuthSessionFilter)
             addFilterBefore<UsernamePasswordAuthenticationFilter>(jwtAuthenticationFilter)
         }
         return http.build()
@@ -52,7 +55,7 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val config = CorsConfiguration()
-        config.allowedOrigins = listOf("http://localhost:3000")
+        config.allowedOrigins = listOf("http://localhost:3000", "http://localhost:3001")
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
         config.allowedHeaders = listOf("*")
         config.allowCredentials = true
