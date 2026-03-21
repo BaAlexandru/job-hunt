@@ -36,14 +36,14 @@ function StatusCell({ row }: { row: ApplicationResponse }) {
   const transitions = STATUS_TRANSITIONS[row.status] ?? []
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger
         onClick={(e) => e.stopPropagation()}
         className="cursor-pointer"
       >
         <StatusBadge status={row.status} />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent align="start" className="min-w-[180px]" sideOffset={4} collisionPadding={8}>
         {transitions.map((target) => (
           <DropdownMenuItem
             key={target}
