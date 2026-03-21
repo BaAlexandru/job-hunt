@@ -66,7 +66,7 @@ export function FilterBar({ filters, onFiltersChange }: FilterBarProps) {
   const selectedCompany = companies.find((c) => c.id === filters.companyId)
 
   return (
-    <div className="flex flex-wrap items-center gap-4 px-6 py-3">
+    <div className="flex flex-wrap items-center gap-4 py-3">
       {/* Status multi-select */}
       <Popover open={statusOpen} onOpenChange={setStatusOpen}>
         <PopoverTrigger asChild>

@@ -85,7 +85,7 @@ export function ApplicationDetail({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+      <SheetContent className="flex w-full flex-col sm:max-w-lg">
         {isLoading || !application ? (
           <div className="flex flex-col gap-4 p-4">
             <Skeleton className="h-6 w-48" />
@@ -105,27 +105,29 @@ export function ApplicationDetail({
               </div>
             </SheetHeader>
 
-            <Tabs defaultValue="overview" className="px-4 pb-4">
-              <TabsList>
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="notes">Notes</TabsTrigger>
-                <TabsTrigger value="interviews">Interviews</TabsTrigger>
-                <TabsTrigger value="documents">Documents</TabsTrigger>
-              </TabsList>
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              <Tabs defaultValue="overview" className="px-4 pb-4">
+                <TabsList>
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="notes">Notes</TabsTrigger>
+                  <TabsTrigger value="interviews">Interviews</TabsTrigger>
+                  <TabsTrigger value="documents">Documents</TabsTrigger>
+                </TabsList>
 
-              <TabsContent value="overview">
-                <OverviewTab applicationId={applicationId} />
-              </TabsContent>
-              <TabsContent value="notes">
-                <NotesTab applicationId={applicationId} />
-              </TabsContent>
-              <TabsContent value="interviews">
-                <InterviewsTab applicationId={applicationId} />
-              </TabsContent>
-              <TabsContent value="documents">
-                <DocumentsTab applicationId={applicationId} />
-              </TabsContent>
-            </Tabs>
+                <TabsContent value="overview">
+                  <OverviewTab applicationId={applicationId} />
+                </TabsContent>
+                <TabsContent value="notes">
+                  <NotesTab applicationId={applicationId} />
+                </TabsContent>
+                <TabsContent value="interviews">
+                  <InterviewsTab applicationId={applicationId} />
+                </TabsContent>
+                <TabsContent value="documents">
+                  <DocumentsTab applicationId={applicationId} />
+                </TabsContent>
+              </Tabs>
+            </div>
           </>
         )}
       </SheetContent>

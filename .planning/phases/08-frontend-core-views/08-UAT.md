@@ -1,9 +1,9 @@
 ---
-status: complete
+status: resolved
 phase: 08-frontend-core-views
-source: [08-01-SUMMARY.md, 08-02-SUMMARY.md, 08-03-SUMMARY.md, 08-04-SUMMARY.md]
+source: [08-01-SUMMARY.md, 08-02-SUMMARY.md, 08-03-SUMMARY.md, 08-04-SUMMARY.md, 08-05-SUMMARY.md]
 started: 2026-03-21T07:00:00Z
-updated: 2026-03-21T07:10:00Z
+updated: 2026-03-21T08:00:00Z
 ---
 
 ## Current Test
@@ -104,7 +104,7 @@ skipped: 9
 ## Gaps
 
 - truth: "New user can load and interact with all pages after registering via Better Auth"
-  status: failed
+  status: resolved
   reason: "User reported: All API calls return 500 for new users. Better Auth creates user in its own tables but no corresponding row exists in backend users table. BetterAuthSessionFilter silently fails the JOIN, no auth is set, controllers throw IllegalStateException."
   severity: blocker
   test: 1
@@ -122,7 +122,7 @@ skipped: 9
   debug_session: ""
 
 - truth: "Empty state shows friendly message with action button, not error styling"
-  status: failed
+  status: resolved
   reason: "User reported: Error message in red on applications page when user has no data. Jobs and companies show same message in grey. No create/add buttons visible on company, job, or document pages."
   severity: major
   test: 1
