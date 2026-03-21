@@ -204,10 +204,12 @@ export function useDeleteApplication() {
 export function useApplicationNotes(applicationId: string) {
   return useQuery({
     queryKey: applicationKeys.notes(applicationId),
-    queryFn: () =>
-      apiClient<NoteResponse[]>(
+    queryFn: async () => {
+      const page = await apiClient<PaginatedResponse<NoteResponse>>(
         `/applications/${applicationId}/notes`,
-      ),
+      )
+      return page.content
+    },
     enabled: !!applicationId,
   })
 }
