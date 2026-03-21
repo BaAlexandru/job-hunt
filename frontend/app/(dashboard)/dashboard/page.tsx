@@ -60,7 +60,7 @@ function MetricCard({
         {isLoading ? (
           <Skeleton className="mb-2 h-8 w-16" />
         ) : (
-          <span className="text-[28px] font-semibold leading-none">
+          <span className="text-2xl font-semibold leading-none sm:text-[28px]">
             {value}
           </span>
         )}
@@ -170,7 +170,7 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center gap-2">
                   <StatusBadge status={status} />
-                  <span className="text-sm">{label}</span>
+                  <span className="text-xs sm:text-sm">{label}</span>
                 </div>
                 <span className="text-sm font-semibold">{count}</span>
               </div>
@@ -194,7 +194,7 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center gap-3">
                   <div>
-                    <p className="text-sm font-medium">{app.jobTitle}</p>
+                    <p className="text-xs font-medium sm:text-sm">{app.jobTitle}</p>
                     {app.companyName && (
                       <p className="text-xs text-muted-foreground">
                         {app.companyName}
