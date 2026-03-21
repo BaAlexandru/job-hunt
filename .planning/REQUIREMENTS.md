@@ -124,7 +124,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | AUTH-01 | Phase 2 | Complete |
-| AUTH-02 | Phase 2 | Complete |
+| AUTH-02 | Phase 2, Phase 9 | Pending (frontend route guard) |
 | AUTH-03 | Phase 2 | Complete |
 | AUTH-04 | Phase 2 | Complete |
 | COMP-01 | Phase 3 | Complete |
@@ -143,13 +143,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | APPL-07 | Phase 4 | Complete |
 | INTV-01 | Phase 5 | Complete |
 | INTV-02 | Phase 5 | Complete |
-| INTV-03 | Phase 5 | Complete |
-| INTV-04 | Phase 5 | Complete |
+| INTV-03 | Phase 5, Phase 9 | Pending (frontend contract fix) |
+| INTV-04 | Phase 5, Phase 9 | Pending (frontend timeline UI) |
 | DOCS-01 | Phase 6 | Complete |
 | DOCS-02 | Phase 6 | Complete |
 | DOCS-03 | Phase 6 | Complete |
 | DOCS-04 | Phase 6 | Complete |
-| DOCS-05 | Phase 6 | Complete |
+| DOCS-05 | Phase 6, Phase 9 | Pending (frontend category selector) |
 | INFR-01 | Phase 1 | Complete |
 | INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Complete |
@@ -165,4 +165,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-19*
-*Last updated: 2026-03-20 after phase 5 completion audit*
+*Last updated: 2026-03-21 after v1.0 milestone audit gap closure planning*

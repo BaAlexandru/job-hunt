@@ -20,6 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Document Management** - File upload/download, application linking, versioning, categorization
 - [x] **Phase 7: Frontend Shell & Auth UI** - Next.js setup, auth pages, API client, responsive layout
 - [x] **Phase 8: Frontend Core Views** - Kanban board, list/table view, all feature pages
+- [ ] **Phase 9: Frontend Integration Polish** - Gap closure: interview notes contract, timeline UI, document category, route guard
 
 ## Phase Details
 
@@ -159,10 +160,25 @@ Plans:
 - [x] 08-10-PLAN.md -- Gap closure: fixed sidebar and sticky topbar for stable navigation during scroll
 - [x] 08-11-PLAN.md -- Gap closure: status dropdown width fix, dashboard card deep-link to application detail
 
+### Phase 9: Frontend Integration Polish
+**Goal**: Close integration gaps found during milestone audit -- fix frontend-backend contract mismatches, wire missing UI features, and verify route protection
+**Depends on**: Phase 8
+**Requirements**: INTV-03, INTV-04, DOCS-05, AUTH-02
+**Gap Closure**: Closes INT-01, INT-02, INT-03, and degraded proxy.ts flow from v1.0-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. Interview notes render correctly in the Interviews tab (Page response unwrapped)
+  2. Timeline tab exists in application detail panel and displays chronological entries from backend
+  3. Document upload form includes a category selector (CV, Cover Letter, Portfolio, Other)
+  4. Unauthenticated users are redirected to sign-in when accessing dashboard routes
+**Plans:** TBD
+
+Plans:
+- [ ] 09-01-PLAN.md -- TBD (to be created by /gsd:plan-phase 9)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -174,6 +190,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 6. Document Management | 2/2 | Complete | 2026-03-21 |
 | 7. Frontend Shell & Auth UI | 3/3 | Complete | 2026-03-20 |
 | 8. Frontend Core Views | 11/11 | Complete | 2026-03-21 |
+| 9. Frontend Integration Polish | 0/? | Not started | - |
 
 ## Deferred to v2
 
