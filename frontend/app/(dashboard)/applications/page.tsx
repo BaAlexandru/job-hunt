@@ -40,7 +40,7 @@ export default function ApplicationsPage() {
   return (
     <div className="flex flex-col gap-4">
       {/* Page header */}
-      <div className="flex items-center justify-between px-6 pt-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-semibold">Applications</h1>
         <div className="flex items-center gap-3">
           <Tabs
@@ -67,12 +67,12 @@ export default function ApplicationsPage() {
 
       {/* Content */}
       {isError ? (
-        <div className="px-6 py-12 text-center text-sm text-muted-foreground">
+        <div className="py-12 text-center text-sm text-muted-foreground">
           Could not load applications. Check your connection and try again.
         </div>
       ) : isLoading ? (
         view === "board" ? (
-          <div className="flex gap-4 overflow-x-auto p-4">
+          <div className="flex gap-4 overflow-x-auto">
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
@@ -85,14 +85,14 @@ export default function ApplicationsPage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col gap-2 px-6">
+          <div className="flex flex-col gap-2">
             {Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="h-12 w-full" />
             ))}
           </div>
         )
       ) : applications.length === 0 && !filters.status && !filters.companyId && !filters.search && !filters.fromDate && !filters.toDate ? (
-        <div className="px-6 py-8">
+        <div className="py-8">
           <EmptyState
             heading="No applications yet"
             body="Start tracking your job search by creating your first application."

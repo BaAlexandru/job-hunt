@@ -145,7 +145,7 @@ export function ApplicationList({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-2 px-6">
+      <div className="flex flex-col gap-2">
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton key={i} className="h-12 w-full" />
         ))}
@@ -164,14 +164,14 @@ export function ApplicationList({
     <div className="flex flex-col">
       <FilterBar filters={filters} onFiltersChange={onFiltersChange} />
       {applications.length === 0 && hasFilters ? (
-        <div className="px-6 py-8">
+        <div className="py-8">
           <EmptyState
             heading="No applications match your filters"
             body="Try adjusting your filters or create a new application."
           />
         </div>
       ) : (
-        <div className="px-6">
+        <div>
           <DataTable
             columns={columns}
             data={applications}
