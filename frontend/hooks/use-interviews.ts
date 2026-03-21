@@ -130,10 +130,12 @@ export function useDeleteInterview() {
 export function useInterviewNotes(interviewId: string) {
   return useQuery({
     queryKey: interviewKeys.notes(interviewId),
-    queryFn: () =>
-      apiClient<InterviewNoteResponse[]>(
+    queryFn: async () => {
+      const page = await apiClient<PaginatedResponse<InterviewNoteResponse>>(
         `/interviews/${interviewId}/notes`,
-      ),
+      )
+      return page.content
+    },
     enabled: !!interviewId,
   })
 }

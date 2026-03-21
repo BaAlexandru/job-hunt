@@ -85,15 +85,6 @@ export function useApplication(id: string) {
   })
 }
 
-export function useApplicationTransitions(id: string) {
-  return useQuery({
-    queryKey: applicationKeys.transitions(id),
-    queryFn: () =>
-      apiClient<ApplicationStatus[]>(`/applications/${id}/transitions`),
-    enabled: !!id,
-  })
-}
-
 // ---------------------------------------------------------------------------
 // Mutations
 // ---------------------------------------------------------------------------
@@ -292,13 +283,30 @@ export function useDeleteApplicationNote() {
 // Timeline
 // ---------------------------------------------------------------------------
 
+interface BackendTimelineEntry {
+  id: string
+  date: string
+  type: string
+  summary: string
+  details: Record<string, unknown> | null
+}
+
 export function useTimeline(applicationId: string) {
   return useQuery({
     queryKey: applicationKeys.timeline(applicationId),
-    queryFn: () =>
-      apiClient<TimelineEntry[]>(
+    queryFn: async () => {
+      const entries = await apiClient<BackendTimelineEntry[]>(
         `/applications/${applicationId}/timeline`,
-      ),
+      )
+      return entries.map((e): TimelineEntry => ({
+        id: e.id,
+        type: e.type,
+        occurredAt: e.date,
+        title: e.summary,
+        description: null,
+        metadata: e.details,
+      }))
+    },
     enabled: !!applicationId,
   })
 }
