@@ -23,7 +23,7 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="hidden w-64 flex-col border-r md:flex">
+    <aside className="hidden fixed inset-y-0 left-0 z-40 w-64 flex-col border-r bg-background md:flex">
       <div className="p-6">
         <h1 className="text-xl font-semibold">JobHunt</h1>
       </div>

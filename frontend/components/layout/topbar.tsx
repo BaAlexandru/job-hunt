@@ -12,7 +12,7 @@ export function Topbar() {
   const [open, setOpen] = useState(false)
 
   return (
-    <header className="flex h-14 items-center justify-between border-b px-6">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-background px-6">
       <div className="md:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
