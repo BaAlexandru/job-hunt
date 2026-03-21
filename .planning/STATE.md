@@ -3,29 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 08-04-PLAN.md -- MILESTONE v1.0 COMPLETE
-last_updated: "2026-03-21T09:32:09.337Z"
-last_activity: 2026-03-21 -- Completed 08-04 documents page, dashboard, and end-to-end verification
+stopped_at: Completed 08-05-PLAN.md (gap closure) -- MILESTONE v1.0 COMPLETE
+last_updated: "2026-03-21T13:18:32Z"
+last_activity: 2026-03-21 -- Completed 08-05 gap closure (user auto-provision + error styling)
 progress:
   total_phases: 8
   completed_phases: 8
-  total_plans: 21
-  completed_plans: 21
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: complete
-stopped_at: Completed 08-04-PLAN.md
-last_updated: "2026-03-21T02:22:00Z"
-last_activity: 2026-03-21 -- Completed 08-04 documents page, dashboard, and end-to-end verification
-progress:
-  total_phases: 8
-  completed_phases: 8
-  total_plans: 21
-  completed_plans: 21
+  total_plans: 22
+  completed_plans: 22
 ---
 
 # Project State
@@ -40,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 ## Current Position
 
 Phase: 8 of 8 (Frontend Core Views)
-Plan: 4 of 4 in current phase
+Plan: 5 of 5 in current phase
 Status: Complete
-Last activity: 2026-03-21 -- Completed 08-04 documents page, dashboard, and end-to-end verification
+Last activity: 2026-03-21 -- Completed 08-05 gap closure (user auto-provision + error styling)
 
-Progress: [██████████] 21/21 plans complete -- MILESTONE v1.0 COMPLETE
+Progress: [██████████] 22/22 plans complete -- MILESTONE v1.0 COMPLETE
 
 ## Performance Metrics
 
@@ -84,6 +69,7 @@ Progress: [██████████] 21/21 plans complete -- MILESTONE v1.
 | Phase 08 P03 | 8 | 2 tasks | 7 files |
 | Phase 08 P02 | 11 | 2 tasks | 7 files |
 | Phase 08 P04 | 3 | 2 tasks | 7 files |
+| Phase 08 P05 | 3 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -139,6 +125,8 @@ Recent decisions affecting current work:
 - [Phase 08]: standardSchemaResolver instead of zodResolver for Zod v4 compatibility with @hookform/resolvers
 - [Phase 08]: Client-side metric aggregation from useApplications({size:1000}) for dashboard -- v1 approach
 - [Phase 08]: react-dropzone for drag-and-drop file upload with PDF/DOCX MIME validation
+- [Phase 08]: Two-step session query (validate session, then lookup/create backend user) instead of single JOIN
+- [Phase 08]: Empty password + enabled=true for auto-provisioned Better Auth users (session auth, not password)
 
 ### Roadmap Evolution
 
@@ -158,6 +146,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-21T02:22:00Z
-Stopped at: Completed 08-04-PLAN.md -- MILESTONE v1.0 COMPLETE
+Last session: 2026-03-21T13:18:32Z
+Stopped at: Completed 08-05-PLAN.md (gap closure) -- MILESTONE v1.0 COMPLETE
 Resume file: None

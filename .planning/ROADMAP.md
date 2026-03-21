@@ -144,13 +144,14 @@ Plans:
   2. User can view applications as a sortable, filterable table/list
   3. User can manage companies, jobs, applications, interviews, and documents through the frontend UI
   4. All CRUD operations from phases 3-6 are accessible through frontend pages
-**Plans:** 4/4 plans executed
+**Plans:** 5/5 plans executed
 
 Plans:
 - [x] 08-01-PLAN.md -- Install dependencies, shadcn/ui components, TypeScript types, TanStack Query hooks, shared components
 - [x] 08-02-PLAN.md -- Applications page with kanban board, list/table view, detail panel, application form
 - [x] 08-03-PLAN.md -- Companies card grid with detail page, Jobs filterable table, CRUD forms for both
 - [x] 08-04-PLAN.md -- Documents page with drag-and-drop upload, Dashboard metrics, end-to-end verification
+- [x] 08-05-PLAN.md -- Gap closure: auto-provision backend users for Better Auth sessions, fix error styling
 
 ## Progress
 
@@ -166,7 +167,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 5. Interview Management | 2/2 | Complete | 2026-03-20 |
 | 6. Document Management | 2/2 | Complete | 2026-03-21 |
 | 7. Frontend Shell & Auth UI | 3/3 | Complete | 2026-03-20 |
-| 8. Frontend Core Views | 4/4 | Complete | 2026-03-21 |
+| 8. Frontend Core Views | 5/5 | Complete | 2026-03-21 |
 
 ## Deferred to v2
 
