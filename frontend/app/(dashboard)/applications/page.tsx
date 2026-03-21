@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState, useEffect } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import { PlusIcon, LayoutGridIcon, ListIcon } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -14,7 +15,7 @@ import { useViewPreference } from "@/hooks/use-view-preference"
 import { useApplications } from "@/hooks/use-applications"
 import type { FilterState } from "@/components/applications/filter-bar"
 
-export default function ApplicationsPage() {
+function ApplicationsContent() {
   const [view, setView] = useViewPreference("jobhunt:applications-view", "board")
   const [selectedApplicationId, setSelectedApplicationId] = useState<
     string | null
@@ -23,6 +24,15 @@ export default function ApplicationsPage() {
   const [filters, setFilters] = useState<FilterState>({})
   const [page, setPage] = useState(0)
   const [includeArchived, setIncludeArchived] = useState(false)
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  useEffect(() => {
+    const appId = searchParams.get("applicationId")
+    if (appId) {
+      setSelectedApplicationId(appId)
+    }
+  }, [searchParams])
 
   const { data, isLoading, isError } = useApplications({
     status: filters.status?.join(","),
@@ -126,12 +136,34 @@ export default function ApplicationsPage() {
         applicationId={selectedApplicationId}
         open={selectedApplicationId !== null}
         onOpenChange={(open) => {
-          if (!open) setSelectedApplicationId(null)
+          if (!open) {
+            setSelectedApplicationId(null)
+            if (searchParams.has("applicationId")) {
+              router.replace("/applications", { scroll: false })
+            }
+          }
         }}
       />
 
       {/* Create/edit dialog */}
       <ApplicationForm open={formOpen} onOpenChange={setFormOpen} />
     </div>
+  )
+}
+
+export default function ApplicationsPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col gap-4">
+        <Skeleton className="h-8 w-48" />
+        <div className="flex gap-4 overflow-x-auto">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-40 w-[280px] shrink-0" />
+          ))}
+        </div>
+      </div>
+    }>
+      <ApplicationsContent />
+    </Suspense>
   )
 }
