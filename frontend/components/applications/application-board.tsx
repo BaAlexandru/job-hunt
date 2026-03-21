@@ -1,7 +1,15 @@
 "use client"
 
 import { useMemo, useState, useCallback } from "react"
-import type { DragStartEvent, UniqueIdentifier } from "@dnd-kit/core"
+import {
+  useSensor,
+  useSensors,
+  MouseSensor,
+  TouchSensor,
+  KeyboardSensor,
+  type DragStartEvent,
+  type UniqueIdentifier,
+} from "@dnd-kit/core"
 import { toast } from "sonner"
 import {
   Kanban,
@@ -43,6 +51,17 @@ export function ApplicationBoard({
   const updateStatus = useUpdateApplicationStatus()
   const [draggingStatus, setDraggingStatus] = useState<ApplicationStatus | null>(
     null,
+  )
+
+  // Custom sensors with activation constraints so clicks pass through to card onClick
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: { distance: 5 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 200, tolerance: 5 },
+    }),
+    useSensor(KeyboardSensor),
   )
 
   // Group applications by status, ensuring all 8 columns always exist
@@ -116,11 +135,11 @@ export function ApplicationBoard({
 
   if (isLoading) {
     return (
-      <div className="flex gap-4 overflow-x-auto p-4">
+      <div className="flex gap-3 overflow-x-auto p-2 sm:gap-4 sm:p-4">
         {APPLICATION_STATUSES.map((status) => (
           <div
             key={status}
-            className="flex w-[280px] shrink-0 flex-col gap-2 rounded-lg bg-secondary p-2.5"
+            className="flex w-[240px] shrink-0 flex-col gap-2 rounded-lg bg-secondary p-2.5 sm:w-[280px]"
           >
             <Skeleton className="h-6 w-24" />
             <Skeleton className="h-20 w-full" />
@@ -144,20 +163,21 @@ export function ApplicationBoard({
         />
         <label
           htmlFor="show-archived"
-          className="cursor-pointer text-sm text-muted-foreground"
+          className="cursor-pointer text-xs text-muted-foreground sm:text-sm"
         >
           Show archived
         </label>
       </div>
 
       <ScrollArea className="w-full">
-        <div className="min-w-max p-4 pt-0">
+        <div className="min-w-max p-2 pt-0 sm:p-4 sm:pt-0">
           <Kanban<ApplicationResponse>
             value={columns}
             onValueChange={handleValueChange}
             getItemValue={(item) => item.id}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
+            sensors={sensors}
             flatCursor
           >
             <KanbanBoard>
@@ -170,7 +190,7 @@ export function ApplicationBoard({
                   <div
                     key={status}
                     className={cn(
-                      "flex w-[280px] shrink-0 flex-col transition-opacity",
+                      "flex w-[240px] shrink-0 flex-col transition-opacity sm:w-[280px]",
                       isDimmed && "opacity-40 pointer-events-none",
                     )}
                   >

@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState, useEffect } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import { PlusIcon, LayoutGridIcon, ListIcon } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -14,7 +15,7 @@ import { useViewPreference } from "@/hooks/use-view-preference"
 import { useApplications } from "@/hooks/use-applications"
 import type { FilterState } from "@/components/applications/filter-bar"
 
-export default function ApplicationsPage() {
+function ApplicationsContent() {
   const [view, setView] = useViewPreference("jobhunt:applications-view", "board")
   const [selectedApplicationId, setSelectedApplicationId] = useState<
     string | null
@@ -23,6 +24,15 @@ export default function ApplicationsPage() {
   const [filters, setFilters] = useState<FilterState>({})
   const [page, setPage] = useState(0)
   const [includeArchived, setIncludeArchived] = useState(false)
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  useEffect(() => {
+    const appId = searchParams.get("applicationId")
+    if (appId) {
+      setSelectedApplicationId(appId)
+    }
+  }, [searchParams])
 
   const { data, isLoading, isError } = useApplications({
     status: filters.status?.join(","),
@@ -40,7 +50,7 @@ export default function ApplicationsPage() {
   return (
     <div className="flex flex-col gap-4">
       {/* Page header */}
-      <div className="flex items-center justify-between px-6 pt-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-semibold">Applications</h1>
         <div className="flex items-center gap-3">
           <Tabs
@@ -67,16 +77,16 @@ export default function ApplicationsPage() {
 
       {/* Content */}
       {isError ? (
-        <div className="px-6 py-12 text-center text-sm text-destructive">
+        <div className="py-12 text-center text-sm text-muted-foreground">
           Could not load applications. Check your connection and try again.
         </div>
       ) : isLoading ? (
         view === "board" ? (
-          <div className="flex gap-4 overflow-x-auto p-4">
+          <div className="flex gap-4 overflow-x-auto">
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className="flex w-[280px] shrink-0 flex-col gap-2 rounded-lg bg-secondary p-2.5"
+                className="flex w-[240px] shrink-0 flex-col gap-2 rounded-lg bg-secondary p-2.5 sm:w-[280px]"
               >
                 <Skeleton className="h-6 w-24" />
                 <Skeleton className="h-20 w-full" />
@@ -85,14 +95,14 @@ export default function ApplicationsPage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col gap-2 px-6">
+          <div className="flex flex-col gap-2">
             {Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="h-12 w-full" />
             ))}
           </div>
         )
       ) : applications.length === 0 && !filters.status && !filters.companyId && !filters.search && !filters.fromDate && !filters.toDate ? (
-        <div className="px-6 py-8">
+        <div className="py-8">
           <EmptyState
             heading="No applications yet"
             body="Start tracking your job search by creating your first application."
@@ -126,12 +136,34 @@ export default function ApplicationsPage() {
         applicationId={selectedApplicationId}
         open={selectedApplicationId !== null}
         onOpenChange={(open) => {
-          if (!open) setSelectedApplicationId(null)
+          if (!open) {
+            setSelectedApplicationId(null)
+            if (searchParams.has("applicationId")) {
+              router.replace("/applications", { scroll: false })
+            }
+          }
         }}
       />
 
       {/* Create/edit dialog */}
       <ApplicationForm open={formOpen} onOpenChange={setFormOpen} />
     </div>
+  )
+}
+
+export default function ApplicationsPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col gap-4">
+        <Skeleton className="h-8 w-48" />
+        <div className="flex gap-4 overflow-x-auto">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-40 w-[280px] shrink-0" />
+          ))}
+        </div>
+      </div>
+    }>
+      <ApplicationsContent />
+    </Suspense>
   )
 }

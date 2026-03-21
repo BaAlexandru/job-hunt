@@ -87,7 +87,7 @@ const JOB_TYPES = [
 ]
 
 const SALARY_TYPES = [
-  { value: "EXACT", label: "Exact" },
+  { value: "FIXED", label: "Fixed" },
   { value: "RANGE", label: "Range" },
   { value: "TEXT", label: "Text" },
 ]
@@ -95,9 +95,8 @@ const SALARY_TYPES = [
 const SALARY_PERIODS = [
   { value: "HOURLY", label: "Hourly" },
   { value: "DAILY", label: "Daily" },
-  { value: "WEEKLY", label: "Weekly" },
   { value: "MONTHLY", label: "Monthly" },
-  { value: "YEARLY", label: "Yearly" },
+  { value: "ANNUAL", label: "Annual" },
 ]
 
 export function JobForm({
@@ -206,7 +205,7 @@ export function JobForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{isEditing ? "Edit Job" : "Add Job"}</DialogTitle>
           <DialogDescription>
@@ -407,11 +406,11 @@ export function JobForm({
             />
           </div>
 
-          {(salaryType === "EXACT" || salaryType === "RANGE") && (
+          {(salaryType === "FIXED" || salaryType === "RANGE") && (
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
                 <Label htmlFor="salaryMin">
-                  {salaryType === "EXACT" ? "Salary" : "Min"}
+                  {salaryType === "FIXED" ? "Salary" : "Min"}
                 </Label>
                 <Input
                   id="salaryMin"
@@ -445,7 +444,7 @@ export function JobForm({
             </div>
           )}
 
-          {(salaryType === "EXACT" || salaryType === "RANGE") && (
+          {(salaryType === "FIXED" || salaryType === "RANGE") && (
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
                 <Label htmlFor="currency">Currency</Label>

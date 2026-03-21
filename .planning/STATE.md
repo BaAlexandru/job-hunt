@@ -2,30 +2,63 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 08-04-PLAN.md -- MILESTONE v1.0 COMPLETE
-last_updated: "2026-03-21T09:32:09.337Z"
-last_activity: 2026-03-21 -- Completed 08-04 documents page, dashboard, and end-to-end verification
+status: in-progress
+stopped_at: Completed 08-11-PLAN.md (gap closure - status dropdown fix + dashboard deep linking)
+last_updated: "2026-03-21T20:42:36.713Z"
+last_activity: 2026-03-21 -- Completed 08-09 gap closure (dialog UX + dashboard timestamps)
 progress:
   total_phases: 8
   completed_phases: 8
-  total_plans: 21
-  completed_plans: 21
+  total_plans: 28
+  completed_plans: 28
+  percent: 96
 ---
 
 ---
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: complete
-stopped_at: Completed 08-04-PLAN.md
-last_updated: "2026-03-21T02:22:00Z"
-last_activity: 2026-03-21 -- Completed 08-04 documents page, dashboard, and end-to-end verification
+status: in-progress
+stopped_at: Completed 08-08-PLAN.md (gap closure - kanban click-through + mobile optimization)
+last_updated: "2026-03-21T15:56:31Z"
+last_activity: 2026-03-21 -- Completed 08-08 gap closure (kanban click-through + mobile optimization)
+progress:
+  [██████████] 96%
+  completed_phases: 8
+  total_plans: 25
+  completed_plans: 25
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 08-06-PLAN.md (theme toggle, dialog UX, dark contrast)
+last_updated: "2026-03-21T15:51:38.533Z"
+last_activity: 2026-03-21 -- Completed 08-06 gap closure (theme toggle + dialog UX + dark contrast)
 progress:
   total_phases: 8
+  completed_phases: 7
+  total_plans: 25
+  completed_plans: 24
+  percent: 96
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 08-06-PLAN.md (theme toggle, dialog UX, dark contrast)
+last_updated: "2026-03-21T15:49:07Z"
+last_activity: 2026-03-21 -- Completed 08-06 gap closure (theme toggle + dialog UX + dark contrast)
+progress:
+  [██████████] 96%
   completed_phases: 8
-  total_plans: 21
-  completed_plans: 21
+  total_plans: 25
+  completed_plans: 23
 ---
 
 # Project State
@@ -40,11 +73,11 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 ## Current Position
 
 Phase: 8 of 8 (Frontend Core Views)
-Plan: 4 of 4 in current phase
-Status: Complete
-Last activity: 2026-03-21 -- Completed 08-04 documents page, dashboard, and end-to-end verification
+Plan: 9 of 11 in current phase
+Status: in-progress
+Last activity: 2026-03-21 -- Completed 08-09 gap closure (dialog UX + dashboard timestamps)
 
-Progress: [██████████] 21/21 plans complete -- MILESTONE v1.0 COMPLETE
+Progress: [█████████░] 26/28 plans complete
 
 ## Performance Metrics
 
@@ -84,6 +117,13 @@ Progress: [██████████] 21/21 plans complete -- MILESTONE v1.
 | Phase 08 P03 | 8 | 2 tasks | 7 files |
 | Phase 08 P02 | 11 | 2 tasks | 7 files |
 | Phase 08 P04 | 3 | 2 tasks | 7 files |
+| Phase 08 P05 | 3 | 2 tasks | 4 files |
+| Phase 08 P06 | 2 | 3 tasks | 5 files |
+| Phase 08 P07 | 5 | 3 tasks | 10 files |
+| Phase 08 P08 | 3 | 2 tasks | 3 files |
+| Phase 08 P09 | 3 | 2 tasks | 2 files |
+| Phase 08 P10 | 4 | 2 tasks | 4 files |
+| Phase 08 P11 | 5 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -139,6 +179,14 @@ Recent decisions affecting current work:
 - [Phase 08]: standardSchemaResolver instead of zodResolver for Zod v4 compatibility with @hookform/resolvers
 - [Phase 08]: Client-side metric aggregation from useApplications({size:1000}) for dashboard -- v1 approach
 - [Phase 08]: react-dropzone for drag-and-drop file upload with PDF/DOCX MIME validation
+- [Phase 08]: Two-step session query (validate session, then lookup/create backend user) instead of single JOIN
+- [Phase 08]: Empty password + enabled=true for auto-provisioned Better Auth users (session auth, not password)
+- [Phase 08]: Sheet detail panel 92% width on mobile, max-w-lg on desktop for usable form display
+- [Phase 08]: MouseSensor distance:5 + TouchSensor delay:200/tolerance:5 for click vs drag discrimination on kanban
+- [Phase 08]: 240px kanban columns on mobile (vs 280px desktop) for more visible content
+- [Phase 08]: Fixed positioning for sidebar instead of flex-based layout to prevent horizontal scroll displacement
+- [Phase 08]: min-h-0 on scroll wrapper to override flex min-height:auto default for Sheet panel mobile scroll
+- [Phase 08]: Radix modal={false} removes viewport overlay blocking scroll in inline table dropdowns
 
 ### Roadmap Evolution
 
@@ -158,6 +206,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-21T02:22:00Z
-Stopped at: Completed 08-04-PLAN.md -- MILESTONE v1.0 COMPLETE
+Last session: 2026-03-21T19:35:56.847Z
+Stopped at: Completed 08-11-PLAN.md (gap closure - status dropdown fix + dashboard deep linking)
 Resume file: None

@@ -55,6 +55,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -114,6 +115,7 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      </div>
 
       {pagination && pagination.pageCount > 1 && (
         <div className="flex items-center justify-between px-2 py-4">

@@ -29,7 +29,9 @@ const TERMINAL_STATUSES: ApplicationStatus[] = [
 
 function relativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime()
-  const minutes = Math.floor(diff / 60_000)
+  const absDiff = Math.abs(diff)
+  const minutes = Math.floor(absDiff / 60_000)
+  if (minutes < 1) return "just now"
   if (minutes < 60) return `${minutes}m ago`
   const hours = Math.floor(minutes / 60)
   if (hours < 24) return `${hours}h ago`
@@ -56,11 +58,11 @@ function MetricCard({
 }) {
   return (
     <Card>
-      <CardContent className="flex flex-col items-center justify-center py-6">
+      <CardContent className="flex flex-col items-center justify-center py-3 sm:py-6">
         {isLoading ? (
           <Skeleton className="mb-2 h-8 w-16" />
         ) : (
-          <span className="text-[28px] font-semibold leading-none">
+          <span className="text-2xl font-semibold leading-none sm:text-[28px]">
             {value}
           </span>
         )}
@@ -120,7 +122,7 @@ export default function DashboardPage() {
   if (isError) {
     return (
       <div className="flex flex-col items-center gap-2 py-12 text-center">
-        <p className="text-sm text-destructive">
+        <p className="text-sm text-muted-foreground">
           Could not load dashboard data. Check your connection and try again.
         </p>
       </div>
@@ -128,12 +130,12 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-8">
       {/* Page heading */}
       <h1 className="text-xl font-semibold">Dashboard</h1>
 
       {/* Top metric cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <MetricCard
           label="Total Applications"
           value={metrics.total}
@@ -159,8 +161,8 @@ export default function DashboardPage() {
       {/* Status breakdown */}
       {!isLoading && metrics.byStatus.length > 0 && (
         <section>
-          <CardHeader className="px-0">
-            <CardTitle>Status Breakdown</CardTitle>
+          <CardHeader className="px-0 pb-2 sm:pb-4">
+            <CardTitle className="text-base sm:text-lg">Status Breakdown</CardTitle>
           </CardHeader>
           <div className="space-y-2">
             {metrics.byStatus.map(({ status, label, count }) => (
@@ -170,7 +172,7 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center gap-2">
                   <StatusBadge status={status} />
-                  <span className="text-sm">{label}</span>
+                  <span className="text-xs sm:text-sm">{label}</span>
                 </div>
                 <span className="text-sm font-semibold">{count}</span>
               </div>
@@ -182,19 +184,19 @@ export default function DashboardPage() {
       {/* Recent activity */}
       {!isLoading && metrics.recent.length > 0 && (
         <section>
-          <CardHeader className="px-0">
-            <CardTitle>Recent Activity</CardTitle>
+          <CardHeader className="px-0 pb-2 sm:pb-4">
+            <CardTitle className="text-base sm:text-lg">Recent Activity</CardTitle>
           </CardHeader>
           <div className="space-y-2">
             {metrics.recent.map((app) => (
               <Link
                 key={app.id}
-                href="/applications"
-                className="flex items-center justify-between rounded-md border px-3 py-2 transition-colors hover:bg-muted/50"
+                href={`/applications?applicationId=${app.id}`}
+                className="flex flex-col gap-1 rounded-md border px-3 py-2 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex items-center gap-3">
                   <div>
-                    <p className="text-sm font-medium">{app.jobTitle}</p>
+                    <p className="text-xs font-medium sm:text-sm">{app.jobTitle}</p>
                     {app.companyName && (
                       <p className="text-xs text-muted-foreground">
                         {app.companyName}
