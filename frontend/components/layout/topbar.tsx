@@ -6,6 +6,7 @@ import { Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { MobileNav } from "./mobile-nav"
+import { ThemeToggle } from "./theme-toggle"
 
 export function Topbar() {
   const [open, setOpen] = useState(false)
@@ -25,7 +26,10 @@ export function Topbar() {
         </Sheet>
       </div>
       <div className="flex-1" />
-      <UserButton />
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+        <UserButton />
+      </div>
     </header>
   )
 }
