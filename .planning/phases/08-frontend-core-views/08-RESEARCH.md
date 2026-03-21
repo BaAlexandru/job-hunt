@@ -504,7 +504,7 @@ export function DataTable<TData, TValue>({
 ### Pitfall 7: Backend Auth Session Mismatch
 **What goes wrong:** API calls from the frontend return 401 because the backend expects JWT but the frontend uses Better Auth session cookies.
 **Why it happens:** Phase 7 CONTEXT.md notes: "backend security will be updated to accept Better Auth session tokens -- this is a Phase 8 concern."
-**How to avoid:** Phase 8 must update the backend SecurityConfig to validate Better Auth session cookies. The frontend already sends `credentials: "include"` on all API calls.
+**How to avoid:** Plan 01 Task 0 adds a `BetterAuthSessionFilter` to the backend that reads the Better Auth session cookie (`better-auth.session_token`), validates it against the `session` table, and sets the SecurityContext. This must run BEFORE any frontend page tasks.
 **Warning signs:** All API calls fail with 401 despite being logged in.
 
 ## Code Examples
@@ -599,6 +599,9 @@ export function DocumentUpload() {
 }
 ```
 
+### Document DTO Shape (Corrected)
+**Note:** The backend uses a nested document structure, NOT a flat one. `DocumentResponse` contains a nested `currentVersion: DocumentVersionResponse` with file metadata. Application linking is via a separate `DocumentApplicationLinkResponse` with `documentVersionId` and `applicationId`. There is NO `fileName`, `parentDocumentId`, or flat `applicationId` on DocumentResponse. See Plan 01 Task 2 interfaces block for the exact TypeScript types.
+
 ### Upload Mutation (FormData without JSON Content-Type)
 ```typescript
 // hooks/use-documents.ts
@@ -663,10 +666,8 @@ export function useViewPreference(key: string, defaultView: ViewPreference = "bo
 
 ## Open Questions
 
-1. **Backend auth integration with Better Auth sessions**
-   - What we know: Frontend uses Better Auth session cookies. Backend currently validates JWT tokens. Phase 7 CONTEXT.md explicitly flags this as "a Phase 8 concern."
-   - What's unclear: The exact approach for updating SecurityConfig to validate Better Auth sessions. Options include: (a) backend reads Better Auth session cookie and queries the `session` table directly, (b) Better Auth client-side provides a JWT that backend validates, (c) backend becomes a Better Auth resource server.
-   - Recommendation: This needs to be planned as the first task in Phase 8 -- all other frontend pages depend on successful API calls. Research the Better Auth documentation for backend session verification patterns.
+1. **Backend auth integration with Better Auth sessions** -- RESOLVED
+   - **Resolution:** Plan 01 Task 0 creates a `BetterAuthSessionFilter` that reads the `better-auth.session_token` cookie, queries the Better Auth `session` table, and sets SecurityContext. Approach (a) was chosen: backend reads session cookie and queries the session table directly. Both JWT and session cookie auth coexist (JWT filter remains as fallback).
 
 2. **Kanban card ordering within columns**
    - What we know: The backend API does not have a sort order field on applications. Cards within a column are ordered by the default query sort (createdAt desc).
