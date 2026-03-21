@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-10-PLAN.md (gap closure - fixed layout scroll + sheet mobile scroll)
-last_updated: "2026-03-21T19:35:36.881Z"
+stopped_at: Completed 08-11-PLAN.md (gap closure - status dropdown fix + dashboard deep linking)
+last_updated: "2026-03-21T19:35:56.851Z"
 last_activity: 2026-03-21 -- Completed 08-09 gap closure (dialog UX + dashboard timestamps)
 progress:
   total_phases: 8
@@ -123,6 +123,7 @@ Progress: [█████████░] 26/28 plans complete
 | Phase 08 P08 | 3 | 2 tasks | 3 files |
 | Phase 08 P09 | 3 | 2 tasks | 2 files |
 | Phase 08 P10 | 4 | 2 tasks | 4 files |
+| Phase 08 P11 | 5 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -185,6 +186,7 @@ Recent decisions affecting current work:
 - [Phase 08]: 240px kanban columns on mobile (vs 280px desktop) for more visible content
 - [Phase 08]: Fixed positioning for sidebar instead of flex-based layout to prevent horizontal scroll displacement
 - [Phase 08]: min-h-0 on scroll wrapper to override flex min-height:auto default for Sheet panel mobile scroll
+- [Phase 08]: Radix modal={false} removes viewport overlay blocking scroll in inline table dropdowns
 
 ### Roadmap Evolution
 
@@ -204,6 +206,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-21T19:35:17.576Z
-Stopped at: Completed 08-10-PLAN.md (gap closure - fixed layout scroll + sheet mobile scroll)
+Last session: 2026-03-21T19:35:56.847Z
+Stopped at: Completed 08-11-PLAN.md (gap closure - status dropdown fix + dashboard deep linking)
 Resume file: None
