@@ -1,4 +1,5 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
+export const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
 
 export class ApiError extends Error {
   constructor(
@@ -14,7 +15,9 @@ export async function apiClient<T>(
   options: RequestInit = {},
 ): Promise<T> {
   const headers: HeadersInit = {
-    "Content-Type": "application/json",
+    ...(!(options.body instanceof FormData) && {
+      "Content-Type": "application/json",
+    }),
     ...options.headers,
   }
 
