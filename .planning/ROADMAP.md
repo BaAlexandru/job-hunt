@@ -85,6 +85,8 @@ Wave 6:                Phase 18 ──── depends on Phase 17
 - Production runs continuously with replicas=1
 - If sustained memory pressure is observed, upgrade to t3.medium (4GB, ~$30/mo)
 
+**Monthly cost estimate (t3.small in eu-central-1):** ~$15/mo for EC2 (t3.small is NOT free-tier eligible). EBS 30GB and Elastic IP are covered by free tier. Total: ~$15/mo baseline.
+
 **JVM tuning (required in Dockerfile):**
 - `-XX:MaxRAMPercentage=75.0 -XX:+UseContainerSupport -XX:+ExitOnOutOfMemoryError`
 - K8s resource limits: `requests: 384Mi / limits: 512Mi`
@@ -209,7 +211,7 @@ Wave 6:                Phase 18 ──── depends on Phase 17
 | 11. Visibility & Sharing | v1.1 | 0/? | Not started | - |
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
 | 13. CI Pipeline | v1.1 | 0/? | Not started | - |
-| 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
+| 14. AWS Infrastructure | v1.1 | 0/2 | Planned | - |
 | 15. K3s Cluster Setup | v1.1 | 0/? | Not started | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
 | 17. App Deployment & ArgoCD | v1.1 | 0/? | Not started | - |
