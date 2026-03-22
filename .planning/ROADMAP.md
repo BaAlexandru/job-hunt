@@ -215,7 +215,7 @@ Plans:
 | 10. Gap Closure | v1.1 | 0/? | Not started | - |
 | 11. Visibility & Sharing | 4/4 | Complete    | 2026-03-22 | - |
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
-| 13. CI Pipeline | 1/1 | Complete   | 2026-03-22 | - |
+| 13. CI Pipeline | 1/1 | Complete    | 2026-03-22 | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
 | 15. K3s Cluster Setup | v1.1 | 0/? | Not started | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
