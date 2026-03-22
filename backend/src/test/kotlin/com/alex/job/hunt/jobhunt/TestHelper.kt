@@ -32,7 +32,7 @@ object TestHelper {
             .andExpect(status().isCreated)
 
         val verificationToken = emailVerificationTokenRepository.findAll()
-            .last().token
+            .first { !it.used }.token
 
         mockMvc.perform(get("/api/auth/verify").param("token", verificationToken))
             .andExpect(status().isOk)

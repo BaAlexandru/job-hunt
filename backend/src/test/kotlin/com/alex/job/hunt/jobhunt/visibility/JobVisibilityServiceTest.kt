@@ -212,10 +212,10 @@ class JobVisibilityServiceTest {
     }
 
     @Test
-    fun `deleting job cleans up associated shares`() {
+    fun `archiving job preserves associated shares`() {
         val tokenA = TestHelper.registerAndGetToken(mockMvc, jsonMapper, emailVerificationTokenRepository, "owner@test.com")
         val tokenB = TestHelper.registerAndGetToken(mockMvc, jsonMapper, emailVerificationTokenRepository, "recipient@test.com")
-        val jobId = TestHelper.createJob(mockMvc, jsonMapper, tokenA, "Deletable Job")
+        val jobId = TestHelper.createJob(mockMvc, jsonMapper, tokenA, "Archivable Job")
 
         // Create share
         mockMvc.perform(
@@ -225,15 +225,15 @@ class JobVisibilityServiceTest {
                 .content(jsonMapper.writeValueAsString(CreateShareRequest("recipient@test.com")))
         )
 
-        // Delete job (archive)
+        // Archive job
         mockMvc.perform(
             delete("/api/jobs/$jobId")
                 .header("Authorization", "Bearer $tokenA")
         )
             .andExpect(status().isNoContent)
 
-        // Shares should be cleaned up
-        org.junit.jupiter.api.Assertions.assertEquals(0, resourceShareRepository.count())
+        // Shares should persist after archiving (CONTEXT.md: "Shares persist when a resource is archived")
+        org.junit.jupiter.api.Assertions.assertEquals(1, resourceShareRepository.count())
     }
 
     @Test

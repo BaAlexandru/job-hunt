@@ -112,8 +112,6 @@ class JobService(
     fun archive(id: UUID, userId: UUID) {
         val entity = jobRepository.findByIdAndUserId(id, userId)
             ?: throw NotFoundException("Job not found")
-        // Clean up shares before archiving
-        resourceShareRepository.deleteByResourceTypeAndResourceId(ResourceType.JOB, id)
         entity.archived = true
         entity.archivedAt = Instant.now()
         entity.updatedAt = Instant.now()
