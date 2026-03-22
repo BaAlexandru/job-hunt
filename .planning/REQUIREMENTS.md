@@ -11,7 +11,7 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 
 - [x] **GAP-01**: User can view and add interview notes in the InterviewsTab UI
 - [x] **GAP-02**: User can view document version history and upload new versions in the UI
-- [ ] **GAP-03**: User receives password reset email via SMTP when requesting a reset
+- [x] **GAP-03**: User receives password reset email via SMTP when requesting a reset
 
 ### Visibility & Sharing
 
@@ -89,7 +89,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | GAP-01 | Phase 10 | Complete |
 | GAP-02 | Phase 10 | Complete |
-| GAP-03 | Phase 10 | Pending |
+| GAP-03 | Phase 10 | Complete |
 | VISI-01 | Phase 11 | Pending |
 | VISI-02 | Phase 11 | Pending |
 | VISI-03 | Phase 11 | Pending |

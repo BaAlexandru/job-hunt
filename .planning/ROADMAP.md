@@ -32,7 +32,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 **Parallel execution:** Phases marked with the same parallel group (A, B) can run concurrently on separate branches.
 
-- [ ] **Phase 10: Gap Closure** - Complete missing UI features and email delivery from v1.0 `[parallel-A]`
+- [x] **Phase 10: Gap Closure** - Complete missing UI features and email delivery from v1.0 `[parallel-A]` (completed 2026-03-22)
 - [ ] **Phase 11: Visibility & Sharing** - Backend + frontend for private/public/shared visibility on resources `[parallel-A]`
 - [ ] **Phase 12: Production Docker Images** - Multi-stage Dockerfiles for backend and frontend `[parallel-A]`
 - [ ] **Phase 13: CI Pipeline** - GitHub Actions builds, tests, scans, and pushes images to GHCR
@@ -100,7 +100,7 @@ Wave 6:                Phase 18 ──── depends on Phase 17
   1. User can view existing interview notes and add new notes per interview round in the InterviewsTab
   2. User can see document version history and upload a new version of an existing document
   3. User receives a password reset email at their registered address when requesting a reset
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
 - [ ] 10-01-PLAN.md — Document version history panel (GAP-02)
 - [ ] 10-02-PLAN.md — Interview notes UI in InterviewsTab (GAP-01)
@@ -209,7 +209,7 @@ Plans:
 | 7. Frontend Shell & Auth UI | v1.0 | 3/3 | Complete | 2026-03-20 |
 | 8. Frontend Core Views | v1.0 | 11/11 | Complete | 2026-03-21 |
 | 9. Frontend Integration Polish | v1.0 | 2/2 | Complete | 2026-03-22 |
-| 10. Gap Closure | 2/3 | In Progress|  | - |
+| 10. Gap Closure | 3/3 | Complete   | 2026-03-22 | - |
 | 11. Visibility & Sharing | v1.1 | 0/? | Not started | - |
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
 | 13. CI Pipeline | v1.1 | 0/? | Not started | - |
