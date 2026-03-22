@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const j=JSON.parse(d);if(j.tool_input&&j.tool_input.command&&j.tool_input.command.includes('trivy')){console.log(JSON.stringify({hookSpecificOutput:{hookEventName:'PreToolUse',additionalContext:'TRIVY COMMAND DETECTED: Follow the trivy-scanning skill rules from .claude/skills/rules/trivy-scanning.md. Use best practices: filter by severity (--severity HIGH,CRITICAL), use appropriate output format, and apply project-specific scanning patterns.'}}))}});\"",
+            "timeout": 5,
+            "statusMessage": "Checking for trivy usage..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const j=JSON.parse(d);const p=j.tool_input&&(j.tool_input.file_path||'');const c=j.tool_input&&(j.tool_input.content||j.tool_input.new_string||'');const keywords=['build-push-action','metadata-action','docker/build','docker/metadata','docker/login','setup-buildx','setup-qemu','image.*push','image.*tag','ghcr.io','docker.*registry'];const text=(p+' '+c).toLowerCase();if(keywords.some(k=>new RegExp(k).test(text))){console.log(JSON.stringify({hookSpecificOutput:{hookEventName:'PreToolUse',additionalContext:'DOCKER BUILD+PUSH DETECTED: Follow the docker-build-push skill from .claude/skills/rules/docker-build-push.md. Use metadata-action@v5 for tag generation (SHA+date+latest), build-push-action@v6 for builds, conditional push/login for PRs, and GHA caching.'}}))}});\"",
+            "timeout": 5,
+            "statusMessage": "Checking for docker build/push patterns..."
+          }
+        ]
+      }
+    ]
+  }
+}
