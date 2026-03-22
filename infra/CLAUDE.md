@@ -8,8 +8,16 @@
 
 ## Directory Purpose
 
-- /docker - Dockerfiles for production builds (future phases)
+- /docker - Helper scripts and compose overrides for production builds
+- Dockerfiles live in module roots (`backend/Dockerfile`, `frontend/Dockerfile`), NOT in infra/docker/ — keeps Dockerfiles close to the code they build, which is the standard pattern for multi-stage builds
 - No Kubernetes/Helm configs (out of scope for v1)
+
+## Dockerfile Placement (Phase 12)
+
+- `backend/Dockerfile` — Multi-stage build, Eclipse Temurin JDK 24 Alpine (builder) + JRE 24 Alpine (runtime)
+- `frontend/Dockerfile` — Multi-stage build, Node.js 22 Alpine (LTS)
+- `compose.prod.yaml` at project root — extends compose.yaml for local production testing
+- `.dockerignore` files in backend/ and frontend/ to keep build context lean
 
 ## Docker Compose
 
@@ -17,6 +25,7 @@
 - Spring Boot docker-compose starter auto-discovers it there
 - Fixed port mapping: 5432:5432
 - Named volume: pgdata for data persistence
+- compose.prod.yaml extends compose.yaml with backend + frontend services for local prod testing
 
 ## OpenTofu Infrastructure
 

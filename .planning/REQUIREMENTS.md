@@ -23,8 +23,8 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 
 ### Docker & CI
 
-- [ ] **DOCK-01**: Backend produces a multi-stage Docker image (JRE-alpine, <200MB)
-- [ ] **DOCK-02**: Frontend produces a multi-stage Docker image (Next.js standalone, <200MB)
+- [x] **DOCK-01**: Backend produces a multi-stage Docker image (JRE-alpine, <200MB)
+- [x] **DOCK-02**: Frontend produces a multi-stage Docker image (Next.js standalone, <200MB)
 - [ ] **DOCK-03**: GitHub Actions pipeline builds, tests, and pushes images to GHCR on merge to master
 - [ ] **DOCK-04**: Container images are scanned for vulnerabilities in CI
 
@@ -95,8 +95,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | VISI-03 | Phase 11 | Pending |
 | VISI-04 | Phase 11 | Pending |
 | VISI-05 | Phase 11 | Pending |
-| DOCK-01 | Phase 12 | Pending |
-| DOCK-02 | Phase 12 | Pending |
+| DOCK-01 | Phase 12 | Complete |
+| DOCK-02 | Phase 12 | Complete |
 | DOCK-03 | Phase 13 | Pending |
 | DOCK-04 | Phase 13 | Pending |
 | K8S-01 | Phase 14 | Complete |

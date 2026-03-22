@@ -1,0 +1,26 @@
+# Build artifacts
+.next/
+node_modules/
+out/
+
+# IDE
+.idea/
+*.iml
+
+# Git
+.git/
+.gitignore
+
+# Tests
+**/*.test.*
+**/*.spec.*
+vitest.config.*
+coverage/
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Misc
+*.md
+.env*
