@@ -211,7 +211,7 @@ Wave 6:                Phase 18 ──── depends on Phase 17
 | 11. Visibility & Sharing | v1.1 | 0/? | Not started | - |
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
 | 13. CI Pipeline | v1.1 | 0/? | Not started | - |
-| 14. AWS Infrastructure | 2/2 | Complete   | 2026-03-22 | - |
+| 14. AWS Infrastructure | 2/2 | Complete    | 2026-03-22 | - |
 | 15. K3s Cluster Setup | v1.1 | 0/? | Not started | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
 | 17. App Deployment & ArgoCD | v1.1 | 0/? | Not started | - |
