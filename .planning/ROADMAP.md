@@ -113,7 +113,7 @@ Wave 6:                Phase 18 ──── depends on Phase 17
   3. User can browse public companies and jobs from all users via API
   4. Shared items appear in a dedicated "Shared with me" page accessible to the recipient (view-only)
   5. Default visibility is PRIVATE — no behavior change for existing data
-**Plans:** 4 plans
+**Plans:** 1/4 plans executed
 Plans:
 - [ ] 11-01-PLAN.md — Backend schema, entities, repositories, DTOs (V16 migration + Visibility enum + ResourceShareEntity)
 - [ ] 11-02-PLAN.md — Backend services and controllers (ShareService, visibility endpoints, browse, shared-with-me)
@@ -211,7 +211,7 @@ Plans:
 | 8. Frontend Core Views | v1.0 | 11/11 | Complete | 2026-03-21 |
 | 9. Frontend Integration Polish | v1.0 | 2/2 | Complete | 2026-03-22 |
 | 10. Gap Closure | v1.1 | 0/? | Not started | - |
-| 11. Visibility & Sharing | v1.1 | 0/4 | Planned | - |
+| 11. Visibility & Sharing | 1/4 | In Progress|  | - |
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
 | 13. CI Pipeline | v1.1 | 0/? | Not started | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
-status: completed
-stopped_at: Completed 14-01-PLAN.md (Phase 14 fully complete)
-last_updated: "2026-03-22T14:32:52.869Z"
-last_activity: "2026-03-22 — Completed Phase 14 Plan 01 (bootstrap module: S3 state bucket)"
+status: active
+stopped_at: Completed 11-01-PLAN.md
+last_updated: "2026-03-22T14:53:37Z"
+last_activity: "2026-03-22 — Completed Plan 01 data foundation (migration, entities, repos, DTOs, test stubs)"
 progress:
   total_phases: 9
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
-  percent: 100
+  completed_phases: 0
+  total_plans: 4
+  completed_plans: 1
+  percent: 25
 ---
 
 # Project State
@@ -21,27 +21,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Track jobs you've applied to with their status, documents, and timeline so nothing falls through the cracks during a job search.
-**Current focus:** v1.1 Infrastructure & Deployment — Phase 14 (AWS Infrastructure)
+**Current focus:** v1.1 Infrastructure & Deployment — Phase 11 (Visibility & Sharing)
 
 ## Current Position
 
-Phase: 14 of 18 (AWS Infrastructure)
-Plan: 2 of 2 (all complete)
-Status: Phase 14 complete — both plans executed
-Last activity: 2026-03-22 — Completed Phase 14 Plan 01 (bootstrap module: S3 state bucket)
+Phase: 11 of 18 (Visibility & Sharing)
+Plan: 2 of 4
+Status: Executing
+Last activity: 2026-03-22 — Completed Plan 01 data foundation (migration, entities, repos, DTOs, test stubs)
 
-Progress: [██████████] 100%
+Progress: [███░░░░░░░] 25%
 
 ## Performance Metrics
 
 **Velocity:**
 - v1.0: 30 plans in 4 days (2026-03-19 to 2026-03-22)
-- v1.1: 2 plans in 5 min (Phase 14 Plans 01+02)
-
-| Phase | Plan | Duration | Tasks | Files |
-|-------|------|----------|-------|-------|
-| 14    | 01   | 3min     | 1     | 5     |
-| 14    | 02   | 2min     | 2     | 10    |
+- v1.1: Not started
 
 ## Accumulated Context
 
@@ -55,10 +50,9 @@ Recent decisions affecting current work:
 - Cloudflare proxy TLS + Origin CA cert (not cert-manager + Let's Encrypt)
 - Traefik bundled with K3s (not NGINX Ingress)
 - K3s over kubeadm (lightweight, single binary)
-- Inline security group rules (simpler for 3 ingress + 1 egress, per CONTEXT.md trade-off)
-- 2GB swap file with swappiness=10 for t3.small OOM safety net
-- KMS encryption (aws:kms) for S3 state bucket rather than AES-256
-- prevent_destroy lifecycle on state bucket to guard against accidental deletion
+- Polymorphic resource_shares table with resource_type discriminator (not separate share tables per entity)
+- Class-level @Disabled on test stubs to prevent Spring context loading before migration exists
+- Visibility field as String in DTOs for clean JSON serialization
 
 ### Pending Todos
 
@@ -69,10 +63,9 @@ None yet.
 - t3.small has only 2GB RAM; memory budget is tight (~1,610MB estimated usage, ~438MB headroom)
 - Mitigation: staging namespace defaults to replicas=0 (scale-to-zero), only production runs continuously
 - Fallback: upgrade to t3.medium ($30/mo) if sustained memory pressure after deployment
-- t3.small is NOT free-tier eligible — baseline EC2 cost is ~$15/mo (corrected in Phase 14 context audit)
 
 ## Session Continuity
 
-Last session: 2026-03-22T14:15:42Z
-Stopped at: Completed 14-01-PLAN.md (Phase 14 fully complete)
-Resume file: None
+Last session: 2026-03-22T14:53:37.628Z
+Stopped at: Completed 11-01-PLAN.md
+Resume file: .planning/phases/11-visibility-sharing/11-02-PLAN.md

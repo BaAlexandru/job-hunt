@@ -9,28 +9,28 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 
 ### Gap Closure
 
-- [x] **GAP-01**: User can view and add interview notes in the InterviewsTab UI
-- [x] **GAP-02**: User can view document version history and upload new versions in the UI
-- [x] **GAP-03**: User receives password reset email via SMTP when requesting a reset
+- [ ] **GAP-01**: User can view and add interview notes in the InterviewsTab UI
+- [ ] **GAP-02**: User can view document version history and upload new versions in the UI
+- [ ] **GAP-03**: User receives password reset email via SMTP when requesting a reset
 
 ### Visibility & Sharing
 
-- [ ] **VISI-01**: User can set visibility (PRIVATE/PUBLIC/SHARED) on companies and jobs
-- [ ] **VISI-02**: User can share specific companies or jobs with other users (by email)
-- [ ] **VISI-03**: User can browse public companies and jobs from other users
+- [x] **VISI-01**: User can set visibility (PRIVATE/PUBLIC/SHARED) on companies and jobs
+- [x] **VISI-02**: User can share specific companies or jobs with other users (by email)
+- [x] **VISI-03**: User can browse public companies and jobs from other users
 - [ ] **VISI-04**: User can view items shared with them
-- [ ] **VISI-05**: Shared users can only VIEW (not edit/delete) unless granted EDIT permission
+- [x] **VISI-05**: Shared users can only VIEW (not edit/delete) — view-only always, no edit permission grant
 
 ### Docker & CI
 
-- [x] **DOCK-01**: Backend produces a multi-stage Docker image (JRE-alpine, <200MB)
-- [x] **DOCK-02**: Frontend produces a multi-stage Docker image (Next.js standalone, <200MB)
+- [ ] **DOCK-01**: Backend produces a multi-stage Docker image (JRE-alpine, <200MB)
+- [ ] **DOCK-02**: Frontend produces a multi-stage Docker image (Next.js standalone, <200MB)
 - [ ] **DOCK-03**: GitHub Actions pipeline builds, tests, and pushes images to GHCR on merge to master
 - [ ] **DOCK-04**: Container images are scanned for vulnerabilities in CI
 
 ### Kubernetes Infrastructure
 
-- [x] **K8S-01**: EC2 instance (t3.small) provisioned via OpenTofu with VPC, security groups, Elastic IP
+- [ ] **K8S-01**: EC2 instance (t3.small) provisioned via OpenTofu with VPC, security groups, Elastic IP
 - [ ] **K8S-02**: K3s cluster installed and running on EC2 instance
 - [ ] **K8S-03**: Staging and production namespaces configured with resource quotas
 - [ ] **K8S-04**: Kustomize base + overlays for staging and production environments
@@ -87,19 +87,19 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GAP-01 | Phase 10 | Complete |
-| GAP-02 | Phase 10 | Complete |
-| GAP-03 | Phase 10 | Complete |
-| VISI-01 | Phase 11 | Pending |
-| VISI-02 | Phase 11 | Pending |
-| VISI-03 | Phase 11 | Pending |
+| GAP-01 | Phase 10 | Pending |
+| GAP-02 | Phase 10 | Pending |
+| GAP-03 | Phase 10 | Pending |
+| VISI-01 | Phase 11 | Complete |
+| VISI-02 | Phase 11 | Complete |
+| VISI-03 | Phase 11 | Complete |
 | VISI-04 | Phase 11 | Pending |
-| VISI-05 | Phase 11 | Pending |
-| DOCK-01 | Phase 12 | Complete |
-| DOCK-02 | Phase 12 | Complete |
+| VISI-05 | Phase 11 | Complete |
+| DOCK-01 | Phase 12 | Pending |
+| DOCK-02 | Phase 12 | Pending |
 | DOCK-03 | Phase 13 | Pending |
 | DOCK-04 | Phase 13 | Pending |
-| K8S-01 | Phase 14 | Complete |
+| K8S-01 | Phase 14 | Pending |
 | K8S-02 | Phase 15 | Pending |
 | K8S-03 | Phase 15 | Pending |
 | K8S-04 | Phase 15 | Pending |
@@ -125,4 +125,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-22*
-*Last updated: 2026-03-22 after audit — GAP-04 split into VISI-01..05, phases renumbered 10-18*
+*Last updated: 2026-03-22 after Phase 11 context audit — VISI-05 narrowed to view-only (no edit permission grant)*
