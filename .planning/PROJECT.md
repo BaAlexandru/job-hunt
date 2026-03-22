@@ -66,13 +66,16 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 **Domain:** job-hunt.dev (Cloudflare DNS, proxied, HTTPS-only)
 
 **Target features:**
-- v1.0 gap closure (interview notes UI, doc version UI, visibility/sharing, password reset email)
+- v1.0 gap closure (interview notes UI, doc version UI, password reset email)
+- Visibility & Sharing (private/public/shared on companies and jobs, share by email)
 - Production-ready Docker images (multi-stage builds, <200MB each)
-- K3s on AWS EC2 t3.small (single cluster, namespace-based staging/prod)
+- K3s on AWS EC2 t3.small (single cluster, namespace-based staging/prod, staging scale-to-zero)
 - ArgoCD core-mode + GitOps CI/CD pipeline
 - Cloudflare proxy TLS + Origin CA cert (Full Strict mode)
 - Data stores on K8s (PostgreSQL, Redis, MinIO with StatefulSets + backups)
 - GitHub Actions CI + GHCR image registry
+
+**Phases:** 9 phases (10-18), 4 parallelizable in wave 1
 
 ## Context
 
@@ -104,7 +107,8 @@ Tech stack: Kotlin + Spring Boot 4.0.4, Next.js 16.2, PostgreSQL, Redis, MinIO.
 | Fixed sidebar + sticky topbar | Prevents horizontal scroll displacement on kanban | ✓ Good |
 | BetterAuthSessionFilter before JWT filter | Cookie auth first, JWT fallback for API testing | ✓ Good |
 | standardSchemaResolver for forms | Zod v4 incompatible with zodResolver, Standard Schema works | ✓ Good |
-| Phase 6.1 deferred to v2 | Visibility & Sharing not needed for MVP, reduces scope | ✓ Good |
+| Phase 6.1 moved to v1.1 Phase 11 | Visibility & Sharing split into own phase with VISI-01..05 requirements | ✓ Good |
+| Staging scale-to-zero | t3.small (2GB) can't run two full environments; staging defaults to replicas=0 | -- Pending |
 | Self-managed K8s over EKS | EKS control plane ~$73/mo, self-managed on free-tier EC2 much cheaper | -- Pending |
 | ArgoCD + GitOps over GitHub Actions | K8s-native GitOps, better learning opportunity, production-grade pattern | -- Pending |
 | Namespace separation over separate clusters | Research: free-tier can't run two clusters, namespace isolation sufficient for single-dev | -- Pending |
@@ -113,4 +117,4 @@ Tech stack: Kotlin + Spring Boot 4.0.4, Next.js 16.2, PostgreSQL, Redis, MinIO.
 | AI deferred to v3 | Infrastructure is higher priority, AI features need stable deployment first | -- Pending |
 
 ---
-*Last updated: 2026-03-22 after v1.1 milestone started*
+*Last updated: 2026-03-22 after v1.1 audit — phases renumbered 10-18, GAP-04 split to Phase 11, memory mitigation documented*

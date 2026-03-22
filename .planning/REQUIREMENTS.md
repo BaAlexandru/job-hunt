@@ -12,7 +12,14 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 - [ ] **GAP-01**: User can view and add interview notes in the InterviewsTab UI
 - [ ] **GAP-02**: User can view document version history and upload new versions in the UI
 - [ ] **GAP-03**: User receives password reset email via SMTP when requesting a reset
-- [ ] **GAP-04**: User can set visibility (private/public/shared) on companies and jobs
+
+### Visibility & Sharing
+
+- [ ] **VISI-01**: User can set visibility (PRIVATE/PUBLIC/SHARED) on companies and jobs
+- [ ] **VISI-02**: User can share specific companies or jobs with other users (by email)
+- [ ] **VISI-03**: User can browse public companies and jobs from other users
+- [ ] **VISI-04**: User can view items shared with them
+- [ ] **VISI-05**: Shared users can only VIEW (not edit/delete) unless granted EDIT permission
 
 ### Docker & CI
 
@@ -83,35 +90,39 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GAP-01 | Phase 10 | Pending |
 | GAP-02 | Phase 10 | Pending |
 | GAP-03 | Phase 10 | Pending |
-| GAP-04 | Phase 10 | Pending |
-| DOCK-01 | Phase 11 | Pending |
-| DOCK-02 | Phase 11 | Pending |
-| DOCK-03 | Phase 12 | Pending |
-| DOCK-04 | Phase 12 | Pending |
-| K8S-01 | Phase 13 | Pending |
-| K8S-02 | Phase 14 | Pending |
-| K8S-03 | Phase 14 | Pending |
-| K8S-04 | Phase 14 | Pending |
-| K8S-05 | Phase 16 | Pending |
-| DATA-01 | Phase 15 | Pending |
-| DATA-02 | Phase 15 | Pending |
-| DATA-03 | Phase 15 | Pending |
-| DATA-04 | Phase 15 | Pending |
-| ARGO-01 | Phase 16 | Pending |
-| ARGO-02 | Phase 16 | Pending |
-| ARGO-03 | Phase 16 | Pending |
-| ARGO-04 | Phase 16 | Pending |
-| DNS-01 | Phase 17 | Pending |
-| DNS-02 | Phase 17 | Pending |
-| DNS-03 | Phase 17 | Pending |
-| DNS-04 | Phase 17 | Pending |
-| DNS-05 | Phase 17 | Pending |
+| VISI-01 | Phase 11 | Pending |
+| VISI-02 | Phase 11 | Pending |
+| VISI-03 | Phase 11 | Pending |
+| VISI-04 | Phase 11 | Pending |
+| VISI-05 | Phase 11 | Pending |
+| DOCK-01 | Phase 12 | Pending |
+| DOCK-02 | Phase 12 | Pending |
+| DOCK-03 | Phase 13 | Pending |
+| DOCK-04 | Phase 13 | Pending |
+| K8S-01 | Phase 14 | Pending |
+| K8S-02 | Phase 15 | Pending |
+| K8S-03 | Phase 15 | Pending |
+| K8S-04 | Phase 15 | Pending |
+| K8S-05 | Phase 17 | Pending |
+| DATA-01 | Phase 16 | Pending |
+| DATA-02 | Phase 16 | Pending |
+| DATA-03 | Phase 16 | Pending |
+| DATA-04 | Phase 16 | Pending |
+| ARGO-01 | Phase 17 | Pending |
+| ARGO-02 | Phase 17 | Pending |
+| ARGO-03 | Phase 17 | Pending |
+| ARGO-04 | Phase 17 | Pending |
+| DNS-01 | Phase 18 | Pending |
+| DNS-02 | Phase 18 | Pending |
+| DNS-03 | Phase 18 | Pending |
+| DNS-04 | Phase 18 | Pending |
+| DNS-05 | Phase 18 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 26 total
-- Mapped to phases: 26
+- v1.1 requirements: 30 total (3 GAP + 5 VISI + 4 DOCK + 5 K8S + 4 DATA + 4 ARGO + 5 DNS)
+- Mapped to phases: 30
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-22*
-*Last updated: 2026-03-22 after roadmap creation*
+*Last updated: 2026-03-22 after audit — GAP-04 split into VISI-01..05, phases renumbered 10-18*
