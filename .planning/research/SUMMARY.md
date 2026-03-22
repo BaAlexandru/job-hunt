@@ -1,214 +1,99 @@
-# Project Research Summary
+# Research Summary: JobHunt v1.1 Infrastructure & Deployment
 
-**Project:** JobHunt - Job Application Tracker
-**Domain:** Full-Stack Web App (Kotlin/Spring Boot + Next.js)
-**Researched:** 2026-03-19
-**Confidence:** HIGH
+**Domain:** Self-managed Kubernetes deployment for existing full-stack web application
+**Researched:** 2026-03-22
+**Overall confidence:** HIGH
 
 ## Executive Summary
 
-JobHunt is a personal job application tracker with AI features — a category that existing SaaS products (Huntr, Teal, Seekario) have validated heavily but uniformly gatekeep behind paid tiers. The research confirms that self-hosting is itself the primary differentiator: unlimited applications, unlimited AI usage at API cost, and full data ownership, versus competitors charging $40+/month for features that are now cheap to build. The recommended approach is a monorepo with a Kotlin/Spring Boot backend and Next.js frontend, structured package-by-feature, with a clear six-phase build order that keeps the backend ahead of the frontend and defers AI integration until the document and job management foundations are solid.
+The v1.1 milestone takes a working Spring Boot 4.0.4 + Next.js 16.2 job tracker application from local Docker Compose development to production on self-managed Kubernetes. The infrastructure stack centers on K3s (v1.35.2) as the lightweight Kubernetes distribution running on AWS EC2, with ArgoCD (v3.3.3) providing GitOps continuous deployment, cert-manager (v1.20.0) handling automated TLS from Let's Encrypt, and GitHub Actions + GitHub Container Registry forming the CI pipeline. OpenTofu manages AWS infrastructure as code.
 
-> **Update (2026-03-19):** The user decided to keep Spring Boot 4.0.4 + Spring AI 2.0.0-M3 (accepting milestone risks) rather than the 3.5.9 recommendation below. The ROADMAP.md (8 phases) supersedes the 6-phase ordering in "Implications for Roadmap" below. See `.planning/phases/01-foundation-infrastructure/01-CONTEXT.md` for the rationale.
+The critical constraint is cost versus resources. The project specifies AWS EC2 and self-managed K8s, which means the free tier (t3.micro, 1GB RAM) is insufficient for production workloads. A realistic budget is $20-30/month for a t3.small production node plus a t3.micro staging node. The memory budget on t3.small (2GB) is tight: K3s system overhead (~350MB) + ArgoCD (~300MB) + Spring Boot JVM (~384MB) + PostgreSQL (~256MB) + Next.js (~128MB) + Redis (~64MB) + MinIO (~128MB) totals ~1,610MB, leaving ~400MB headroom. This works but requires explicit JVM memory tuning (`-XX:MaxRAMPercentage=75.0`) and K8s resource limits on every pod.
 
-The stack choices are well-aligned and production-grade for 2026. The primary architectural risk is over-engineering early: trying to build the kanban board before auth works, or adding AI before documents are stored. The feature dependency chain is strict — auth enables company tracking, which enables job tracking, which enables applications, which enables AI analysis. Every shortcut in that chain creates retrofit work. The research is explicit: add `user_id` to every entity on day one even though it is currently single-user, enforce Kotlin compiler plugins from the first commit, and configure CORS/JWT filter ordering correctly before touching the frontend. These are cheap to do upfront and expensive to fix later.
+The build order is dependency-driven: Docker images first (everything else needs containerized builds), then EC2 provisioning via OpenTofu, then K8s manifests and data store deployment, then ArgoCD for GitOps, then domain + TLS as the last mile. Gap closure features (interview notes UI, document version UI, password reset email) are independent of infrastructure and should be done first or in parallel.
 
-The most important build constraint comes from PITFALLS.md: the project currently has Spring Boot at the root rather than in a `backend/` subdirectory. The architecture research provides a concrete migration path, and this restructuring should happen before any feature work begins. Three pitfalls require Phase 1 attention regardless of the feature being built: Kotlin compiler plugins, multi-tenancy data model scoping, and CORS/JWT filter chain ordering. Skipping any of these creates either a security vulnerability or a data-layer rewrite.
-
----
+The largest risks are JVM OOM-kills on constrained nodes (Pitfall 2), data loss from PostgreSQL/MinIO without backup strategy (Pitfall 9), and Let's Encrypt rate limits during TLS debugging (Pitfall 7). All three have well-documented prevention strategies detailed in PITFALLS.md.
 
 ## Key Findings
 
-### Recommended Stack
+**Stack:** K3s v1.35.2 on EC2 t3.small, ArgoCD v3.3.3, cert-manager v1.20.0, Traefik (K3s bundled), OpenTofu for IaC, Kustomize for K8s manifests, ghcr.io for images, Resend for SMTP email, GitHub Actions for CI.
 
-The user's chosen stack is validated with specific version guidance. The critical decision is **Spring Boot 3.5.9 over 4.0.x** — Spring AI 1.1.1 (GA) requires Boot 3.x, Boot 4.0 is still maturing, and there is no benefit to taking on migration risk for a greenfield project. Spring AI 2.0 (requiring Boot 4.0) is still a milestone release; migrate to it after the GA ships (expected April 2026+).
+**Architecture:** Single-node K3s per environment (staging on t3.micro, production on t3.small). ArgoCD on production cluster managing both environments. Kustomize base + overlays for staging/production configuration. Sealed Secrets for credentials in Git.
 
-**Core technologies:**
-- **Kotlin 2.3.20**: Primary language — null safety, coroutines, Spring Boot first-class support
-- **Spring Boot 3.5.9**: Application framework — latest 3.5.x patch, production-proven, Boot 4.0 avoided due to Spring AI incompatibility
-- **Spring AI 1.1.1 GA**: AI provider abstraction — `ChatModel` interface works with Anthropic Claude and OpenAI, provider-agnostic
-- **PostgreSQL + Flyway 10.x**: Database — JSONB, full-text search, production-grade; Flyway for schema migration with strict immutability discipline
-- **Next.js 16.2.x (App Router)**: Frontend framework — Turbopack now default and stable, App Router is the standard
-- **TanStack Query 5.91.x**: Server state management — handles caching, optimistic updates, removes Redux boilerplate for API-driven apps
-- **Tailwind CSS 4.1.x + shadcn/ui CLI v4**: Styling — Rust-based Oxide engine, CSS-first config, shadcn copies components into the project
-- **MockK + Testcontainers**: Testing — MockK replaces Mockito (Kotlin-native), Testcontainers replaces H2 (eliminates dialect mismatch bugs)
-
-**Key avoidances:** Spring Boot 4.0, Spring AI 2.0.0-M2, JJWT library (Nimbus is already bundled), Mockito with Kotlin, H2 for integration tests, `react-beautiful-dnd` (deprecated), moment.js, `pages/` directory.
-
-### Expected Features
-
-All major competitors (Huntr, Teal, Eztrackr) use Kanban as the primary UI paradigm. Users expect drag-and-drop status changes as a first-class interaction, not buried in a detail page. The feature dependency chain is strict: auth -> company -> job -> application -> AI.
-
-**Must have (table stakes):**
-- Application CRUD with 8-status flow (Interested, Applied, Phone Screen, Interview, Offer, Accepted, Rejected, Withdrawn)
-- Kanban board with drag-and-drop status changes — this is how users mentally model their pipeline
-- List/table view with sort and filter — dual views are standard across all competitors
-- Company management — multiple roles per company; company-level metadata required
-- Job posting management (title, description, URL, salary range, location)
-- Application date tracking (applied date, last activity, next action date)
-- Notes per application — essential for interview prep and recruiter context
-- Document upload (PDF/DOCX) with per-application linking — knowing which CV you sent where is critical
-- Basic search and filtering — necessary at 50+ applications
-- User authentication (JWT) — protects personal job search data
-
-**Should have (competitive differentiators):**
-- Application analytics dashboard — most free trackers lack this; meaningful after accumulating data
-- Tags and custom labels — essential once tracking 20+ applications
-- Salary tracking fields — useful during offer comparison
-- Timeline/activity log per application — richer than status changes alone
-- Reminders for stale applications — no competitor has this; strong differentiator
-- Contact/networking tracker — link recruiters and contacts to applications
-
-**Defer (v2+):**
-- AI CV optimization and cover letter generation — requires stable document + job management foundation; HIGH complexity
-- Job posting URL scraping — fragile, site-dependent; v2 per PROJECT.md
-- Browser extension — separate codebase, high effort, high convenience
-
-### Architecture Approach
-
-The system follows a monorepo structure with three directories: `backend/` (Spring Boot/Kotlin), `frontend/` (Next.js), and `infra/` (Docker Compose, K8s manifests). The backend uses package-by-feature organization — each domain module (`auth/`, `company/`, `job/`, `application/`, `document/`, `ai/`) contains its own controller, service, entity, repository, and DTOs. The REST API is the contract between frontend and backend; they are independently deployable. The current project structure (Spring Boot at root) must be migrated to this monorepo layout before feature work begins.
-
-**Major components:**
-1. **Next.js Frontend** — App Router pages, shadcn/ui components, TanStack Query for all server state, JWT token handling
-2. **Spring Boot Backend** — REST API with Spring Security JWT filter chain, layered service/repository architecture per domain module
-3. **PostgreSQL** — All structured data; Flyway manages all schema changes (never manual edits)
-4. **StorageService abstraction** — `LocalStorageService` for dev (filesystem), `S3StorageService` for prod; metadata in PostgreSQL, binaries on storage
-5. **Spring AI ChatClient** — Provider-agnostic; configured via `AiConfig`, isolated from business logic; Anthropic Claude by default
-
-**Key patterns:**
-- Package-by-feature with strict Controller -> Service -> Repository dependency direction
-- Application status as an explicit state machine with validated transitions (not free-form string updates)
-- TanStack Query for all server state; no Redux; only minimal client state in React context
-- Flat `/api/` prefix for all endpoints (no versioning — monorepo means frontend/backend evolve together)
-
-### Critical Pitfalls
-
-1. **Kotlin compiler plugins missing** — Without `kotlin("plugin.spring")` and `kotlin("plugin.jpa")` in `build.gradle.kts`, `@Transactional` silently does nothing (classes are final by default in Kotlin), lazy loading breaks, and Spring cannot proxy service classes. Add these on day one. Recovery is LOW cost before any entities exist; HIGH cost after.
-
-2. **No user scoping in data model from day one** — Every business entity needs a `user_id` foreign key from the first migration. Without it, every repository method, service call, and file path must be retrofitted when multi-user support is added — effectively a data-layer rewrite. `findByIdAndUserId(id, userId)` not `findById(id)` everywhere.
-
-3. **CORS + JWT filter chain ordering** — Spring Security evaluates authentication before CORS by default. Browser preflight `OPTIONS` requests carry no Bearer token, so they receive 401. CORS errors in browsers hide the real response. Configure `CorsConfigurationSource` as a bean and register via `http.cors { }` so CORS is evaluated before authentication. Explicitly permit `OPTIONS "/**"`.
-
-4. **Flyway migration immutability** — Never edit an already-applied migration file. Flyway detects checksum mismatches and refuses to start. Always create a new migration to fix issues. Document this rule in `CLAUDE.md` for the backend module.
-
-5. **File upload security — path traversal and unrestricted types** — Never use `MultipartFile.getOriginalFilename()` for storage. Generate UUID-based filenames; store original name in the database. Whitelist only `.pdf`, `.docx`, `.doc`. Set 10MB max file size in `application.properties`. Store files outside the web root or use object storage.
-
----
+**Critical pitfall:** JVM memory defaults will OOM-kill Spring Boot on K8s unless explicitly tuned with `-XX:MaxRAMPercentage=75.0` and container memory limits. This blocks basic deployment and must be addressed in the Dockerfile phase.
 
 ## Implications for Roadmap
 
-> **Note:** The phase ordering below was the initial research recommendation. The actual ROADMAP.md has 8 phases with finer granularity (auth separated from foundation, application tracking separated from company/job, interview management added). Refer to ROADMAP.md for the authoritative phase plan.
+Based on research, suggested phase structure:
 
-The architecture research provides an explicit build order based on technical dependencies. The backend can be fully built and tested before writing frontend code. AI features depend on ALL core domain entities existing first.
+1. **v1.0 Gap Closure** - Close interview notes UI, document version UI, password reset email
+   - Addresses: 3 known v1.0 gaps that are independent of infrastructure
+   - Avoids: Mixing feature work with infrastructure complexity
+   - Rationale: These are LOW complexity frontend tasks. Do them first while the dev environment is stable.
 
-### Phase 1: Foundation and Authentication
+2. **Production Docker Images** - Multi-stage Dockerfiles for backend (JRE-alpine) and frontend (standalone)
+   - Addresses: Containerized builds required by everything downstream
+   - Avoids: Image bloat pitfall (>800MB images filling disk)
+   - Rationale: Docker images gate CI, K8s deployment, and ArgoCD. Nothing else works without them.
 
-**Rationale:** Nothing else can be built without auth. The Kotlin compiler plugins, data model user scoping, CORS/JWT configuration, and Flyway discipline must all be established here — they cannot be retrofitted. This phase also includes the monorepo restructuring (Spring Boot at root -> `backend/` directory).
-**Delivers:** Runnable monorepo, working registration/login, JWT auth, PostgreSQL via Docker Compose, Flyway migrations infrastructure, OpenAPI docs
-**Addresses:** User authentication (table stakes)
-**Avoids:** Kotlin final class pitfall, single-tenancy hardcoding, CORS/JWT filter ordering, Flyway checksum mismatches, JWT security basics (httpOnly cookies, env var secret, 30-minute expiry)
+3. **AWS Infrastructure Provisioning** - EC2 instances, VPC, security groups, EBS volumes via OpenTofu
+   - Addresses: The physical compute layer K8s runs on
+   - Avoids: EC2 free-tier misconception (budget for t3.small)
+   - Rationale: Need running instances before installing K3s.
 
-### Phase 2: Core Domain (Backend)
+4. **K8s Cluster + Data Stores** - K3s installation, PostgreSQL/Redis/MinIO StatefulSets, PVCs, backup CronJobs
+   - Addresses: Running cluster with persistent data stores
+   - Avoids: Data loss from missing PVC config and backup strategy
+   - Rationale: Data stores must be proven persistent before deploying the application.
 
-**Rationale:** Company -> Job -> Application is a strict dependency chain. Application tracking is the entire reason the product exists. Build the backend domain completely (including the state machine) before starting the frontend, so the API can be tested via Swagger/Postman.
-**Delivers:** Full REST API for companies, jobs, and applications; status state machine with validated transitions; search and filtering; Flyway migrations V2-V4
-**Addresses:** Company management, job posting management, application tracking, notes, date tracking, search/filter (all P1 table stakes)
-**Avoids:** N+1 queries (use `@EntityGraph`/`JOIN FETCH` from the start), status as String instead of enum
+5. **CI/CD Pipeline** - GitHub Actions for image builds, ArgoCD for GitOps deployment, Sealed Secrets
+   - Addresses: Automated build-test-push-deploy workflow
+   - Avoids: Secrets in Git, ArgoCD resource exhaustion on small nodes
+   - Rationale: With cluster and data stores running, set up the automation layer.
 
-### Phase 3: Document Management (Backend)
+6. **Domain + TLS + Go Live** - Domain registration, DNS, cert-manager, Let's Encrypt, Traefik ingress
+   - Addresses: HTTPS access on a custom domain
+   - Avoids: Let's Encrypt rate limits (use staging issuer first)
+   - Rationale: Last mile -- everything else must work before adding the public-facing layer.
 
-**Rationale:** Documents must be implemented with security from the start. The `StorageService` abstraction (local dev -> S3 prod) must be established here so switching storage backends later is a config change, not a rewrite. AI features in a later phase depend on this being solid.
-**Delivers:** File upload/download API, `StorageService` interface with `LocalStorageService` implementation, document-to-application linking, Flyway V5
-**Addresses:** Document upload and linking (P1 table stakes)
-**Avoids:** File upload path traversal, missing type validation, binary data stored in PostgreSQL, files without user-scoped paths
+**Phase ordering rationale:**
+- Gap closure before infrastructure because they are independent and quick
+- Docker images before anything else in infrastructure because they gate CI and K8s
+- EC2 provisioning before K3s installation (need the compute)
+- Data stores before application deployment (need persistence verified)
+- ArgoCD after basic cluster works (can use kubectl initially, then automate)
+- Domain + TLS last because you need the EC2 elastic IP first and everything else running
 
-### Phase 4: Frontend Shell and Auth
-
-**Rationale:** Start the frontend only after the backend API is stable and tested. Auth pages and the API client layer must come before any feature pages. JWT handling (httpOnly cookies, 401 interceptor, token refresh) must be established here.
-**Delivers:** Next.js App Router setup, login/register pages, AuthProvider, API client layer with JWT interceptor, TanStack Query setup, shadcn/ui component base
-**Addresses:** Responsive design, auth UX
-**Avoids:** TanStack Query hydration mismatches (configure `QueryClient` in React state, not module scope; start with client-only fetching for this authenticated app), hardcoded `localhost:8080` (use `NEXT_PUBLIC_API_URL`)
-
-### Phase 5: Frontend Feature Pages
-
-**Rationale:** With the API complete and the frontend shell working, build feature pages by connecting UI to existing API endpoints. Kanban board (drag-and-drop) is the highest-value view and the most complex; build list view first as the simpler baseline.
-**Delivers:** Company/job CRUD pages, application list/table view, kanban board with drag-and-drop, document upload/management UI, search/filter UI
-**Addresses:** Kanban board, list view, full frontend experience for all P1 features
-**Avoids:** Loading all applications at once without pagination (kanban can freeze at 100+ items), status transitions requiring detail page navigation (support inline and drag-and-drop)
-
-### Phase 6: AI Features
-
-**Rationale:** AI features depend on ALL of: stored documents, job descriptions, and company context. This is the correct deferral point per PROJECT.md and validated by the dependency chain in FEATURES.md. Design the `AiService` abstraction layer before writing the first AI feature to avoid provider lock-in.
-**Delivers:** CV analysis against job description, cover letter generation, async AI processing (returns job ID, polls or SSE for result), centralized `AiConfig`
-**Addresses:** AI CV optimization, AI cover letter generation (P3 differentiators)
-**Avoids:** Synchronous AI calls blocking request threads (use `@Async` or coroutines), provider lock-in through hardcoded model names in service classes, missing rate limiting and cost controls on AI endpoints
-
-### Phase Ordering Rationale
-
-- **Backend before frontend:** The REST API is the contract. Building the backend first lets it be validated via Swagger/Postman before any UI depends on it.
-- **Documents before AI:** AI requires stored CVs and job descriptions. No shortcuts here.
-- **Auth on day one:** Every entity needs `user_id` from the first migration. This is foundational, not a feature.
-- **v1.x features (analytics, tags, contacts, reminders) slot between Phase 5 and Phase 6** — they require accumulated application data and benefit from the full frontend foundation being stable first.
-
-### Research Flags
-
-Phases likely needing deeper research during planning:
-- **Phase 6 (AI Features):** Async AI processing patterns in Spring Boot (WebFlux vs `@Async` vs coroutines), prompt engineering for structured output, token counting and cost controls, SSE vs polling for long-running results
-- **Phase 3 (Document Management):** MIME type validation by magic bytes (not Content-Type header), PDF/DOCX text extraction for AI context assembly
-
-Phases with standard patterns (skip research-phase):
-- **Phase 1 (Foundation):** Kotlin + Spring Boot setup is extremely well-documented; follow the STACK.md build.gradle.kts exactly
-- **Phase 2 (Core Domain):** Standard Spring Boot CRUD with JPA; package-by-feature is established convention
-- **Phase 4 (Frontend Shell):** Next.js App Router setup is well-documented; follow TanStack Query SSR guidance from PITFALLS.md
-- **Phase 5 (Frontend Features):** dnd-kit has strong documentation; shadcn/ui component copying is straightforward
-
----
+**Research flags for phases:**
+- Phase 4 (K8s + Data Stores): Needs careful memory budgeting. Test JVM under resource limits.
+- Phase 5 (ArgoCD): Consider core-mode install to save 500MB+ RAM. Resource-constrained deployment.
+- Phase 6 (TLS): MUST use Let's Encrypt staging issuer first to avoid rate limits.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | All versions verified against official release notes and changelogs. Spring AI / Spring Boot version compatibility explicitly confirmed. |
-| Features | HIGH | Multiple competitor products analyzed (Huntr, Teal, Eztrackr, Seekario, Built In). Feature prioritization backed by direct product comparison. |
-| Architecture | HIGH | Package-by-feature with Spring Boot is a well-documented, widely adopted pattern. Data flow diagrams based on actual Spring Security and JPA semantics. |
-| Pitfalls | HIGH | Each pitfall sourced from official documentation (Kotlin plugin docs, Spring Security JWT docs, TanStack Query SSR docs) plus community-validated bug reports. |
+| Stack | HIGH | All versions verified against GitHub releases and official docs. K3s v1.35.2, ArgoCD v3.3.3, cert-manager v1.20.0 confirmed current as of 2026-03-22. |
+| Features | HIGH | Infrastructure features are well-defined. Gap closure features are small, isolated tasks. |
+| Architecture | HIGH | Single-node K3s + Kustomize overlays is a well-documented pattern. Memory budget calculated from known component requirements. |
+| Pitfalls | HIGH | All pitfalls sourced from official documentation, community experience, and known K8s operational patterns. JVM memory, data persistence, and Let's Encrypt rate limits are all commonly encountered. |
 
-**Overall confidence:** HIGH
+## Gaps to Address
 
-### Gaps to Address
-
-- **Auth.js (next-auth v5) vs custom JWT handling:** The research leaves this as "evaluate in Phase 1." For a single-user app with a Spring Boot backend issuing its own JWTs, a custom `fetch` wrapper with httpOnly cookies is likely simpler. Decide in Phase 1 planning before building auth pages.
-- **Kanban board pagination strategy:** The research flags that loading all applications at once breaks at 100+ items, but does not prescribe a specific pagination approach for kanban columns. This needs a decision during Phase 5 planning (load per-column, virtual scrolling, or total application cap for v1).
-- **File storage in production:** The research recommends MinIO locally and S3 in production. The specific deployment target (VPS, cloud provider, self-hosted K8s) is not defined in PROJECT.md. Decide before Phase 3 ends so the `StorageService` prod implementation is the right one.
-- **Spring Boot 4.0 migration timing:** Spring AI 2.0 GA is expected ~April 2026. After the project is functional on 3.5.x, assess migrating to Boot 4.0 for access to Spring AI 2.0's improved agentic patterns.
-
----
+- **t3.small memory pressure under real load:** The 2GB memory budget is calculated from component minimums. Real-world Spring Boot memory varies with request volume and JPA entity cache size. May need t3.medium ($30/mo) -- monitor after first deployment.
+- **Spot instance viability for production:** Spot saves ~65% but instances can be terminated with 2-minute warning. Acceptable for a job tracker (brief downtime is fine), but needs graceful shutdown configuration.
+- **Sealed Secrets vs SOPS:** Research recommends Sealed Secrets for simplicity. SOPS with age keys is an alternative if the cluster-bound encryption model of Sealed Secrets is too limiting. Decide during ArgoCD phase.
+- **Gateway API vs Ingress resource:** K3s bundles Traefik which supports both. FEATURES.md mentions Gateway API but standard Ingress resource is simpler and sufficient. Decide during ingress phase.
+- **Separate clusters vs namespace separation:** PROJECT.md says "two separate clusters" but FEATURES.md anti-features section flags this as potentially wasteful. Single cluster with namespaces is cheaper and simpler. Decision needed during planning.
 
 ## Sources
 
-### Primary (HIGH confidence)
-- [Spring Boot Releases](https://github.com/spring-projects/spring-boot/releases) — version verification
-- [Spring AI 1.1 GA Released](https://spring.io/blog/2025/11/12/spring-ai-1-1-GA-released/) — Spring AI version and Boot compatibility
-- [Spring AI 2.0.0-M2](https://spring.io/blog/2026/01/23/spring-ai-2-0-0-M2-available-now) — Boot 4.0 requirement confirmed
-- [Next.js 16 Blog Post](https://nextjs.org/blog/next-16) — Turbopack stable as default bundler
-- [Kotlin 2.3.20 Released](https://blog.jetbrains.com/kotlin/2026/03/kotlin-2-3-20-released/) — latest Kotlin version
-- [Tailwind CSS v4.0 Announcement](https://tailwindcss.com/blog/tailwindcss-v4) — v4 architecture changes, CSS-first config
-- [Kotlin All-Open Plugin Documentation](https://kotlinlang.org/docs/all-open-plugin.html) — Kotlin final class pitfall
-- [TanStack Query SSR Documentation](https://tanstack.com/query/latest/docs/framework/react/guides/ssr) — hydration pitfall
-- [Spring Security JWT Documentation](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html) — Nimbus JWT built-in
-- [Secure File Upload with Spring Boot](https://www.oussemasahbeni.com/blog/secure-file-upload-spring-boot) — file upload security patterns
-
-### Secondary (MEDIUM confidence)
-- [ApplyArc - Best Job Application Trackers](https://applyarc.com/blog/best-job-application-trackers) — competitor feature analysis
-- [Huntr Pricing](https://huntr.co/pricing) — paid tier feature gating confirmed
-- [Teal - Job Tracker](https://www.tealhq.com/tools/job-tracker) — AI feature comparison
-- [Cypress vs Playwright 2026](https://bugbug.io/blog/test-automation-tools/cypress-vs-playwright/) — E2E testing comparison
-- [PropelAuth: Avoiding CORS Issues in React/Next.js](https://www.propelauth.com/post/avoiding-cors-issues-in-react-next-js) — CORS + JWT filter chain ordering
-
-### Tertiary (LOW confidence)
-- [Hexagonal Architecture with Spring Boot + Kotlin](https://medium.com/@hieunv/understanding-hexagonal-architecture-through-a-practical-application-2f2d28f604d9) — architecture pattern reference (not adopted directly)
+All sources documented in individual research files:
+- STACK.md: 15 sources covering tool versions and compatibility
+- FEATURES.md: 20 sources covering infrastructure patterns and cost analysis
+- ARCHITECTURE.md: 10 sources covering system design patterns
+- PITFALLS.md: 20 sources covering operational risks and prevention strategies
 
 ---
-
-*Research completed: 2026-03-19*
+*Research completed: 2026-03-22*
 *Ready for roadmap: yes*

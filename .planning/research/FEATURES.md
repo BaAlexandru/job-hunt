@@ -1,226 +1,253 @@
 # Feature Research
 
-**Domain:** Job Application Tracking (Personal Web App)
-**Researched:** 2026-03-19
-**Confidence:** HIGH
+**Domain:** Production Deployment & Infrastructure for Job Application Tracker
+**Researched:** 2026-03-22
+**Confidence:** HIGH (infrastructure patterns are well-established)
+
+## Scope
+
+This research covers two categories for v1.1:
+1. **Gap Closure** -- v1.0 features with backend complete but frontend missing
+2. **Infrastructure & Deployment** -- everything needed to go live on a custom domain
+
+All v1.0 application features (CRUD, kanban, auth, documents, interviews) are already shipped. This milestone focuses on production-readiness and deployment.
 
 ## Feature Landscape
 
-### Table Stakes (Users Expect These)
+### Table Stakes (Must Have to Go Live)
 
-Features users assume exist. Missing these = product feels incomplete.
+Features required for the application to be accessible on the internet as a real product.
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| Application CRUD with status | Core purpose of the app; every competitor has this | LOW | Statuses: Interested, Applied, Phone Screen, Interview, Offer, Rejected, Accepted, Withdrawn |
-| Kanban board view | Every major tracker (Huntr, Teal, Eztrackr, Seekario) uses kanban as primary UI. Users expect drag-and-drop status changes | MEDIUM | Drag-and-drop between status columns. This is how users mentally model their pipeline |
-| List/table view | Some users prefer dense tabular data; Huntr, Teal, Built In all offer dual views | LOW | Sortable, filterable table. Complement to kanban, not replacement |
-| Company management | Users track multiple roles at the same company; need company-level data (name, website, notes, location) | LOW | Link multiple jobs to one company. Store company metadata |
-| Job posting details | Users need to store job title, description, URL, salary range, location, job type | LOW | Manual entry first. Job description text is critical for AI features later |
-| Application date tracking | Users need to know when they applied, when they last heard back, interview dates | LOW | Created date, applied date, last activity date, next action date |
-| Notes per application | Users jot down interview prep, recruiter names, follow-up reminders | LOW | Free-text notes field on each application. Simple but essential |
-| Document upload and linking | Users need to know which CV and cover letter they sent for each application. Huntr, Eztrackr, Seekario all support this | MEDIUM | Upload PDF/DOCX, link docs to specific applications. Store per-job versions |
-| Search and filtering | With 50+ applications, finding specific ones is critical | LOW | Filter by status, company, date range. Full-text search on job title and company |
-| User authentication | Personal data requires login protection even for single-user | MEDIUM | JWT-based auth. Register/login flow. Protects sensitive job search data |
-| Interview scheduling and round tracking | Users go through multiple rounds (screening, technical, behavioral, final) per application. Need to track dates, types, locations, and notes per stage | MEDIUM | Interview entity linked to Application. Type enum (phone/video/onsite), round enum (screening/technical/behavioral/final). Timeline view aggregates interviews + status changes chronologically |
-| Responsive design | Users check their tracker on phones between interviews | LOW | Not a native app, but the web app must be usable on mobile viewports |
+| Feature | Why Expected | Complexity | Category | Notes |
+|---------|--------------|------------|----------|-------|
+| Production Docker images (multi-stage) | Cannot deploy without containerized builds; dev-mode Docker is not production-ready | MEDIUM | Infrastructure | Backend: Gradle build + JRE runtime stage. Frontend: pnpm install + Next.js standalone output + Node.js Alpine runtime. Target <200MB per image |
+| Container registry (GHCR) | Images must be stored somewhere pullable by the cluster | LOW | Infrastructure | GitHub Container Registry is free for public images, integrates natively with GitHub Actions |
+| CI pipeline (GitHub Actions) | Manual docker build+push is error-prone and unsustainable | MEDIUM | Infrastructure | Build, test, push images on merge to master. Reuse existing Gradle/pnpm test commands |
+| Kubernetes cluster (k3s on EC2) | The deployment target; chosen over EKS for cost ($0 control plane vs $73/mo) | HIGH | Infrastructure | k3s on a single t3.small or t3.medium EC2 instance. k3s bundles Traefik, CoreDNS, local-path storage |
+| K8s manifests for all services | Cluster needs to know what to run | MEDIUM | Infrastructure | Deployments + Services for: backend, frontend, PostgreSQL, Redis, MinIO. ConfigMaps for env vars, Secrets for credentials |
+| Ingress / traffic routing | External traffic must reach the app | MEDIUM | Infrastructure | Traefik ships with k3s. Use Kubernetes Gateway API (not deprecated Ingress resource). Route jobhunt.yourdomain.com to frontend, /api/* to backend |
+| Domain + DNS binding | Users access the app via a domain, not an IP address | LOW | Infrastructure | Register domain (Namecheap/Cloudflare ~$10/yr). A record pointing to EC2 elastic IP |
+| TLS/HTTPS via cert-manager + Let's Encrypt | Modern browsers warn on HTTP; HTTPS is non-negotiable for auth cookies | MEDIUM | Infrastructure | cert-manager auto-provisions and renews Let's Encrypt certificates. Integrates with Traefik Gateway API |
+| Database on K8s (PostgreSQL StatefulSet) | App needs its database in the cluster | MEDIUM | Infrastructure | StatefulSet with PersistentVolumeClaim. Single replica is fine for personal project. Must configure backup strategy |
+| Redis on K8s | Session store for Better Auth | LOW | Infrastructure | Simple Deployment + Service. Redis data is ephemeral (sessions re-created on login). No persistence needed |
+| MinIO on K8s | Document storage must be available in production | MEDIUM | Infrastructure | StatefulSet with PVC for document data persistence. Same S3 API the app already uses |
+| Environment variables / secrets management | Production credentials must not be in git | LOW | Infrastructure | K8s Secrets for DB passwords, MinIO keys, JWT secrets. ConfigMaps for non-sensitive config |
+| Interview notes UI | Backend API exists, frontend InterviewsTab missing the notes component | LOW | Gap Closure | Add notes textarea to interview detail/edit in InterviewsTab. Backend already handles CRUD |
+| Document version UI | Backend supports versions, frontend lacks version history panel | LOW | Gap Closure | Add version history panel showing upload date, size, download link per version |
+| Password reset email | Better Auth callback needs SMTP transport to deliver reset emails | MEDIUM | Gap Closure | Configure SMTP (e.g., AWS SES free tier, or Resend). Wire Better Auth email callback |
 
-### Differentiators (Competitive Advantage)
+### Differentiators (Valuable but Not Blocking Launch)
 
-Features that set the product apart. Not required, but valuable.
+Features that improve production quality but are not required for initial go-live.
 
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| AI-powered CV optimization | Analyze job description + existing CV and suggest targeted adjustments. Huntr charges $40/mo for this. Building it yourself = free unlimited usage | HIGH | Requires: stored job description + stored CV + AI provider integration. Deferred to later phase per PROJECT.md |
-| AI cover letter generation | Generate tailored cover letters from job description + CV + company info. Major paid feature in Huntr/Teal | HIGH | Same prerequisites as CV optimization. Deferred to later phase |
-| Application analytics dashboard | Visualize application funnel: how many applied vs interviews vs offers. Response rate by company type. Most free trackers lack this | MEDIUM | Aggregate queries on application data. Charts showing conversion rates, activity over time, status distribution |
-| Contact/networking tracker | Link recruiter names, emails, LinkedIn profiles to applications. Track who you talked to and when. Huntr Pro feature | MEDIUM | Separate contacts entity linked to applications. Not MVP but high value for active networkers |
-| Reminders and follow-ups | Alert when no response after X days. Remind to send thank-you notes. JobHero has this | MEDIUM | Needs next-action-date field + notification mechanism (email or in-app) |
-| Tags and custom labels | Categorize applications by tech stack, remote/onsite, contract type, priority level | LOW | Flexible tagging system. Useful for filtering and organization |
-| Salary tracking and comparison | Record offered salary, expected range, and compare across applications | LOW | Fields on job/application. Simple but useful for negotiation decisions |
-| Timeline/activity log | Chronological log of all events per application (applied, email received, interview scheduled) | MEDIUM | Event-sourced activity history. Richer than just status changes |
-| Browser extension for job saving | One-click save from job boards (LinkedIn, Indeed, etc). Huntr and Teal both have popular extensions | HIGH | Chrome extension is a separate codebase. High effort, high convenience. Defer significantly |
-| Job description URL scraping | Auto-extract job details from a posted URL instead of manual entry | MEDIUM | Web scraping is fragile (sites change layouts). PROJECT.md already marks this as v2 |
+| Feature | Value Proposition | Complexity | Category | Notes |
+|---------|-------------------|------------|----------|-------|
+| ArgoCD GitOps deployment | Push-to-deploy via git commits. K8s-native, declarative, auditable. Better learning experience than kubectl apply | HIGH | Infrastructure | Runs inside the cluster, watches a git repo for manifest changes. Installs via Helm. Adds ~300MB RAM overhead |
+| Staging environment (second cluster or namespace) | Test changes before they hit production. Catch config issues early | HIGH | Infrastructure | Two k3s instances means two EC2 nodes (~$15-30/mo total). Namespace separation is cheaper but weaker isolation |
+| Automated database backups | Prevent data loss from accidental deletion or corruption | MEDIUM | Operations | CronJob running pg_dump to S3/MinIO. Daily backups, 7-day retention. Critical before real usage |
+| Health check probes (liveness/readiness) | K8s restarts unhealthy pods automatically. Prevents serving broken state | LOW | Infrastructure | Spring Boot Actuator /actuator/health already exists. Add K8s probe config to Deployment manifests |
+| Structured logging (JSON) | Machine-parseable logs for debugging production issues | LOW | Operations | Spring Boot: logback JSON encoder. Next.js: pino. Enables future log aggregation |
+| Resource limits and requests | Prevents one pod from starving others. Required for stable multi-service node | LOW | Infrastructure | Set CPU/memory requests and limits on all Deployments. Essential on constrained EC2 instances |
+| Visibility and sharing (public/private companies/jobs) | Allow sharing specific companies or job postings. Useful for portfolio or mentorship | MEDIUM | Gap Closure | Backend schema changes for visibility field. Frontend toggle. Low priority for single user |
+| Graceful shutdown | Clean connection draining on pod termination. Prevents 502 errors during deploys | LOW | Infrastructure | Spring Boot: server.shutdown=graceful already standard. Add preStop hook in K8s manifest |
+| Rolling update strategy | Zero-downtime deployments | LOW | Infrastructure | K8s default rolling update works. Set maxUnavailable=0, maxSurge=1 for zero-downtime |
 
-### Anti-Features (Commonly Requested, Often Problematic)
+### Anti-Features (Commonly Attempted, Often Problematic)
 
-Features that seem good but create problems.
+Features that seem necessary for production but create disproportionate complexity for a single-developer personal project.
 
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| Job board integrations (LinkedIn, Indeed APIs) | "Auto-import my applications" | APIs are restricted/nonexistent for job seekers. LinkedIn aggressively blocks scraping. Indeed has no public job-seeker API. Maintenance burden is enormous | Manual entry + optional URL scraping for job details. Browser extension later |
-| Real-time notifications/push | "Alert me when something changes" | Single-user app with self-entered data means nothing changes without the user's action. Push notification infra is complex for near-zero value | Simple reminder system: "follow up on applications with no activity in X days" |
-| In-app document editor | "Edit my CV right in the app" | Building a document editor (especially for PDF/DOCX fidelity) is a massive effort. Google Docs/Word already exist | Upload-only approach. Edit externally, upload the result. AI suggests changes as text, user applies them in their editor |
-| Collaborative/sharing features | "Share my job search with my mentor" | Adds multi-user complexity (permissions, sharing links, privacy). Distracts from core single-user value | Single-user focus. Export/share via PDF or link if needed later |
-| Email integration (parse inbox) | "Auto-detect application confirmations from email" | Email parsing is unreliable, requires OAuth + provider-specific handling, privacy concerns with email access | Manual status updates. Activity log for tracking communications |
-| Gamification (streaks, achievements) | "Motivate me to apply more" | Job searching is stressful; gamification can feel patronizing. Adds complexity without solving the core problem | Clean analytics showing activity trends is motivating without being gimmicky |
-| Mobile native app | "I want it on my phone" | Two codebases to maintain. React Native or Flutter adds significant complexity | Responsive web app works on mobile. PWA (progressive web app) if needed later |
+| Separate staging + production K8s clusters | "Real companies do it" | Doubles infrastructure cost ($15-30/mo extra), doubles maintenance burden, and for a single-user app the blast radius of a bad deploy is just yourself | Single cluster with namespace separation (staging/production). Or skip staging entirely -- deploy to prod with rolling updates and rollback if broken |
+| Managed database (RDS) | "Never run databases in K8s" | RDS free tier is only 12 months, then $15+/mo. For a single-user personal project with daily pg_dump backups, PostgreSQL on k3s is perfectly adequate | PostgreSQL StatefulSet + automated pg_dump backups. Migrate to RDS only if data becomes critical or multi-user traffic grows |
+| Full observability stack (Prometheus + Grafana + Loki) | "You need monitoring" | Each tool consumes 200-500MB RAM. On a t3.small (2GB), this leaves nothing for your actual app. Overkill for single-user traffic | kubectl logs + Spring Boot Actuator + structured logging to stdout. Add Prometheus only if you upgrade to a larger instance |
+| Helm charts for all services | "Helm is the standard K8s package manager" | Adds abstraction layer, templating complexity, and chart versioning overhead. For 5-6 services with straightforward configs, raw manifests are simpler and more debuggable | Plain K8s YAML manifests organized by service. Kustomize for environment overlaps (staging vs prod) if needed |
+| Multi-node K8s cluster with HA | "Single node is not production" | For a personal project with one user, HA provides zero benefit. Multi-node requires shared storage, leader election, and costs 2-3x more | Single k3s node. Accept that node failure = brief downtime. Automated backups ensure data safety |
+| Service mesh (Istio/Linkerd) | "Microservices need a service mesh" | Massive resource overhead (500MB+ RAM), extreme complexity, zero value for 3 services on one node that communicate via cluster DNS | Direct Service-to-Service communication via K8s DNS. The app has 3 backend services, not 30 microservices |
+| Horizontal Pod Autoscaler | "Scale based on load" | Single node cannot scale horizontally. HPA without node autoscaling just reshuffles pods on the same machine | Fixed replica counts (1 per service). Vertical scaling via larger EC2 instance if needed |
+| Custom domain email (you@jobhunt.com) | "Professional email for password resets" | Requires email infrastructure (SES, SPF, DKIM, DMARC setup). Adds operational burden | Use a personal Gmail/ProtonMail as SMTP sender for transactional emails, or use Resend/Mailgun free tier with their domain |
 
 ## Feature Dependencies
 
 ```
-[User Authentication]
-    └──requires──> (nothing, foundational)
+[Gap Closure: Interview Notes UI]
+    └──requires──> (nothing new, just frontend component work)
 
-[Company Management]
-    └──requires──> [User Authentication]
+[Gap Closure: Document Version UI]
+    └──requires──> (nothing new, just frontend component work)
 
-[Job Posting Management]
-    └──requires──> [Company Management]
+[Gap Closure: Password Reset Email]
+    └──requires──> SMTP provider configuration
 
-[Application Tracking + Status Flow]
-    └──requires──> [Job Posting Management]
+[Gap Closure: Visibility & Sharing]
+    └──requires──> Schema migration + backend changes + frontend toggle
 
-[Kanban Board View]
-    └──requires──> [Application Tracking + Status Flow]
+[Production Docker Images]
+    └──requires──> (nothing new, existing build system)
 
-[List/Table View]
-    └──requires──> [Application Tracking + Status Flow]
+[CI Pipeline (GitHub Actions)]
+    └──requires──> [Production Docker Images]
+    └──requires──> [Container Registry (GHCR)]
 
-[Interview Management]
-    └──requires──> [Application Tracking + Status Flow]
+[K8s Cluster (k3s on EC2)]
+    └──requires──> AWS account + EC2 instance setup
 
-[Document Upload]
-    └──requires──> [User Authentication]
+[K8s Manifests]
+    └──requires──> [Production Docker Images] (image references)
+    └──requires──> [K8s Cluster] (deployment target)
 
-[Document-Application Linking]
-    └──requires──> [Document Upload]
-    └──requires──> [Application Tracking + Status Flow]
+[Domain + DNS]
+    └──requires──> [K8s Cluster] (need the IP to point at)
 
-[AI CV Optimization]
-    └──requires──> [Document Upload] (needs stored CV)
-    └──requires──> [Job Posting Management] (needs job description)
+[TLS/HTTPS]
+    └──requires──> [Domain + DNS] (cert-manager needs a real domain)
+    └──requires──> [Ingress / Traffic Routing]
 
-[AI Cover Letter Generation]
-    └──requires──> [Document Upload] (needs stored CV for context)
-    └──requires──> [Job Posting Management] (needs job description)
-    └──requires──> [Company Management] (needs company context)
+[Ingress / Traffic Routing]
+    └──requires──> [K8s Cluster] (Traefik comes with k3s)
+    └──requires──> [K8s Manifests] (Services to route to)
 
-[Application Analytics]
-    └──requires──> [Application Tracking + Status Flow] (needs data to analyze)
+[ArgoCD]
+    └──requires──> [K8s Cluster]
+    └──requires──> [K8s Manifests] (in a git repo for ArgoCD to watch)
+    └──requires──> [CI Pipeline] (to push images that trigger ArgoCD sync)
 
-[Contact/Networking Tracker]
-    └──enhances──> [Application Tracking + Status Flow]
-    └──enhances──> [Company Management]
+[Database Backups]
+    └──requires──> [PostgreSQL on K8s]
 
-[Tags and Labels]
-    └──enhances──> [Application Tracking + Status Flow]
-    └──enhances──> [Job Posting Management]
+[Staging Namespace]
+    └──requires──> [K8s Manifests] (Kustomize overlays for env separation)
+    └──enhances──> [ArgoCD] (ArgoCD can manage both staging and prod apps)
 
-[Reminders]
-    └──requires──> [Application Tracking + Status Flow]
-
-[URL Scraping]
-    └──enhances──> [Job Posting Management]
+[Health Check Probes]
+    └──enhances──> [K8s Manifests]
+    └──requires──> Spring Boot Actuator (already exists)
 ```
 
 ### Dependency Notes
 
-- **AI features require both documents and job data:** This is why AI is correctly deferred. The document and job management systems must be solid first.
-- **Kanban and list views are parallel:** Both depend on application tracking but not on each other. Can be built in either order, though kanban is the higher-value view.
-- **Analytics requires accumulated data:** Building analytics too early means empty dashboards. Better to add after users have been tracking for a while.
-- **Contact tracker is independent:** Can be added at any point after core application tracking exists.
+- **Gap closure features are independent of infrastructure:** Interview notes UI, doc version UI, and password reset email can be built on the existing dev setup with zero infrastructure dependencies. Do these first.
+- **Visibility & Sharing has schema changes:** Requires a Flyway migration, so it touches both backend and database. More complex than other gap closures.
+- **Docker images gate everything else:** Nothing deploys without containerized builds. This is the critical first infrastructure step.
+- **CI pipeline gates ArgoCD:** ArgoCD watches git for manifest changes, but needs CI to build and push new images first. Without CI, ArgoCD has nothing new to deploy.
+- **Domain + TLS are late dependencies:** You can run the cluster with NodePort/port-forward before DNS is configured. Domain and TLS are the last mile.
+- **ArgoCD is an enhancement, not a blocker:** You can deploy with `kubectl apply` initially and add ArgoCD later. It is valuable for learning but not required for go-live.
 
 ## MVP Definition
 
-### Launch With (v1)
+### Launch With (Go-Live Minimum)
 
-Minimum viable product -- what's needed to start using the app for an actual job search.
+The absolute minimum to have the app accessible on the internet with HTTPS.
 
-- [ ] User authentication (register/login) -- protects personal data
-- [ ] Company CRUD (name, website, location, notes) -- foundation for job tracking
-- [ ] Job posting CRUD (title, description, URL, salary range, company link) -- what you're applying to
-- [ ] Application tracking with status flow (drag-and-drop kanban + list view) -- the core loop
-- [ ] Application dates (applied date, last activity, next action) -- timeline awareness
-- [ ] Notes per application -- capture context and prep
-- [ ] Document upload (PDF/DOCX) -- store CVs and cover letters
-- [ ] Link documents to applications -- know which CV you sent where
-- [ ] Basic search and filtering -- find applications by status, company, text
+- [ ] Interview notes UI -- close the most visible v1.0 gap
+- [ ] Document version UI -- close the second v1.0 gap
+- [ ] Password reset email via SMTP -- required for auth to work properly in production
+- [ ] Multi-stage Dockerfiles for backend and frontend
+- [ ] GitHub Actions CI to build, test, and push images to GHCR
+- [ ] Single k3s node on AWS EC2 (t3.small or t3.medium)
+- [ ] K8s manifests for all services (backend, frontend, PostgreSQL, Redis, MinIO)
+- [ ] Traefik Gateway API routing (frontend + backend API)
+- [ ] Domain registration + DNS A record to EC2 elastic IP
+- [ ] cert-manager + Let's Encrypt for automatic HTTPS
+- [ ] K8s Secrets for production credentials
+- [ ] Health check probes (liveness/readiness) on all Deployments
 
-### Add After Validation (v1.x)
+### Add After Go-Live (v1.1.x)
 
-Features to add once core tracking is working and being used daily.
+Features to add once the app is running in production and stable.
 
-- [ ] Tags and custom labels -- once you have 20+ applications, categorization becomes essential
-- [ ] Salary tracking fields -- useful during offer comparison phase
-- [ ] Application analytics dashboard -- meaningful only after accumulating data
-- [ ] Timeline/activity log per application -- richer history than just status changes
-- [ ] Reminders for follow-ups -- "no response in 7 days" nudges
-- [ ] Contact/networking tracker -- link people to applications and companies
+- [ ] Automated database backups (CronJob + pg_dump) -- add within first week of production
+- [ ] ArgoCD for GitOps deployment -- replace manual kubectl apply with push-to-deploy
+- [ ] Staging namespace with Kustomize overlays -- test changes before prod
+- [ ] Structured JSON logging -- better debugging when issues arise
+- [ ] Visibility & Sharing feature -- low urgency for single user
+- [ ] Resource limits tuning -- observe actual usage first, then set limits
 
 ### Future Consideration (v2+)
 
-Features to defer until core product is proven useful.
-
-- [ ] AI CV optimization -- requires stable document and job management. HIGH complexity
-- [ ] AI cover letter generation -- same prerequisites as CV optimization
-- [ ] Job posting URL scraping -- fragile, version-dependent, but convenient
-- [ ] Browser extension -- separate codebase, high effort, high reward if app is used daily
-- [ ] Export/reporting (PDF summary of job search) -- nice for review but not core
+- [ ] Multi-node cluster -- only if traffic grows beyond single-user
+- [ ] Prometheus + Grafana monitoring -- only if instance is large enough (4GB+ RAM)
+- [ ] Managed database migration (RDS) -- only if data becomes business-critical
+- [ ] CDN for static assets -- only if global access latency matters
 
 ## Feature Prioritization Matrix
 
-| Feature | User Value | Implementation Cost | Priority |
-|---------|------------|---------------------|----------|
-| Application tracking + status flow | HIGH | MEDIUM | P1 |
-| Kanban board view | HIGH | MEDIUM | P1 |
-| List/table view | HIGH | LOW | P1 |
-| Company management | HIGH | LOW | P1 |
-| Job posting management | HIGH | LOW | P1 |
-| Document upload + linking | HIGH | MEDIUM | P1 |
-| User authentication | HIGH | MEDIUM | P1 |
-| Notes per application | MEDIUM | LOW | P1 |
-| Search and filtering | MEDIUM | LOW | P1 |
-| Application date tracking | MEDIUM | LOW | P1 |
-| Tags and labels | MEDIUM | LOW | P2 |
-| Salary tracking | MEDIUM | LOW | P2 |
-| Analytics dashboard | MEDIUM | MEDIUM | P2 |
-| Activity timeline | MEDIUM | MEDIUM | P2 |
-| Reminders/follow-ups | MEDIUM | MEDIUM | P2 |
-| Contact tracker | MEDIUM | MEDIUM | P2 |
-| AI CV optimization | HIGH | HIGH | P3 |
-| AI cover letter generation | HIGH | HIGH | P3 |
-| URL scraping | MEDIUM | MEDIUM | P3 |
-| Browser extension | MEDIUM | HIGH | P3 |
+| Feature | User Value | Implementation Cost | Priority | Category |
+|---------|------------|---------------------|----------|----------|
+| Interview notes UI | MEDIUM | LOW | P1 | Gap Closure |
+| Document version UI | MEDIUM | LOW | P1 | Gap Closure |
+| Password reset email | HIGH | MEDIUM | P1 | Gap Closure |
+| Production Docker images | HIGH | MEDIUM | P1 | Infrastructure |
+| CI pipeline (GitHub Actions) | HIGH | MEDIUM | P1 | Infrastructure |
+| K8s cluster (k3s on EC2) | HIGH | HIGH | P1 | Infrastructure |
+| K8s manifests (all services) | HIGH | MEDIUM | P1 | Infrastructure |
+| Ingress / traffic routing | HIGH | MEDIUM | P1 | Infrastructure |
+| Domain + DNS + TLS | HIGH | LOW | P1 | Infrastructure |
+| Health check probes | MEDIUM | LOW | P1 | Infrastructure |
+| Secrets management | HIGH | LOW | P1 | Infrastructure |
+| Database backups | HIGH | LOW | P2 | Operations |
+| ArgoCD GitOps | MEDIUM | HIGH | P2 | Infrastructure |
+| Staging namespace | LOW | MEDIUM | P2 | Infrastructure |
+| Structured logging | LOW | LOW | P2 | Operations |
+| Visibility & Sharing | LOW | MEDIUM | P2 | Gap Closure |
+| Resource limits tuning | MEDIUM | LOW | P2 | Infrastructure |
+| Graceful shutdown | MEDIUM | LOW | P2 | Infrastructure |
+| Full observability stack | LOW | HIGH | P3 | Operations |
+| Multi-node HA cluster | LOW | HIGH | P3 | Infrastructure |
 
 **Priority key:**
-- P1: Must have for launch -- the app is useless without these
-- P2: Should have, add when core is stable -- these make the app genuinely good
-- P3: Nice to have, future consideration -- high effort or requires foundation to be solid first
+- P1: Required for go-live -- the app cannot be accessed on the internet without these
+- P2: Should have within first 1-2 weeks of production -- operational safety and developer experience
+- P3: Future consideration -- only relevant at scale or with more resources
 
-## Competitor Feature Analysis
+## Cost Analysis
 
-| Feature | Huntr (Free) | Huntr (Pro $40/mo) | Teal | Our Approach |
-|---------|-------------|-------------------|------|--------------|
-| Kanban board | Yes (100 app limit) | Yes (unlimited) | Yes | Yes, unlimited (self-hosted) |
-| List view | Yes | Yes | Yes | Yes |
-| Document storage | Basic | Full + per-job versions | Limited | Full, linked per application |
-| AI resume tailoring | Basic scoring | Full AI generation | Yes (paid) | Phase 2+ with Spring AI |
-| AI cover letters | No | Yes | Yes (paid) | Phase 2+ with Spring AI |
-| Contact management | No | Yes | No | Phase 1.x |
-| Analytics | No | Basic | Yes | Phase 1.x |
-| Chrome extension | Yes | Yes | Yes | Phase 2+ (if ever) |
-| Job board integration | No | No | LinkedIn save | No (manual entry) |
-| Salary tracking | No | Yes | No | Phase 1.x |
-| Reminders | No | No | No | Phase 1.x (differentiator) |
-| Self-hosted/private | No (SaaS) | No (SaaS) | No (SaaS) | Yes (key advantage) |
+| Resource | Monthly Cost | Notes |
+|----------|-------------|-------|
+| EC2 t3.small (2 vCPU, 2GB RAM) | ~$15/mo | Sufficient for single-user with k3s + all services. Free tier t3.micro (1GB) is too small |
+| EC2 t3.medium (2 vCPU, 4GB RAM) | ~$30/mo | Comfortable headroom for ArgoCD + all services. Recommended |
+| Elastic IP | $3.60/mo (when attached) | Required for stable DNS. Free when attached to running instance |
+| Domain (Namecheap/Cloudflare) | ~$10/year | One-time annual cost |
+| GHCR | $0 | Free for public images |
+| Let's Encrypt | $0 | Free TLS certificates |
+| GitHub Actions | $0 | Free for public repos, 2000 min/mo for private |
+| SMTP (Resend/AWS SES) | $0 | Free tier covers transactional email volume |
+| **Total (t3.small)** | **~$19/mo** | |
+| **Total (t3.medium)** | **~$34/mo** | Recommended for ArgoCD headroom |
 
-**Key competitive insight:** The self-hosted nature is itself a differentiator. All major competitors are SaaS products with free tier limitations and paid AI features. Building your own means: unlimited applications, unlimited AI usage (you pay the API directly), full data ownership, and no monthly subscription.
+## Alternative: Budget VPS Instead of EC2
+
+| Provider | Specs | Monthly Cost | K8s Ready |
+|----------|-------|-------------|-----------|
+| Hetzner CAX11 (ARM) | 2 vCPU, 4GB RAM, 40GB | ~$4/mo | Yes, k3s runs on ARM |
+| DigitalOcean Basic | 2 vCPU, 2GB RAM, 50GB | ~$12/mo | Yes |
+| Vultr Cloud Compute | 2 vCPU, 4GB RAM, 80GB | ~$24/mo | Yes |
+| AWS t3.medium | 2 vCPU, 4GB RAM, EBS | ~$34/mo | Yes |
+
+**Recommendation:** Hetzner CAX11 at $4/mo is dramatically cheaper and has more RAM than EC2 t3.small. If the goal is "self-managed K8s as a learning exercise" rather than "must be on AWS specifically," Hetzner is the better value. However, the project specifies AWS EC2, so costs above assume AWS.
 
 ## Sources
 
-- [ApplyArc - Best Job Application Trackers](https://applyarc.com/blog/best-job-application-trackers)
-- [ApplyArc - Comparison Guide](https://applyarc.com/compare/best-job-application-trackers)
-- [Huntr - Product Page](https://huntr.co/product/job-tracker)
-- [Huntr - Pricing](https://huntr.co/pricing)
-- [Teal - Job Tracker](https://www.tealhq.com/tools/job-tracker)
-- [Eztrackr](https://www.eztrackr.app/)
-- [Seekario - Job Tracker](https://seekario.ai/job-tracker)
-- [Sprout Blog - Best Trackers 2025](https://www.usesprout.com/blog/best-job-application-trackers)
-- [Eztrackr Blog - 12 Best Trackers](https://www.eztrackr.app/blog/job-application-tracker)
-- [Built In Job Tracker](https://builtin.com/articles/built-in-job-tracker-kanban-list)
-- [Medium - Top 10 Trackers](https://medium.com/@avgenakisg/the-top-10-job-application-trackers-741ad5786ad5)
+- [Docker Multi-Stage Builds](https://docs.docker.com/get-started/docker-concepts/building-images/multi-stage-builds/)
+- [Next.js Standalone Docker Optimization](https://dev.to/angojay/optimizing-nextjs-docker-images-with-standalone-mode-2nnh)
+- [Next.js Deployment Docs](https://nextjs.org/docs/app/getting-started/deploying)
+- [K3s Official Site](https://k3s.io/)
+- [K3s Documentation](https://docs.k3s.io/)
+- [K3s Single Node Production Discussion](https://github.com/k3s-io/k3s/discussions/2988)
+- [K3s Production Cluster Setup (Jan 2026)](https://oneuptime.com/blog/post/2026-01-26-k3s-production-cluster/view)
+- [K3s Traefik + Gateway API Discussion](https://github.com/k3s-io/k3s/discussions/11100)
+- [ArgoCD Documentation](https://argo-cd.readthedocs.io/en/stable/)
+- [ArgoCD Getting Started](https://argo-cd.readthedocs.io/en/stable/getting_started/)
+- [Ingress NGINX Retirement Announcement (Nov 2025)](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/)
+- [Kubernetes Gateway API Guide 2026](https://calmops.com/devops/kubernetes-gateway-api-complete-guide-2026/)
+- [cert-manager Documentation](https://cert-manager.io/docs/tutorials/getting-started-aws-letsencrypt/)
+- [GHCR Documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
+- [Spring Boot Actuator Health Probes for K8s (Jan 2026)](https://oneuptime.com/blog/post/2026-01-25-health-probes-kubernetes-spring-boot/view)
+- [Spring Boot Production Readiness Checklist 2025](https://medium.com/@khawaraleem/production-ready-spring-boot-a-complete-2025-checklist-for-real-world-microservices-0618738cde01)
+- [PostgreSQL Backup on Kubernetes (Crunchy Data)](https://www.crunchydata.com/blog/stateful-postgres-storage-using-kubernetes)
+- [Affordable Kubernetes for Personal Projects](https://hexiosec.com/blog/affordable-kubernetes-for-personal-projects/)
+- [EKS Pricing Guide](https://www.devzero.io/blog/eks-pricing)
 
 ---
-*Feature research for: Job Application Tracking*
-*Researched: 2026-03-19*
+*Feature research for: Production Deployment & Infrastructure*
+*Researched: 2026-03-22*

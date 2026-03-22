@@ -1,602 +1,584 @@
-# Architecture Research
+# Architecture Patterns: Infrastructure & Deployment
 
-**Domain:** Job Application Tracker (Full-Stack Web Application)
-**Researched:** 2026-03-19
-**Confidence:** HIGH
+**Domain:** Kubernetes deployment infrastructure for Spring Boot + Next.js monorepo
+**Researched:** 2026-03-22
+**Overall confidence:** MEDIUM-HIGH
 
-## Current State Assessment
+## Recommended Architecture
 
-The project currently exists as a single Spring Boot 4.0.4 application with Kotlin 2.2.21, Java 24, and a basic Docker Compose for PostgreSQL. The PROJECT.md describes a monorepo with `/backend`, `/frontend`, `/infra` directories, but the actual structure is a Spring Initializr scaffold at the root. This architecture document recommends how to restructure.
-
-**Key observation:** The build.gradle.kts already includes Spring AI (Anthropic), Spring Security with OAuth2, Flyway, JPA, and Spring REST Docs. These are solid choices. The architecture should organize around them, not fight them.
-
-## System Overview
+### High-Level Overview
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│                         Client Browser                            │
-│  ┌──────────────────────────────────────────────────────────┐     │
-│  │              Next.js Frontend (React/TS)                  │     │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐               │     │
-│  │  │ Pages/   │  │ Components│  │ API Layer│               │     │
-│  │  │ Routes   │  │ (shadcn) │  │ (TanStack│               │     │
-│  │  │          │  │          │  │  Query)  │               │     │
-│  │  └──────────┘  └──────────┘  └─────┬────┘               │     │
-│  └─────────────────────────────────────┼────────────────────┘     │
-└────────────────────────────────────────┼─────────────────────────┘
-                                         │ REST API (JSON)
-                                         │ JWT Bearer Token
-┌────────────────────────────────────────┼─────────────────────────┐
-│              Spring Boot Backend (Kotlin)                          │
-│  ┌─────────────────────────────────────┼────────────────────┐     │
-│  │                Security Filter Chain │                     │     │
-│  │  ┌──────────┐  ┌──────────┐  ┌─────┴────┐               │     │
-│  │  │ Auth     │  │ CORS     │  │ JWT      │               │     │
-│  │  │ Provider │  │ Config   │  │ Filter   │               │     │
-│  │  └──────────┘  └──────────┘  └──────────┘               │     │
-│  ├──────────────────────────────────────────────────────────┤     │
-│  │                  REST Controllers                         │     │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐ │     │
-│  │  │ Auth     │  │ Job      │  │ Document │  │ AI       │ │     │
-│  │  │ Controller│  │ Controller│  │ Controller│  │ Controller│ │     │
-│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘ │     │
-│  ├───────┴──────────────┴─────────────┴─────────────┴───────┤     │
-│  │                  Service Layer                            │     │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐ │     │
-│  │  │ Auth     │  │ Job      │  │ Document │  │ AI       │ │     │
-│  │  │ Service  │  │ Service  │  │ Service  │  │ Service  │ │     │
-│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘ │     │
-│  ├───────┴──────────────┴─────────────┴─────────────┴───────┤     │
-│  │                Repository / Data Layer                     │     │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐               │     │
-│  │  │ JPA      │  │ File     │  │ Spring AI│               │     │
-│  │  │ Repos    │  │ Storage  │  │ Client   │               │     │
-│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘               │     │
-│  └───────┴──────────────┴─────────────┴─────────────────────┘     │
-└──────────┬──────────────┬─────────────┬──────────────────────────┘
-           │              │             │
-    ┌──────┴──────┐ ┌─────┴─────┐ ┌────┴──────────┐
-    │ PostgreSQL  │ │ Local FS  │ │ Anthropic API │
-    │ (Docker)    │ │ / S3      │ │ (Claude)      │
-    └─────────────┘ └───────────┘ └───────────────┘
+                    Internet
+                       |
+                 [AWS Route 53]
+                       |
+              [EC2: K3s Single Node]
+                       |
+                  [Traefik Ingress]
+                   /    |    \
+          [Frontend] [Backend] [MinIO Console]
+          Next.js    Spring     (admin only)
+          :3000      Boot
+                     :8080
+                       |
+              ---------+---------
+              |        |        |
+         [PostgreSQL] [Redis] [MinIO]
+         StatefulSet  Deploy  StatefulSet
+         PVC:10Gi    (no PV)  PVC:10Gi
 ```
 
-## Component Responsibilities
+### Why Single Node, Not Two Clusters
 
-| Component | Responsibility | Communicates With |
-|-----------|----------------|-------------------|
-| **Next.js Frontend** | UI rendering, client-side routing, form handling, state management | Backend REST API via TanStack Query |
-| **Security Filter Chain** | Authentication, authorization, CORS, JWT validation | All inbound requests |
-| **Auth Controller/Service** | User registration, login, token refresh, OAuth2 | PostgreSQL (user table), JWT library |
-| **Job Controller/Service** | CRUD for companies, jobs, applications, status transitions | PostgreSQL (core domain tables) |
-| **Interview Controller/Service** | Interview scheduling, round tracking, notes per stage, timeline view | PostgreSQL (interview table, linked to applications) |
-| **Document Controller/Service** | File upload/download, document metadata, linking docs to applications | PostgreSQL (metadata), File Storage (binaries) |
-| **AI Controller/Service** | CV analysis, cover letter generation, job description parsing | Spring AI ChatClient, Document Service, Job Service |
-| **PostgreSQL** | Persistent storage for all structured data | Accessed via Spring Data JPA |
-| **File Storage** | Binary document storage (PDFs, DOCX files) | Accessed via storage abstraction |
-| **Anthropic API** | LLM inference for AI features | Accessed via Spring AI |
+The PROJECT.md specifies "separate staging and production clusters." After research, this is **not realistic on AWS free tier**. Here is why:
 
-## Recommended Project Structure
+- **K3s server node minimum:** 2 vCPU, 2 GB RAM (official docs)
+- **t3.micro:** 2 vCPU, 1 GB RAM -- below K3s minimum, will OOM under load
+- **t3.small:** 2 vCPU, 2 GB RAM -- meets K3s minimum but leaves zero headroom for workloads
+- **AWS free tier (post-July 2025 accounts):** 750 hours/month across t3.small, t4g.small, c7i-flex.large, m7i-flex.large for 6 months, plus $200 credit
+- **AWS free tier (pre-July 2025 accounts):** 750 hours/month of t3.micro only for 12 months
 
-### Monorepo Root
+**Recommended approach:** One t3.small (or t4g.small for ARM/Graviton) EC2 instance running K3s with **namespace-based staging/prod separation** instead of two clusters. This is the only viable free-tier path. Two t3.small instances running 24/7 = 1460 hours/month, nearly double the 750-hour free tier limit.
+
+If budget allows ~$15-20/month after free tier expires, upgrade to a single t3.medium (2 vCPU, 4 GB RAM) which gives comfortable headroom for all workloads.
+
+**Confidence:** HIGH -- based on official K3s requirements docs and AWS free tier pricing.
+
+### Component Boundaries
+
+| Component | Responsibility | K8s Resource Type | Namespace |
+|-----------|---------------|-------------------|-----------|
+| Backend API | Spring Boot REST API, JWT auth, file upload | Deployment + Service | `jobhunt-{env}` |
+| Frontend | Next.js standalone SSR server | Deployment + Service | `jobhunt-{env}` |
+| PostgreSQL | Primary datastore, Flyway-managed schema | StatefulSet + PVC | `jobhunt-{env}` |
+| Redis | Rate limiting, session cache | Deployment (no persistence needed) | `jobhunt-{env}` |
+| MinIO | S3-compatible document storage | StatefulSet + PVC | `jobhunt-{env}` |
+| Traefik | Ingress controller, TLS termination | DaemonSet (K3s built-in) | `kube-system` |
+| cert-manager | Let's Encrypt TLS certificate automation | Deployment | `cert-manager` |
+| ArgoCD | GitOps continuous deployment | Various | `argocd` |
+
+### Namespace Strategy
 
 ```
-job-hunt/
-├── backend/                     # Spring Boot application (Kotlin)
-│   ├── build.gradle.kts
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── kotlin/com/alex/job/hunt/jobhunt/
-│   │   │   │   ├── JobHuntApplication.kt
-│   │   │   │   ├── config/              # Spring configuration
-│   │   │   │   │   ├── SecurityConfig.kt
-│   │   │   │   │   ├── CorsConfig.kt
-│   │   │   │   │   ├── JwtConfig.kt
-│   │   │   │   │   ├── AiConfig.kt
-│   │   │   │   │   └── StorageConfig.kt
-│   │   │   │   ├── auth/                # Authentication module
-│   │   │   │   │   ├── AuthController.kt
-│   │   │   │   │   ├── AuthService.kt
-│   │   │   │   │   ├── JwtService.kt
-│   │   │   │   │   ├── User.kt          # Entity
-│   │   │   │   │   ├── UserRepository.kt
-│   │   │   │   │   └── dto/
-│   │   │   │   ├── company/             # Company management
-│   │   │   │   │   ├── CompanyController.kt
-│   │   │   │   │   ├── CompanyService.kt
-│   │   │   │   │   ├── Company.kt
-│   │   │   │   │   ├── CompanyRepository.kt
-│   │   │   │   │   └── dto/
-│   │   │   │   ├── job/                 # Job postings
-│   │   │   │   │   ├── JobController.kt
-│   │   │   │   │   ├── JobService.kt
-│   │   │   │   │   ├── Job.kt
-│   │   │   │   │   ├── JobRepository.kt
-│   │   │   │   │   └── dto/
-│   │   │   │   ├── application/         # Application tracking (core)
-│   │   │   │   │   ├── ApplicationController.kt
-│   │   │   │   │   ├── ApplicationService.kt
-│   │   │   │   │   ├── Application.kt
-│   │   │   │   │   ├── ApplicationStatus.kt  # Enum
-│   │   │   │   │   ├── ApplicationRepository.kt
-│   │   │   │   │   └── dto/
-│   │   │   │   ├── document/            # Document management
-│   │   │   │   │   ├── DocumentController.kt
-│   │   │   │   │   ├── DocumentService.kt
-│   │   │   │   │   ├── Document.kt
-│   │   │   │   │   ├── DocumentRepository.kt
-│   │   │   │   │   ├── StorageService.kt     # Abstraction
-│   │   │   │   │   ├── LocalStorageService.kt
-│   │   │   │   │   └── dto/
-│   │   │   │   ├── interview/            # Interview management
-│   │   │   │   │   ├── InterviewController.kt
-│   │   │   │   │   ├── InterviewService.kt
-│   │   │   │   │   ├── Interview.kt
-│   │   │   │   │   ├── InterviewRepository.kt
-│   │   │   │   │   └── dto/
-│   │   │   │   ├── ai/                  # AI features (later phase)
-│   │   │   │   │   ├── AiController.kt
-│   │   │   │   │   ├── CvAnalysisService.kt
-│   │   │   │   │   ├── CoverLetterService.kt
-│   │   │   │   │   └── dto/
-│   │   │   │   └── common/              # Shared utilities
-│   │   │   │       ├── BaseEntity.kt
-│   │   │   │       ├── exception/
-│   │   │   │       │   ├── GlobalExceptionHandler.kt
-│   │   │   │       │   └── Exceptions.kt
-│   │   │   │       └── dto/
-│   │   │   │           └── PageResponse.kt
-│   │   │   └── resources/
-│   │   │       ├── application.yml
-│   │   │       ├── application-dev.yml
-│   │   │       ├── application-prod.yml
-│   │   │       └── db/migration/        # Flyway migrations
-│   │   │           ├── V1__create_users.sql
-│   │   │           ├── V2__create_companies.sql
-│   │   │           ├── V3__create_jobs.sql
-│   │   │           ├── V4__create_applications.sql
-│   │   │           └── V5__create_documents.sql
-│   │   └── test/kotlin/com/alex/job/hunt/jobhunt/
-│   └── Dockerfile
-├── frontend/                    # Next.js application
-│   ├── package.json
-│   ├── next.config.ts
-│   ├── tsconfig.json
-│   ├── tailwind.config.ts
-│   ├── src/
-│   │   ├── app/                 # Next.js App Router
-│   │   │   ├── layout.tsx
-│   │   │   ├── page.tsx         # Dashboard / landing
-│   │   │   ├── login/
-│   │   │   ├── register/
-│   │   │   ├── companies/
-│   │   │   ├── jobs/
-│   │   │   ├── applications/
-│   │   │   │   ├── page.tsx     # Table/list view
-│   │   │   │   └── board/
-│   │   │   │       └── page.tsx # Kanban view
-│   │   │   ├── documents/
-│   │   │   └── ai/              # AI features UI
-│   │   ├── components/
-│   │   │   ├── ui/              # shadcn/ui components
-│   │   │   ├── layout/          # Header, sidebar, nav
-│   │   │   ├── applications/    # Domain-specific components
-│   │   │   ├── documents/
-│   │   │   └── kanban/
-│   │   ├── lib/
-│   │   │   ├── api/             # API client functions
-│   │   │   │   ├── client.ts    # Axios/fetch wrapper with JWT
-│   │   │   │   ├── auth.ts
-│   │   │   │   ├── companies.ts
-│   │   │   │   ├── jobs.ts
-│   │   │   │   ├── applications.ts
-│   │   │   │   └── documents.ts
-│   │   │   ├── hooks/           # TanStack Query hooks
-│   │   │   │   ├── useAuth.ts
-│   │   │   │   ├── useApplications.ts
-│   │   │   │   └── ...
-│   │   │   └── utils/
-│   │   ├── types/               # TypeScript interfaces mirroring backend DTOs
-│   │   └── providers/           # React context providers
-│   │       ├── QueryProvider.tsx
-│   │       └── AuthProvider.tsx
-│   └── Dockerfile
-├── compose.yaml                    # Docker Compose at root for Spring Boot auto-discovery
-├── infra/                       # Infrastructure configuration
-│   ├── docker/                  # Dockerfiles for production builds (future)
-│   └── k8s/                     # Kubernetes manifests (later)
-│       ├── helm/
-│       └── manifests/
-├── .planning/                   # Project planning (GSD)
-├── CLAUDE.md                    # Root-level AI assistant context
-├── backend/CLAUDE.md            # Backend-specific AI context
-├── frontend/CLAUDE.md           # Frontend-specific AI context
-└── .gitignore
+kube-system/        -- K3s system (Traefik, CoreDNS, local-path-provisioner)
+cert-manager/       -- TLS certificate management
+argocd/             -- ArgoCD server, repo-server, application-controller
+jobhunt-staging/    -- Full app stack (backend, frontend, postgres, redis, minio)
+jobhunt-prod/       -- Full app stack (backend, frontend, postgres, redis, minio)
 ```
 
-### Structure Rationale
+Each environment namespace gets its own database, Redis, and MinIO instance. This provides real isolation without the cost of separate clusters.
 
-- **Package-by-feature (not by layer):** Each domain module (`auth/`, `company/`, `job/`, `application/`, `document/`, `ai/`) contains its own controller, service, entity, repository, and DTOs. This is the modern Spring Boot convention and aligns with how features get built phase-by-phase. You never need to touch 5 different package trees to add one feature.
+## Integration Points: Existing Code to New Infrastructure
 
-- **`common/` for cross-cutting concerns only:** Exception handling, base entities, shared DTOs. Keep this minimal -- if something is only used by two modules, put it in one and import from the other.
+### 1. Backend Dockerfile (NEW)
 
-- **Frontend `lib/api/` + `lib/hooks/` separation:** API client functions are pure fetch wrappers. TanStack Query hooks wrap them with caching/invalidation. This separation means you can test API functions independently and swap query libraries if needed.
+**Location:** `infra/docker/backend.Dockerfile`
 
-- **`infra/` directory:** Keeps Docker and K8s configs out of application code. The root `compose.yaml` from Spring Initializr should move here.
+Multi-stage build using Spring Boot layered JAR extraction:
 
-## Architectural Patterns
+```dockerfile
+# Stage 1: Build
+FROM eclipse-temurin:24-jdk AS builder
+WORKDIR /app
+COPY backend/gradle/ gradle/
+COPY backend/gradlew backend/build.gradle.kts backend/settings.gradle.kts ./
+# Root settings needed for composite build
+COPY settings.gradle.kts /root-settings.gradle.kts
+RUN ./gradlew dependencies --no-daemon
+COPY backend/src/ src/
+RUN ./gradlew bootJar --no-daemon
 
-### Pattern 1: Package-by-Feature with Layered Internals
+# Stage 2: Extract layers
+FROM eclipse-temurin:24-jdk AS extractor
+WORKDIR /app
+COPY --from=builder /app/build/libs/*.jar app.jar
+RUN java -Djarmode=layertools -jar app.jar extract
 
-**What:** Each feature module contains all layers (controller, service, repository, entity, DTOs) but the layers within a module follow strict dependency direction: Controller -> Service -> Repository.
-
-**When to use:** Always -- this is the recommended default for Spring Boot applications of this size.
-
-**Trade-offs:** Slightly more files per feature, but vastly better discoverability. A developer working on "applications" only needs to look in one package.
-
-**Example:**
-
-```kotlin
-// application/ApplicationController.kt
-@RestController
-@RequestMapping("/api/applications")
-class ApplicationController(
-    private val applicationService: ApplicationService
-) {
-    @GetMapping
-    fun list(@AuthenticationPrincipal user: UserDetails): ResponseEntity<List<ApplicationDto>> =
-        ResponseEntity.ok(applicationService.findAllForUser(user.username))
-
-    @PatchMapping("/{id}/status")
-    fun updateStatus(
-        @PathVariable id: Long,
-        @RequestBody request: StatusUpdateRequest
-    ): ResponseEntity<ApplicationDto> =
-        ResponseEntity.ok(applicationService.updateStatus(id, request.status))
-}
+# Stage 3: Runtime
+FROM eclipse-temurin:24-jre
+RUN addgroup --system appuser && adduser --system --ingroup appuser appuser
+WORKDIR /app
+COPY --from=extractor /app/dependencies/ ./
+COPY --from=extractor /app/spring-boot-loader/ ./
+COPY --from=extractor /app/snapshot-dependencies/ ./
+COPY --from=extractor /app/application/ ./
+USER appuser
+EXPOSE 8080
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
 ```
 
-### Pattern 2: Storage Abstraction for Documents
+**Critical integration point:** The backend currently relies on `spring-boot-docker-compose` starter for local dev. In production, this dependency is `testAndDevelopmentOnly` so it will NOT be in the production JAR. The backend needs an `application-prod.yml` profile that provides explicit database/redis/minio connection properties via environment variables.
 
-**What:** A `StorageService` interface with `LocalStorageService` (dev) and `S3StorageService` (prod) implementations. Metadata in PostgreSQL, binaries on filesystem or object storage.
+### 2. Backend Production Profile (NEW)
 
-**When to use:** For the document upload feature. Never store binary files in PostgreSQL.
+**Location:** `backend/src/main/resources/application-prod.yml`
 
-**Trade-offs:** Slightly more complexity than just saving to a known directory, but essential for future S3 migration and testability.
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT:5432}/${DB_NAME:jobhunt}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
 
-**Example:**
+storage:
+  endpoint: http://${MINIO_HOST}:${MINIO_PORT:9000}
+  access-key: ${MINIO_ACCESS_KEY}
+  secret-key: ${MINIO_SECRET_KEY}
+  bucket: ${MINIO_BUCKET:jobhunt-documents}
 
-```kotlin
-// document/StorageService.kt
-interface StorageService {
-    fun store(file: MultipartFile, userId: Long): StorageReference
-    fun load(reference: StorageReference): Resource
-    fun delete(reference: StorageReference)
-}
+jwt:
+  secret: ${JWT_SECRET}
 
-// document/LocalStorageService.kt
-@Service
-@Profile("dev", "local")
-class LocalStorageService(
-    @Value("\${storage.local.path}") private val basePath: Path
-) : StorageService {
-    override fun store(file: MultipartFile, userId: Long): StorageReference {
-        val filename = "${UUID.randomUUID()}_${file.originalFilename}"
-        val target = basePath.resolve(userId.toString()).resolve(filename)
-        Files.createDirectories(target.parent)
-        file.transferTo(target)
-        return StorageReference(path = target.toString(), type = StorageType.LOCAL)
-    }
-    // ...
-}
+management:
+  endpoint:
+    health:
+      show-details: when-authorized
 ```
 
-### Pattern 3: Application Status as State Machine
+### 3. Frontend Dockerfile (NEW)
 
-**What:** Model application status transitions as an explicit state machine rather than a free-form string update. Define valid transitions (e.g., INTERESTED -> APPLIED, APPLIED -> INTERVIEW, but not INTERESTED -> OFFER).
+**Location:** `infra/docker/frontend.Dockerfile`
 
-**When to use:** For the core application tracking feature. Status is the most important field.
+Next.js standalone output mode (30-60% smaller images):
 
-**Trade-offs:** More upfront code than a simple enum setter, but prevents invalid states and makes the kanban board logic predictable.
+```dockerfile
+# Stage 1: Dependencies
+FROM node:22-alpine AS deps
+WORKDIR /app
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
+RUN corepack enable && pnpm install --frozen-lockfile
 
-**Example:**
+# Stage 2: Build
+FROM node:22-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY frontend/ .
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN corepack enable && pnpm build
 
-```kotlin
-// application/ApplicationStatus.kt
-enum class ApplicationStatus {
-    INTERESTED,
-    APPLIED,
-    PHONE_SCREEN,
-    INTERVIEW,
-    OFFER,
-    ACCEPTED,
-    REJECTED,
-    WITHDRAWN;
-
-    fun canTransitionTo(target: ApplicationStatus): Boolean = when (this) {
-        INTERESTED -> target in setOf(APPLIED, WITHDRAWN)
-        APPLIED -> target in setOf(PHONE_SCREEN, INTERVIEW, REJECTED, WITHDRAWN)
-        PHONE_SCREEN -> target in setOf(INTERVIEW, REJECTED, WITHDRAWN)
-        INTERVIEW -> target in setOf(OFFER, REJECTED, WITHDRAWN)
-        OFFER -> target in setOf(ACCEPTED, REJECTED)
-        ACCEPTED, REJECTED, WITHDRAWN -> false
-    }
-}
+# Stage 3: Runtime
+FROM node:22-alpine AS runner
+WORKDIR /app
+RUN addgroup --system appuser && adduser --system -G appuser appuser
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+USER appuser
+EXPOSE 3000
+ENV PORT=3000 HOSTNAME="0.0.0.0"
+# Use node directly, not npm/pnpm -- proper SIGTERM handling
+CMD ["node", "server.js"]
 ```
 
-### Pattern 4: TanStack Query for Server State
+**Critical integration point:** The frontend `next.config.ts` must add `output: "standalone"` for Docker builds. This is a code change in the existing frontend.
 
-**What:** Use TanStack Query (not Redux/Zustand) as the primary state management solution. Server state (applications, jobs, companies) lives in TanStack Query cache. Only minimal client state (UI preferences, sidebar open/closed) uses React state or context.
+### 4. Frontend Config Change (MODIFY)
 
-**When to use:** For all data fetching in the frontend. This app is primarily server-state driven.
-
-**Trade-offs:** Learning curve if unfamiliar, but eliminates massive amounts of boilerplate around loading states, error handling, caching, and refetching.
-
-**Example:**
+**File:** `frontend/next.config.ts` -- add `output: "standalone"`
 
 ```typescript
-// lib/hooks/useApplications.ts
-export function useApplications() {
-  return useQuery({
-    queryKey: ['applications'],
-    queryFn: () => api.applications.list(),
-  })
-}
-
-export function useUpdateApplicationStatus() {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: ({ id, status }: { id: number; status: string }) =>
-      api.applications.updateStatus(id, status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['applications'] })
-    },
-  })
-}
+const nextConfig: NextConfig = {
+  output: "standalone",
+  allowedDevOrigins: ["192.168.178.49"],
+};
 ```
 
-## Data Flow
+### 5. Container Registry
 
-### Primary Request Flow (CRUD Operations)
+**Use GitHub Container Registry (GHCR)** -- free for public repos, 500 MB free for private repos, integrated with GitHub Actions.
 
+Image naming convention:
 ```
-User Action (click, form submit)
-    |
-Next.js Page/Component
-    |
-TanStack Query Hook (useApplications, useMutation)
-    |
-API Client Function (lib/api/applications.ts)
-    | HTTP request with JWT in Authorization header
-    v
-Spring Security Filter Chain
-    | validates JWT, sets SecurityContext
-    v
-REST Controller (@RestController)
-    | validates input (@Valid), extracts user from SecurityContext
-    v
-Service Layer (@Service, @Transactional)
-    | business logic, status validation, authorization checks
-    v
-Repository Layer (Spring Data JPA)
-    | generates SQL from method names / @Query
-    v
-PostgreSQL
-    | result set
-    v
-Entity -> DTO mapping (in Service)
-    | JSON serialization (Jackson + kotlin-module)
-    v
-HTTP Response -> TanStack Query Cache -> React Re-render
+ghcr.io/baalexandru/jobhunt-backend:sha-abc1234
+ghcr.io/baalexandru/jobhunt-frontend:sha-abc1234
 ```
 
-### Document Upload Flow
+Tag strategy: Git SHA tags for immutability + `latest` and `staging`/`prod` mutable tags for convenience.
+
+## Infrastructure-as-Code Directory Structure
+
+### Recommended `/infra` Layout
 
 ```
-User selects file (PDF/DOCX)
-    |
-Frontend: FormData with multipart/form-data POST
-    |
-DocumentController: @PostMapping with @RequestParam file: MultipartFile
-    |
-DocumentService:
-    1. Validate file type and size
-    2. Store binary via StorageService (local FS or S3)
-    3. Create Document entity (metadata: name, type, size, storagePath, userId)
-    4. Save metadata to PostgreSQL
-    5. Return DocumentDto with download URL
-    |
-Response: { id, name, type, size, downloadUrl, createdAt }
+infra/
+  docker/
+    backend.Dockerfile        # Spring Boot multi-stage build
+    frontend.Dockerfile       # Next.js standalone multi-stage build
+  k8s/
+    base/                     # Shared K8s manifests (Kustomize base)
+      backend/
+        deployment.yaml
+        service.yaml
+      frontend/
+        deployment.yaml
+        service.yaml
+      postgres/
+        statefulset.yaml
+        service.yaml
+        pvc.yaml
+      redis/
+        deployment.yaml
+        service.yaml
+      minio/
+        statefulset.yaml
+        service.yaml
+        pvc.yaml
+      kustomization.yaml
+    overlays/
+      staging/
+        kustomization.yaml    # Patches: image tags, replicas=1, resource limits
+        ingress.yaml          # staging.jobhunt.example.com
+        secrets.yaml          # SealedSecret references
+        configmap.yaml        # ENV overrides
+      prod/
+        kustomization.yaml    # Patches: image tags, replicas=1, resource limits
+        ingress.yaml          # jobhunt.example.com
+        secrets.yaml
+        configmap.yaml
+    platform/
+      cert-manager/
+        namespace.yaml
+        clusterissuer.yaml    # Let's Encrypt ACME issuer
+      argocd/
+        namespace.yaml
+        install.yaml          # ArgoCD manifests (or Helm values)
+        apps/
+          root-app.yaml       # App-of-Apps root
+          staging.yaml        # ArgoCD Application: staging overlay
+          prod.yaml           # ArgoCD Application: prod overlay
+  scripts/
+    bootstrap-k3s.sh          # EC2 K3s installation script
+    bootstrap-argocd.sh       # ArgoCD initial setup
+    create-secrets.sh         # Generate and apply K8s secrets
 ```
 
-### AI Analysis Flow (Later Phase)
+### Why Kustomize Over Helm
+
+For this project, **use Kustomize** (not Helm charts):
+
+1. **Simpler for a small app** -- 5 microservices is really 2 app services + 3 data stores
+2. **No template logic needed** -- environment differences are just image tags, resource limits, and hostnames
+3. **K3s ships Kustomize support** -- no extra tooling to install
+4. **ArgoCD has first-class Kustomize support** -- auto-detects kustomization.yaml
+5. **Helm is overkill** -- you are not distributing charts to third parties
+
+The base/overlay pattern gives clean staging/prod separation with minimal duplication.
+
+**Confidence:** HIGH -- Kustomize is the ArgoCD-recommended approach for this scale of deployment.
+
+## Data Flow: CI/CD Pipeline
+
+### GitHub Actions CI (Build + Push)
 
 ```
-User clicks "Analyze CV for this job"
-    |
-Frontend: POST /api/ai/analyze-cv { applicationId, documentId }
-    |
-AiController -> CvAnalysisService:
-    1. Load job description (from Job entity)
-    2. Load company info (from Company entity)
-    3. Load CV content (from StorageService, parse PDF/DOCX)
-    4. Construct prompt with job + company + CV context
-    5. Call Spring AI ChatClient (Anthropic)
-    6. Return structured suggestions
-    |
-Response: { suggestions: [...], relevanceScore, missingKeywords: [...] }
+Developer pushes to main branch
+         |
+         v
+GitHub Actions workflow triggers
+         |
+    +-----------+-----------+
+    |           |           |
+  [Test]    [Test]     [Lint]
+  backend   frontend
+    |           |           |
+    +-----------+-----------+
+         |
+    [Build Docker Images]
+    backend + frontend
+         |
+    [Push to GHCR]
+    ghcr.io/baalexandru/jobhunt-{backend,frontend}:sha-XXXXXX
+         |
+    [Update K8s Manifests]
+    Patch image tag in infra/k8s/overlays/{env}/kustomization.yaml
+         |
+    [Commit manifest change]
+    (Auto-commit to same repo, or separate infra branch)
+         |
+         v
+ArgoCD detects Git change (webhook or 3-min poll)
+         |
+         v
+ArgoCD syncs K8s cluster to match Git state
 ```
 
-### Authentication Flow
+### Key Design Decisions
 
-```
-Registration: POST /api/auth/register { email, password }
-    -> Hash password (BCrypt)
-    -> Save User entity
-    -> Return JWT pair (access + refresh)
+**Single repo, not separate infra repo.** For a single-developer project, keeping K8s manifests in the same monorepo reduces complexity. ArgoCD can point to a subdirectory (`infra/k8s/overlays/prod`) within the monorepo. The ArgoCD best practice of separate repos applies to teams, not solo projects.
 
-Login: POST /api/auth/login { email, password }
-    -> Validate credentials
-    -> Return JWT pair
+**GitHub Actions updates image tags, ArgoCD applies them.** GitHub Actions never talks to K8s directly. It builds images, pushes them, and updates the Git manifests. ArgoCD is the only thing that touches the cluster. This is the standard GitOps separation of concerns.
 
-Authenticated Request:
-    -> Frontend stores JWT in httpOnly cookie or memory
-    -> Every API request includes Authorization: Bearer <token>
-    -> JwtFilter extracts and validates token
-    -> Sets SecurityContextHolder with UserDetails
-    -> Controller accesses user via @AuthenticationPrincipal
-```
+**Image immutability via SHA tags.** Every build produces `sha-<git-short-hash>` tags. The Kustomize overlay references the specific SHA. No `:latest` in production manifests.
 
-## Key Data Flows
+## Patterns to Follow
 
-1. **Application lifecycle:** User creates application (INTERESTED) -> updates status through stages -> each transition validated by state machine -> kanban board reflects current states via query invalidation.
+### Pattern 1: Kustomize Base + Overlay
 
-2. **Document-to-application linking:** Documents exist independently (a CV can be reused) -> link table `application_documents` associates specific documents with specific applications -> "Which CV did I use for this job?" is always answerable.
+**What:** Shared base manifests with per-environment patches.
+**When:** Always -- this is the foundation of the K8s manifest strategy.
 
-3. **AI context assembly:** AI features pull data from multiple services (Job, Company, Document) -> assemble into a rich prompt -> send to LLM -> return structured response. This is a cross-cutting concern that depends on core domain being complete first.
-
-## Scaling Considerations
-
-| Scale | Architecture Adjustments |
-|-------|--------------------------|
-| 1 user (MVP) | Single Spring Boot instance, local file storage, Docker Compose, SQLite or PostgreSQL in container. This is where you start. |
-| 10-100 users | Add proper JWT with refresh tokens, rate limiting on AI endpoints (cost control), S3 for document storage, basic monitoring. |
-| 1000+ users | Add Redis for session/cache, move to K8s, separate frontend deployment (Vercel), add CDN for document downloads, async AI processing with job queue. |
-
-### Scaling Priorities
-
-1. **First bottleneck: AI API costs and latency.** LLM calls are slow (2-10 seconds) and expensive. Add request queuing and caching of AI responses for identical inputs before adding more compute.
-2. **Second bottleneck: Document storage.** Local filesystem does not scale. Migrate to S3/MinIO before hitting disk limits. The StorageService abstraction makes this a config change, not a rewrite.
-
-## Anti-Patterns
-
-### Anti-Pattern 1: Storing Files in PostgreSQL
-
-**What people do:** Save PDF/DOCX binary content as bytea/BLOB columns in PostgreSQL.
-**Why it's wrong:** Bloats database size, makes backups slow, degrades query performance on the same database, and PostgreSQL is not optimized for large binary streaming.
-**Do this instead:** Store metadata (filename, type, size, storage path) in PostgreSQL. Store binary content on local filesystem (dev) or S3 (prod) behind the `StorageService` abstraction.
-
-### Anti-Pattern 2: Fat Controllers
-
-**What people do:** Put business logic (status validation, authorization checks, complex queries) directly in Spring controllers.
-**Why it's wrong:** Cannot unit test business logic without spinning up Spring context, violates single responsibility, makes controllers unmaintainable.
-**Do this instead:** Controllers only handle HTTP concerns (request mapping, validation annotations, response codes). All logic goes in `@Service` classes.
-
-### Anti-Pattern 3: N+1 Queries in JPA
-
-**What people do:** Eagerly load all relationships or rely on lazy loading without thinking about access patterns, leading to N+1 SELECT problems.
-**Why it's wrong:** Loading 50 applications that each lazy-load their company and documents produces 150+ queries instead of 3.
-**Do this instead:** Use `@EntityGraph` or JPQL `JOIN FETCH` for known access patterns. Use DTOs projected directly from queries for list views. Reserve entity loading for single-item detail views and mutations.
-
-### Anti-Pattern 4: Shared Mutable State in Frontend
-
-**What people do:** Use Redux or global state stores to cache server data, manually keeping it in sync with the backend.
-**Why it's wrong:** Leads to stale data bugs, complex synchronization logic, and unnecessary re-renders. Every mutation requires manual cache updates.
-**Do this instead:** Use TanStack Query as the server state cache. It handles staleness, refetching, optimistic updates, and cache invalidation automatically.
-
-### Anti-Pattern 5: Monorepo Without Clear Boundaries
-
-**What people do:** Import backend types in frontend or share code between backend and frontend without a clear contract.
-**Why it's wrong:** Creates tight coupling. The REST API (OpenAPI spec) IS the contract. Frontend and backend should be independently deployable.
-**Do this instead:** Define the API contract explicitly. Frontend TypeScript types mirror backend DTOs but are independently maintained. Consider generating frontend types from an OpenAPI spec if they drift.
-
-## Integration Points
-
-### External Services
-
-| Service | Integration Pattern | Notes |
-|---------|---------------------|-------|
-| Anthropic Claude API | Spring AI ChatClient with `spring-ai-starter-model-anthropic` | Already in build.gradle.kts. Use ChatClient.Builder, not raw HTTP. Configure via `spring.ai.anthropic.api-key` in env vars, never in config files. |
-| PostgreSQL | Spring Data JPA + Flyway | Already configured. Use Flyway for all schema changes -- never modify schema manually. |
-| File Storage (S3) | StorageService abstraction with Spring Cloud AWS (later) | Start with local filesystem. Swap implementation via Spring profiles. |
-
-### Internal Boundaries
-
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| Frontend <-> Backend | REST API over HTTP, JSON payloads, JWT auth | API versioning via URL prefix `/api/`. CORS configured for frontend origin. |
-| Backend <-> PostgreSQL | Spring Data JPA (Hibernate) | Connection pooling via HikariCP (Spring Boot default). |
-| Backend <-> File Storage | StorageService interface | Profile-driven implementation selection (`@Profile("dev")` vs `@Profile("prod")`). |
-| Backend <-> Anthropic | Spring AI ChatClient | Async-capable for long-running analysis. Consider timeout configuration. |
-| Auth module <-> All modules | SecurityContext (thread-local) | After JWT filter runs, any service can access current user via `SecurityContextHolder`. |
-
-## Build Order (Dependency Chain)
-
-This ordering reflects technical dependencies -- what must exist before the next piece can work.
-
-```
-Phase 1: Foundation
-  backend/config/ (security, CORS, database)
-  backend/common/ (base entity, exception handler)
-  backend/auth/ (user entity, JWT, login/register)
-  Flyway V1 (users table)
-  Docker Compose (PostgreSQL)
-
-Phase 2: Core Domain
-  backend/company/ (CRUD)
-  backend/job/ (CRUD, linked to company)
-  backend/application/ (CRUD, status state machine, linked to job)
-  Flyway V2-V4
-
-Phase 3: Interviews
-  backend/interview/ (CRUD, round tracking, notes)
-  Timeline query (merge interview events + status changes)
-  Flyway V5
-
-Phase 4: Documents
-  backend/document/ (upload, download, metadata)
-  StorageService abstraction (local implementation)
-  Link documents to applications
-  Flyway V6
-
-Phase 4: Frontend Shell
-  Next.js setup with App Router
-  Auth pages (login, register)
-  AuthProvider + JWT handling
-  API client layer
-  TanStack Query setup
-
-Phase 5: Frontend Features
-  Company/Job CRUD pages
-  Application tracking (table view)
-  Kanban board view
-  Document upload/management
-
-Phase 6: AI Features
-  Spring AI ChatClient configuration
-  CV analysis service
-  Cover letter generation service
-  Frontend AI interaction pages
+```yaml
+# infra/k8s/overlays/staging/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: jobhunt-staging
+resources:
+  - ../../base
+images:
+  - name: jobhunt-backend
+    newName: ghcr.io/baalexandru/jobhunt-backend
+    newTag: sha-abc1234
+  - name: jobhunt-frontend
+    newName: ghcr.io/baalexandru/jobhunt-frontend
+    newTag: sha-abc1234
+patches:
+  - path: resource-limits.yaml
 ```
 
-**Key dependency insight:** The backend can be fully built and tested (via REST Docs/Postman) before writing any frontend code. The frontend depends on the API existing but not on specific implementation details. AI features depend on ALL core domain entities existing (they read from jobs, companies, documents, and applications).
+### Pattern 2: ArgoCD App-of-Apps
 
-## Migration Note: Current Structure to Monorepo
+**What:** A root ArgoCD Application that manages child Applications.
+**When:** To bootstrap and manage the full cluster declaratively.
 
-> **Decision (2026-03-19):** compose.yaml stays at project root for Spring Boot docker-compose auto-discovery. Backend is a Gradle subproject; frontend is a standalone Next.js project (not a Gradle subproject).
+```yaml
+# infra/k8s/platform/argocd/apps/root-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/BaAlexandru/job-hunt.git
+    targetRevision: HEAD
+    path: infra/k8s/platform/argocd/apps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
 
-The project currently has Spring Boot at the root. To adopt the monorepo structure:
+### Pattern 3: Externalized Config via ConfigMaps and Secrets
 
-1. Create `backend/` directory as a Gradle subproject via `settings.gradle.kts` `include(":backend")`
-2. Move source files into `backend/src/`, create `backend/build.gradle.kts`
-3. Root `build.gradle.kts` declares plugins with `apply false`
-4. Keep `compose.yaml` at project root (Spring Boot docker-compose starter auto-discovers it)
-5. Create `frontend/` as a standalone Next.js project (pnpm, not Gradle)
-6. Create `infra/docker/` for production Dockerfiles (future phases)
+**What:** All environment-specific configuration injected via K8s ConfigMaps and Secrets.
+**When:** Always -- never bake credentials into Docker images.
+
+The backend's `application-prod.yml` reads from environment variables. K8s injects these from ConfigMap (non-sensitive) and Secret (sensitive) resources:
+
+```yaml
+# ConfigMap: DB_HOST, DB_PORT, DB_NAME, REDIS_HOST, MINIO_HOST, etc.
+# Secret: DB_PASSWORD, JWT_SECRET, MINIO_SECRET_KEY
+```
+
+### Pattern 4: K3s Local Path Provisioner for Storage
+
+**What:** Use K3s built-in local-path-provisioner for PersistentVolumeClaims.
+**When:** Single-node clusters where data lives on the node's disk.
+
+K3s ships with Rancher's Local Path Provisioner as the default StorageClass. StatefulSets for PostgreSQL and MinIO use PVCs that automatically provision local storage. No need for EBS or external storage on a single node.
+
+**Risk:** Data loss if the EC2 instance terminates. Mitigate with automated pg_dump backups to S3 (see Pitfalls).
+
+### Pattern 5: Traefik Ingress + cert-manager + Let's Encrypt
+
+**What:** K3s built-in Traefik as ingress controller with automated TLS via cert-manager.
+**When:** Always for production HTTPS.
+
+```yaml
+# infra/k8s/platform/cert-manager/clusterissuer.yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@jobhunt.example.com
+    privateKeySecretRef:
+      name: letsencrypt-prod-key
+    solvers:
+      - http01:
+          ingress:
+            class: traefik
+```
+
+```yaml
+# infra/k8s/overlays/prod/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jobhunt-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+    - hosts:
+        - jobhunt.example.com
+      secretName: jobhunt-tls
+  rules:
+    - host: jobhunt.example.com
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 8080
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 3000
+```
+
+## Anti-Patterns to Avoid
+
+### Anti-Pattern 1: Running Two K3s Clusters on Free Tier
+
+**What:** Attempting separate EC2 instances for staging and production clusters.
+**Why bad:** Exceeds 750 free-tier hours/month. Both clusters would be resource-starved on t3.micro (1 GB RAM). Even t3.small (2 GB) leaves no headroom after K3s overhead.
+**Instead:** Single node with namespace isolation. Add a second node only when budget allows.
+
+### Anti-Pattern 2: Helm Charts for Internal Services
+
+**What:** Writing full Helm charts with values.yaml, templates, Chart.yaml for your own app.
+**Why bad:** Massive overhead for 2 services. You are not distributing this as a package.
+**Instead:** Kustomize base + overlays. Use Helm only to install third-party tools (cert-manager, ArgoCD).
+
+### Anti-Pattern 3: Baking Secrets into Docker Images
+
+**What:** Putting database passwords or JWT secrets in Dockerfiles or application.yml.
+**Why bad:** Anyone who pulls the image has your credentials.
+**Instead:** K8s Secrets injected as environment variables. Use SealedSecrets or SOPS for GitOps-safe secret management.
+
+### Anti-Pattern 4: Using npm/pnpm as Docker CMD
+
+**What:** `CMD ["pnpm", "start"]` in Next.js Dockerfile.
+**Why bad:** Node process manager intercepts SIGTERM, preventing graceful shutdown. K8s sends SIGTERM, pnpm ignores it, K8s waits 30s then SIGKILL.
+**Instead:** `CMD ["node", "server.js"]` with standalone output.
+
+### Anti-Pattern 5: Branch-per-Environment in Git
+
+**What:** Using `staging` and `production` branches for deployment.
+**Why bad:** Merge conflicts, drift between branches, unclear which commit is deployed.
+**Instead:** Single main branch. ArgoCD Applications point to different Kustomize overlays (same branch, different directories).
+
+### Anti-Pattern 6: GitHub Actions Deploying Directly to K8s
+
+**What:** `kubectl apply` in GitHub Actions workflows.
+**Why bad:** CI has cluster credentials, bypasses GitOps, no audit trail.
+**Instead:** GitHub Actions builds images and updates Git manifests. ArgoCD is the sole deployer.
+
+## Scalability Considerations
+
+| Concern | Single User (now) | 10 Users | 100+ Users |
+|---------|-------------------|----------|------------|
+| Compute | 1x t3.small, all pods replicas=1 | 1x t3.medium, still replicas=1 | Multiple nodes, HPA |
+| PostgreSQL | Single pod, local-path PV | Same, add connection pooling | Managed RDS or HA StatefulSet |
+| Redis | Single pod, no persistence | Same | Redis Sentinel or ElastiCache |
+| MinIO | Single pod, local-path PV | Same, consider S3 migration | AWS S3 directly |
+| Ingress | Traefik, single node | Same | ALB or NLB in front |
+| Storage | Local-path PV (node disk) | EBS volumes | EBS + backup strategy |
+| Backups | Cron CronJob pg_dump to S3 | Same, more frequent | Point-in-time recovery, WAL archiving |
+| Cost | ~$0/month (free tier) | ~$15-20/month (t3.medium) | ~$50-100/month |
+
+## Build Order (Dependencies)
+
+Phases should be ordered based on these dependencies:
+
+```
+1. Production Dockerfiles          -- No K8s dependency, testable locally
+   (backend.Dockerfile,
+    frontend.Dockerfile,
+    next.config.ts output:standalone,
+    application-prod.yml)
+        |
+        v
+2. EC2 + K3s Bootstrap             -- Needs Dockerfiles to test deployments
+   (bootstrap-k3s.sh,
+    security groups,
+    SSH key)
+        |
+        v
+3. K8s Base Manifests              -- Needs running K3s cluster
+   (base/ directory:
+    deployments, services,
+    statefulsets, PVCs)
+        |
+        v
+4. Kustomize Overlays              -- Needs base manifests
+   (staging + prod overlays,
+    ingress, configmaps,
+    secrets)
+        |
+        v
+5. cert-manager + TLS              -- Needs ingress working first
+   (cert-manager install,
+    ClusterIssuer,
+    ingress TLS annotations)
+        |
+        v
+6. ArgoCD + GitOps                 -- Needs working K8s + manifests
+   (ArgoCD install,
+    app-of-apps,
+    GitHub webhook)
+        |
+        v
+7. GitHub Actions CI Pipeline      -- Needs GHCR + ArgoCD
+   (build workflow,
+    image push,
+    manifest update)
+        |
+        v
+8. Domain + DNS                    -- Can happen in parallel with 5-7
+   (Route 53 or registrar DNS,
+    A record to EC2 Elastic IP)
+```
+
+## New Components Summary
+
+| Component | Status | Location |
+|-----------|--------|----------|
+| `backend.Dockerfile` | NEW | `infra/docker/backend.Dockerfile` |
+| `frontend.Dockerfile` | NEW | `infra/docker/frontend.Dockerfile` |
+| `application-prod.yml` | NEW | `backend/src/main/resources/application-prod.yml` |
+| `next.config.ts` | MODIFY | `frontend/next.config.ts` (add `output: "standalone"`) |
+| K8s base manifests | NEW | `infra/k8s/base/**` |
+| Kustomize overlays | NEW | `infra/k8s/overlays/{staging,prod}/**` |
+| Platform manifests | NEW | `infra/k8s/platform/{cert-manager,argocd}/**` |
+| Bootstrap scripts | NEW | `infra/scripts/*.sh` |
+| GitHub Actions workflow | NEW | `.github/workflows/ci-cd.yml` |
+| `infra/CLAUDE.md` | MODIFY | Update with K8s conventions |
 
 ## Sources
 
-- [Spring Boot 4.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide)
-- [Next Level Kotlin Support in Spring Boot 4](https://spring.io/blog/2025/12/18/next-level-kotlin-support-in-spring-boot-4/)
-- [Spring Boot 4 Overview - JetBrains](https://blog.jetbrains.com/idea/2025/11/spring-boot-4/)
-- [Spring AI 2.0 + Spring Boot 4 Guide](https://usama.codes/blog/spring-ai-2-spring-boot-4-guide)
-- [Spring AI Agentic Patterns](https://spring.io/blog/2026/01/13/spring-ai-generic-agent-skills/)
-- [Hexagonal Architecture with Spring Boot + Kotlin](https://medium.com/@hieunv/understanding-hexagonal-architecture-through-a-practical-application-2f2d28f604d9)
-- [Migrating to Modular Monolith with Spring Modulith](https://blog.jetbrains.com/idea/2026/02/migrating-to-modular-monolith-using-spring-modulith-and-intellij-idea/)
-- [Clean Architecture with Spring Boot - Baeldung](https://www.baeldung.com/spring-boot-clean-architecture)
-- [Scalable File Upload Patterns in Spring Boot](https://github.com/orgs/community/discussions/180838)
-- [Spring Boot + Next.js Starter Kit](https://dev.to/nermin_karapandzic/ive-created-an-open-source-spring-boot-nextjs-starter-kit-6fk)
-
----
-*Architecture research for: JobHunt - Job Application Tracker*
-*Researched: 2026-03-19*
+- [K3s Official Requirements](https://docs.k3s.io/installation/requirements) -- minimum hardware specs (HIGH confidence)
+- [K3s Quick Start Guide](https://docs.k3s.io/quick-start) -- installation steps
+- [K3s Volumes and Storage](https://docs.k3s.io/add-ons/storage) -- Local Path Provisioner details
+- [K3s Production Discussion](https://github.com/k3s-io/k3s/discussions/2988) -- single-node production viability
+- [ArgoCD Monorepo Pattern](https://oneuptime.com/blog/post/2026-02-26-argocd-monorepo-pattern/view) -- directory structure (MEDIUM confidence)
+- [ArgoCD Best Practices](https://codefresh.io/blog/how-to-structure-your-argo-cd-repositories-using-application-sets/) -- repo structure recommendations
+- [ArgoCD App-of-Apps](https://argo-cd.readthedocs.io/en/latest/operator-manual/cluster-bootstrapping/) -- official bootstrap pattern
+- [K3s + Traefik + cert-manager + Let's Encrypt](https://k3s.rocks/https-cert-manager-letsencrypt/) -- TLS setup guide
+- [Next.js Deploying Docs](https://nextjs.org/docs/app/getting-started/deploying) -- standalone output, Docker
+- [Next.js Docker Best Practices 2026](https://thelinuxcode.com/nextjs-docker-images-how-i-build-predictable-fast-deployments-in-2026/) -- standalone mode details
+- [Spring Boot Multi-Stage Docker](https://medium.com/@cat.edelveis/a-guide-to-docker-multi-stage-builds-for-spring-boot-08e3a64c9812) -- layered JAR extraction
+- [AWS Free Tier EC2 Details](https://cloudwithalon.com/aws-free-tier-2025-whats-free-and-for-how-long) -- instance types, hours limits
+- [AWS Free Tier July 2025 Changes](https://repost.aws/questions/QUlaKi-MimTo-3OjekpKMWiA/what-is-correct-for-ec2-free-tier-instance) -- expanded instance types
+- [GitHub Actions + ArgoCD GitOps](https://medium.com/@mehmetkanus17/argocd-github-actions-a-complete-gitops-ci-cd-workflow-for-kubernetes-applications-ed2f91d37641) -- CI/CD pipeline pattern
+- [StatefulSets & Persistent Storage](https://www.glukhov.org/post/2025/11/statefulsets-and-persistent-storage-in-kubernetes/) -- PostgreSQL, Redis on K8s
+- [K3s on EC2 Instead of EKS](https://medium.com/@yashjani.ca/why-we-used-k3s-on-ec2-instead-of-eks-for-our-capstone-project-a-cost-saving-kubernetes-setup-c8901f070591) -- cost comparison, real experience
