@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
-status: active
-stopped_at: Completed 11-03-PLAN.md
-last_updated: "2026-03-22T15:01:36Z"
-last_activity: "2026-03-22 — Completed Plan 03 frontend hooks & components for visibility/sharing"
+status: executing
+stopped_at: Completed 11-02-PLAN.md
+last_updated: "2026-03-22T15:21:36.971Z"
+last_activity: 2026-03-22 — Completed Plan 02 backend services & controllers for visibility/sharing
 progress:
   total_phases: 9
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
-  percent: 50
+  completed_plans: 3
+  percent: 75
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 11 of 18 (Visibility & Sharing)
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Executing
-Last activity: 2026-03-22 — Completed Plan 03 frontend hooks & components for visibility/sharing
+Last activity: 2026-03-22 — Completed Plan 02 backend services & controllers for visibility/sharing
 
-Progress: [█████░░░░░] 50%
+Progress: [████████░░] 75%
 
 ## Performance Metrics
 
@@ -54,6 +54,8 @@ Recent decisions affecting current work:
 - Class-level @Disabled on test stubs to prevent Spring context loading before migration exists
 - Visibility field as String in DTOs for clean JSON serialization
 - Used sonner toast for mutation success/error feedback in visibility/sharing components
+- Test-specific application.yml with explicit DB config to bypass Docker Desktop port discovery issue
+- JobService.resolveCompanyName uses findById (not findByIdAndUserId) for visibility-aware reads by non-owners
 
 ### Pending Todos
 
@@ -67,6 +69,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T15:01:36Z
-Stopped at: Completed 11-03-PLAN.md
+Last session: 2026-03-22T15:21:36.967Z
+Stopped at: Completed 11-02-PLAN.md
 Resume file: .planning/phases/11-visibility-sharing/11-04-PLAN.md
