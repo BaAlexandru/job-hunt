@@ -37,11 +37,12 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 - [ ] Password reset email delivery (Better Auth callback needs SMTP transport)
 - [ ] Visibility & Sharing (private/public/shared companies and jobs)
 - [ ] Production Docker images (multi-stage builds for backend + frontend)
-- [ ] Self-managed Kubernetes on AWS EC2 (free-tier instances)
-- [ ] Staging and production clusters (separate K8s clusters)
-- [ ] ArgoCD + GitOps deployment pipeline
-- [ ] Domain registration + DNS binding + TLS/HTTPS
+- [ ] Self-managed K3s on AWS EC2 (t3.small, single cluster)
+- [ ] Namespace-based staging/production separation
+- [ ] ArgoCD + GitOps deployment pipeline (core-mode)
+- [ ] Cloudflare DNS (job-hunt.dev) + proxy TLS + HTTPS-only
 - [ ] Database and storage on K8s (PostgreSQL, Redis, MinIO)
+- [ ] GitHub Actions CI + GHCR image registry
 
 <!-- Deferred to v3 -->
 <!-- - AI: Analyze job description + CV and suggest adjustments -->
@@ -60,16 +61,18 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 
 ## Current Milestone: v1.1 Infrastructure & Deployment
 
-**Goal:** Close v1.0 UI gaps, then build a full deployment pipeline with self-managed Kubernetes on AWS EC2, ArgoCD GitOps, staging + production environments, and go live with a custom domain.
+**Goal:** Close v1.0 UI gaps, then build a full deployment pipeline with K3s on AWS EC2, ArgoCD GitOps, namespace-based staging/prod, and go live at job-hunt.dev.
+
+**Domain:** job-hunt.dev (Cloudflare DNS, proxied, HTTPS-only)
 
 **Target features:**
 - v1.0 gap closure (interview notes UI, doc version UI, visibility/sharing, password reset email)
-- Production-ready Docker images (multi-stage builds)
-- Self-managed K8s on AWS EC2 (free-tier)
-- Two separate clusters: staging and production
-- ArgoCD + GitOps CI/CD pipeline
-- Domain + DNS + TLS/HTTPS
-- Managed data stores on K8s (PostgreSQL, Redis, MinIO)
+- Production-ready Docker images (multi-stage builds, <200MB each)
+- K3s on AWS EC2 t3.small (single cluster, namespace-based staging/prod)
+- ArgoCD core-mode + GitOps CI/CD pipeline
+- Cloudflare proxy TLS + Origin CA cert (Full Strict mode)
+- Data stores on K8s (PostgreSQL, Redis, MinIO with StatefulSets + backups)
+- GitHub Actions CI + GHCR image registry
 
 ## Context
 
@@ -104,7 +107,9 @@ Tech stack: Kotlin + Spring Boot 4.0.4, Next.js 16.2, PostgreSQL, Redis, MinIO.
 | Phase 6.1 deferred to v2 | Visibility & Sharing not needed for MVP, reduces scope | ✓ Good |
 | Self-managed K8s over EKS | EKS control plane ~$73/mo, self-managed on free-tier EC2 much cheaper | -- Pending |
 | ArgoCD + GitOps over GitHub Actions | K8s-native GitOps, better learning opportunity, production-grade pattern | -- Pending |
-| Separate clusters over namespaces | More realistic staging/prod separation, doubles infra but better isolation | -- Pending |
+| Namespace separation over separate clusters | Research: free-tier can't run two clusters, namespace isolation sufficient for single-dev | -- Pending |
+| Cloudflare proxy over cert-manager | Free CDN + DDoS + TLS termination, Origin CA for backend encryption | -- Pending |
+| K3s over kubeadm | Lightweight, single binary, bundles Traefik + CoreDNS, 512MB minimum | -- Pending |
 | AI deferred to v3 | Infrastructure is higher priority, AI features need stable deployment first | -- Pending |
 
 ---
