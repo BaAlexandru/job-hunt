@@ -96,6 +96,7 @@ export function ShareManager({
                 variant="ghost"
                 size="sm"
                 className="shrink-0 text-destructive"
+                aria-label={`Revoke access for ${share.email}`}
                 onClick={() =>
                   setRevokeTarget({ shareId: share.id, email: share.email })
                 }

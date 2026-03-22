@@ -9,8 +9,8 @@ import { useBrowseCompanies, useBrowseJobs } from "@/hooks/use-browse"
 
 export default function BrowsePage() {
   const router = useRouter()
-  const { data: companiesData, isLoading: companiesLoading } = useBrowseCompanies()
-  const { data: jobsData, isLoading: jobsLoading } = useBrowseJobs()
+  const { data: companiesData, isLoading: companiesLoading, isError: companiesError } = useBrowseCompanies()
+  const { data: jobsData, isLoading: jobsLoading, isError: jobsError } = useBrowseJobs()
 
   const companies = companiesData?.content ?? []
   const jobs = jobsData?.content ?? []
@@ -32,6 +32,11 @@ export default function BrowsePage() {
                 <Skeleton key={i} className="h-36 rounded-xl" />
               ))}
             </div>
+          ) : companiesError ? (
+            <EmptyState
+              heading="Failed to load companies"
+              body="Something went wrong. Please try again later."
+            />
           ) : companies.length === 0 ? (
             <EmptyState
               heading="No public resources yet"
@@ -60,6 +65,11 @@ export default function BrowsePage() {
                 <Skeleton key={i} className="h-36 rounded-xl" />
               ))}
             </div>
+          ) : jobsError ? (
+            <EmptyState
+              heading="Failed to load jobs"
+              body="Something went wrong. Please try again later."
+            />
           ) : jobs.length === 0 ? (
             <EmptyState
               heading="No public resources yet"

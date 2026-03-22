@@ -10,28 +10,38 @@ import type {
 
 export const sharedWithMeKeys = {
   all: ["shared-with-me"] as const,
-  companies: (page?: number) =>
-    [...sharedWithMeKeys.all, "companies", page] as const,
-  jobs: (page?: number) =>
-    [...sharedWithMeKeys.all, "jobs", page] as const,
+  companies: (params?: { page?: number }) =>
+    [...sharedWithMeKeys.all, "companies", params] as const,
+  jobs: (params?: { page?: number }) =>
+    [...sharedWithMeKeys.all, "jobs", params] as const,
 }
 
-export function useSharedCompanies(page: number = 0) {
+export function useSharedCompanies(
+  params: { page?: number } = {},
+) {
+  const searchParams = new URLSearchParams()
+  if (params.page !== undefined) searchParams.set("page", String(params.page))
+  const qs = searchParams.toString()
+
   return useQuery({
-    queryKey: sharedWithMeKeys.companies(page),
+    queryKey: sharedWithMeKeys.companies(params),
     queryFn: () =>
       apiClient<PaginatedResponse<CompanyResponse>>(
-        `/shared/companies?page=${page}`,
+        `/shared/companies${qs ? `?${qs}` : ""}`,
       ),
   })
 }
 
-export function useSharedJobs(page: number = 0) {
+export function useSharedJobs(params: { page?: number } = {}) {
+  const searchParams = new URLSearchParams()
+  if (params.page !== undefined) searchParams.set("page", String(params.page))
+  const qs = searchParams.toString()
+
   return useQuery({
-    queryKey: sharedWithMeKeys.jobs(page),
+    queryKey: sharedWithMeKeys.jobs(params),
     queryFn: () =>
       apiClient<PaginatedResponse<JobResponse>>(
-        `/shared/jobs?page=${page}`,
+        `/shared/jobs${qs ? `?${qs}` : ""}`,
       ),
   })
 }

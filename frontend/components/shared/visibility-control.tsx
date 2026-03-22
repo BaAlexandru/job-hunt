@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { toast } from "sonner"
 import type { Visibility } from "@/types/api"
+import { ApiError } from "@/lib/api-client"
 import {
   Select,
   SelectContent,
@@ -45,6 +46,9 @@ export function VisibilityControl({
         onSuccess: () => {
           toast.success(`Visibility updated to ${visibility}`)
         },
+        onError: (error) => {
+          toast.error(error instanceof ApiError ? error.message : "Failed to update visibility")
+        },
       },
     )
   }
@@ -55,6 +59,9 @@ export function VisibilityControl({
       {
         onSuccess: () => {
           toast.success("Visibility updated to PUBLIC")
+        },
+        onError: (error) => {
+          toast.error(error instanceof ApiError ? error.message : "Failed to update visibility")
         },
       },
     )

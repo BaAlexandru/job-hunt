@@ -11,8 +11,8 @@ import { useSharedCompanies, useSharedJobs } from "@/hooks/use-shared-with-me"
 
 export default function SharedPage() {
   const router = useRouter()
-  const { data: companiesData, isLoading: companiesLoading } = useSharedCompanies()
-  const { data: jobsData, isLoading: jobsLoading } = useSharedJobs()
+  const { data: companiesData, isLoading: companiesLoading, isError: companiesError } = useSharedCompanies()
+  const { data: jobsData, isLoading: jobsLoading, isError: jobsError } = useSharedJobs()
 
   const companies = companiesData?.content ?? []
   const jobs = jobsData?.content ?? []
@@ -34,6 +34,11 @@ export default function SharedPage() {
                 <Skeleton key={i} className="h-36 rounded-xl" />
               ))}
             </div>
+          ) : companiesError ? (
+            <EmptyState
+              heading="Failed to load companies"
+              body="Something went wrong. Please try again later."
+            />
           ) : companies.length === 0 ? (
             <EmptyState
               heading="Nothing shared with you"
@@ -63,6 +68,11 @@ export default function SharedPage() {
                 <Skeleton key={i} className="h-36 rounded-xl" />
               ))}
             </div>
+          ) : jobsError ? (
+            <EmptyState
+              heading="Failed to load jobs"
+              body="Something went wrong. Please try again later."
+            />
           ) : jobs.length === 0 ? (
             <EmptyState
               heading="Nothing shared with you"
