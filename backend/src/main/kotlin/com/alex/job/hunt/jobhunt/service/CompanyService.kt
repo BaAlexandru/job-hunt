@@ -69,8 +69,6 @@ class CompanyService(
         if (jobRepository.existsByCompanyIdAndUserIdAndArchivedFalse(id, userId)) {
             throw ConflictException("Cannot archive company with active job postings")
         }
-        // Clean up shares before archiving
-        resourceShareRepository.deleteByResourceTypeAndResourceId(ResourceType.COMPANY, id)
         entity.archived = true
         entity.archivedAt = Instant.now()
         entity.updatedAt = Instant.now()

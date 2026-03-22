@@ -212,10 +212,10 @@ class CompanyVisibilityServiceTest {
     }
 
     @Test
-    fun `deleting company cleans up associated shares`() {
+    fun `archiving company preserves associated shares`() {
         val tokenA = TestHelper.registerAndGetToken(mockMvc, jsonMapper, emailVerificationTokenRepository, "owner@test.com")
         val tokenB = TestHelper.registerAndGetToken(mockMvc, jsonMapper, emailVerificationTokenRepository, "recipient@test.com")
-        val companyId = TestHelper.createCompany(mockMvc, jsonMapper, tokenA, "Deletable Co")
+        val companyId = TestHelper.createCompany(mockMvc, jsonMapper, tokenA, "Archivable Co")
 
         // Create share
         mockMvc.perform(
@@ -225,15 +225,15 @@ class CompanyVisibilityServiceTest {
                 .content(jsonMapper.writeValueAsString(CreateShareRequest("recipient@test.com")))
         )
 
-        // Delete company (archive)
+        // Archive company
         mockMvc.perform(
             delete("/api/companies/$companyId")
                 .header("Authorization", "Bearer $tokenA")
         )
             .andExpect(status().isNoContent)
 
-        // Shares should be cleaned up
-        org.junit.jupiter.api.Assertions.assertEquals(0, resourceShareRepository.count())
+        // Shares should persist after archiving (CONTEXT.md: "Shares persist when a resource is archived")
+        org.junit.jupiter.api.Assertions.assertEquals(1, resourceShareRepository.count())
     }
 
     @Test
