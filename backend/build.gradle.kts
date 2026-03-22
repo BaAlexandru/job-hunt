@@ -38,6 +38,9 @@ dependencies {
     // Redis for rate limiting
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
+    // Email
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+
     // S3-compatible storage (AWS SDK v2)
     implementation(platform("software.amazon.awssdk:bom:2.42.16"))
     implementation("software.amazon.awssdk:s3")
