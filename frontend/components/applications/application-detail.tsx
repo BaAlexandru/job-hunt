@@ -52,7 +52,6 @@ import {
   useCreateApplicationNote,
   useUpdateApplicationNote,
   useDeleteApplicationNote,
-  useTimeline,
 } from "@/hooks/use-applications"
 import {
   useInterviews,
@@ -67,6 +66,7 @@ import {
   useUnlinkDocument,
   useDownloadVersionUrl,
 } from "@/hooks/use-documents"
+import { TimelineTab } from "@/components/applications/timeline-tab"
 
 interface ApplicationDetailProps {
   applicationId: string | null
@@ -112,6 +112,7 @@ export function ApplicationDetail({
                   <TabsTrigger value="notes">Notes</TabsTrigger>
                   <TabsTrigger value="interviews">Interviews</TabsTrigger>
                   <TabsTrigger value="documents">Documents</TabsTrigger>
+                  <TabsTrigger value="timeline">Timeline</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview">
@@ -125,6 +126,9 @@ export function ApplicationDetail({
                 </TabsContent>
                 <TabsContent value="documents">
                   <DocumentsTab applicationId={applicationId} />
+                </TabsContent>
+                <TabsContent value="timeline">
+                  <TimelineTab applicationId={applicationId} />
                 </TabsContent>
               </Tabs>
             </div>
