@@ -47,8 +47,15 @@ created: 2026-03-22
 | 11-02-04 | 02 | 2 | VISI-04 | integration | `./gradlew :backend:test --tests "*.SharedWithMeControllerTest"` | Plan 01 Task 0 | W0 |
 | 11-02-05 | 02 | 2 | VISI-03 | integration | `./gradlew :backend:test --tests "*.BrowsePublicControllerTest"` | Plan 01 Task 0 | W0 |
 | 11-02-06 | 02 | 2 | VISI-05 | integration | `./gradlew :backend:test --tests "*.VisibilityDefaultTest"` | Plan 01 Task 0 | W0 |
+| 11-02-07 | 02 | 2 | VISI-05 | integration | `./gradlew :backend:test --tests "*.CompanyVisibilityServiceTest"` | Plan 01 Task 0 | W0 |
+| 11-02-08 | 02 | 2 | VISI-02 | integration | `./gradlew :backend:test --tests "*.CompanyVisibilityServiceTest"` | Plan 01 Task 0 | W0 |
+| 11-02-09 | 02 | 2 | VISI-01 | integration | `./gradlew :backend:test --tests "*.CompanyVisibilityServiceTest"` | Plan 01 Task 0 | W0 |
 
 *Status: W0 = wave 0 stub created by Plan 01 Task 0, pending implementation in Plan 02*
+
+*11-02-07: PRIVATE+share access denied (share check gated on visibility=SHARED)*
+*11-02-08: delete cleans up associated shares (no orphaned resource_shares rows)*
+*11-02-09: visibility change preserves existing share records*
 
 ---
 

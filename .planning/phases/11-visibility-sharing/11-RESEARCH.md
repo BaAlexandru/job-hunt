@@ -165,7 +165,7 @@ CREATE INDEX idx_resource_shares_shared_with ON resource_shares(shared_with_id, 
 ```
 
 ### Pattern 3: Visibility-Aware Repository Queries
-**What:** Widen read queries to allow access when: (a) user owns it, (b) it's PUBLIC, or (c) user has a share.
+**What:** Widen read queries to allow access when: (a) user owns it, (b) it's PUBLIC, or (c) visibility is SHARED AND user has a share record.
 **When to use:** Any getById or list operation that should respect visibility.
 **Example:**
 ```kotlin
@@ -176,12 +176,12 @@ CREATE INDEX idx_resource_shares_shared_with ON resource_shares(shared_with_id, 
     AND (
         c.userId = :userId
         OR c.visibility = 'PUBLIC'
-        OR EXISTS (
+        OR (c.visibility = 'SHARED' AND EXISTS (
             SELECT 1 FROM ResourceShareEntity s
             WHERE s.resourceType = 'COMPANY'
             AND s.resourceId = c.id
             AND s.sharedWithId = :userId
-        )
+        ))
     )
 """)
 fun findByIdWithVisibility(id: UUID, userId: UUID): CompanyEntity?
