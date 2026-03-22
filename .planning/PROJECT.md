@@ -31,12 +31,21 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 
 ### Active
 
+<!-- v1.1: Infrastructure & Deployment -->
 - [ ] Interview notes UI (backend complete, needs frontend component in InterviewsTab)
 - [ ] Document version management UI (backend complete, needs version history panel)
 - [ ] Password reset email delivery (Better Auth callback needs SMTP transport)
-- [ ] AI: Analyze job description + CV and suggest adjustments
-- [ ] AI: Generate or improve cover letters tailored to specific jobs
 - [ ] Visibility & Sharing (private/public/shared companies and jobs)
+- [ ] Production Docker images (multi-stage builds for backend + frontend)
+- [ ] Self-managed Kubernetes on AWS EC2 (free-tier instances)
+- [ ] Staging and production clusters (separate K8s clusters)
+- [ ] ArgoCD + GitOps deployment pipeline
+- [ ] Domain registration + DNS binding + TLS/HTTPS
+- [ ] Database and storage on K8s (PostgreSQL, Redis, MinIO)
+
+<!-- Deferred to v3 -->
+<!-- - AI: Analyze job description + CV and suggest adjustments -->
+<!-- - AI: Generate or improve cover letters tailored to specific jobs -->
 
 ### Out of Scope
 
@@ -47,6 +56,20 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 - Browser extension — separate codebase, manual entry acceptable
 - Email integration/parsing — unreliable, privacy concerns
 - Gamification — job search is stressful, clean analytics better
+- AI features (CV analysis, cover letter generation) — deferred to v3
+
+## Current Milestone: v1.1 Infrastructure & Deployment
+
+**Goal:** Close v1.0 UI gaps, then build a full deployment pipeline with self-managed Kubernetes on AWS EC2, ArgoCD GitOps, staging + production environments, and go live with a custom domain.
+
+**Target features:**
+- v1.0 gap closure (interview notes UI, doc version UI, visibility/sharing, password reset email)
+- Production-ready Docker images (multi-stage builds)
+- Self-managed K8s on AWS EC2 (free-tier)
+- Two separate clusters: staging and production
+- ArgoCD + GitOps CI/CD pipeline
+- Domain + DNS + TLS/HTTPS
+- Managed data stores on K8s (PostgreSQL, Redis, MinIO)
 
 ## Context
 
@@ -79,6 +102,10 @@ Tech stack: Kotlin + Spring Boot 4.0.4, Next.js 16.2, PostgreSQL, Redis, MinIO.
 | BetterAuthSessionFilter before JWT filter | Cookie auth first, JWT fallback for API testing | ✓ Good |
 | standardSchemaResolver for forms | Zod v4 incompatible with zodResolver, Standard Schema works | ✓ Good |
 | Phase 6.1 deferred to v2 | Visibility & Sharing not needed for MVP, reduces scope | ✓ Good |
+| Self-managed K8s over EKS | EKS control plane ~$73/mo, self-managed on free-tier EC2 much cheaper | -- Pending |
+| ArgoCD + GitOps over GitHub Actions | K8s-native GitOps, better learning opportunity, production-grade pattern | -- Pending |
+| Separate clusters over namespaces | More realistic staging/prod separation, doubles infra but better isolation | -- Pending |
+| AI deferred to v3 | Infrastructure is higher priority, AI features need stable deployment first | -- Pending |
 
 ---
-*Last updated: 2026-03-22 after v1.0 milestone*
+*Last updated: 2026-03-22 after v1.1 milestone started*
