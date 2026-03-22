@@ -33,6 +33,11 @@ Users can control visibility of their companies and jobs as PRIVATE, PUBLIC, or 
 - Separate "Shared with me" section/page for items others have shared with you — not mixed into your own lists
 - Confirmation dialog required when setting visibility to PUBLIC ("This will make [resource] visible to all users. Continue?")
 
+### Defaults & migration
+- Default visibility is PRIVATE — no behavior change for existing data
+- Flyway migration V16 adds visibility column with DEFAULT 'PRIVATE' to companies and jobs tables
+- All existing rows receive PRIVATE visibility automatically via column default
+
 ### Cascade behavior
 - No cascade — company and job visibility are fully independent
 - A job CAN be public/shared even if its parent company is private (job shows company name but company detail is not accessible)
@@ -46,6 +51,11 @@ Users can control visibility of their companies and jobs as PRIVATE, PUBLIC, or 
 - Visibility enum implementation (Kotlin enum, JPA mapping)
 - Share management UI component design on detail page
 - "Shared with me" page/tab navigation placement
+
+### Verification (v1.0 retrospective lesson #3)
+- Phase verification MUST confirm end-to-end UI wiring, not just backend API + hook existence
+- Required E2E checkpoints: (1) set visibility on detail page → badge appears on card, (2) set PUBLIC → item appears on /browse page, (3) share with user by email → item appears on recipient's /shared page, (4) shared user can view but NOT edit/delete
+- Use @Query annotations for visibility-aware repository queries (avoid ambiguous derived method names)
 
 </decisions>
 
