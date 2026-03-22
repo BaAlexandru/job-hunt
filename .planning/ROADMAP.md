@@ -36,7 +36,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 - [ ] **Phase 11: Visibility & Sharing** - Backend + frontend for private/public/shared visibility on resources `[parallel-A]`
 - [ ] **Phase 12: Production Docker Images** - Multi-stage Dockerfiles for backend and frontend `[parallel-A]`
 - [ ] **Phase 13: CI Pipeline** - GitHub Actions builds, tests, scans, and pushes images to GHCR
-- [ ] **Phase 14: AWS Infrastructure** - EC2 instance provisioned via OpenTofu with VPC and networking `[parallel-B]`
+- [x] **Phase 14: AWS Infrastructure** - EC2 instance provisioned via OpenTofu with VPC and networking `[parallel-B]` (completed 2026-03-22)
 - [ ] **Phase 15: K3s Cluster Setup** - Kubernetes cluster with namespace separation and Kustomize manifests
 - [ ] **Phase 16: Data Stores on K8s** - PostgreSQL, Redis, MinIO deployed with persistence and backups
 - [ ] **Phase 17: App Deployment & ArgoCD** - Application pods running, GitOps pipeline managing all resources
@@ -211,7 +211,7 @@ Wave 6:                Phase 18 ──── depends on Phase 17
 | 11. Visibility & Sharing | v1.1 | 0/? | Not started | - |
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
 | 13. CI Pipeline | v1.1 | 0/? | Not started | - |
-| 14. AWS Infrastructure | 1/2 | In Progress|  | - |
+| 14. AWS Infrastructure | 2/2 | Complete   | 2026-03-22 | - |
 | 15. K3s Cluster Setup | v1.1 | 0/? | Not started | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
 | 17. App Deployment & ArgoCD | v1.1 | 0/? | Not started | - |
