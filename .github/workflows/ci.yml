@@ -188,10 +188,10 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Backend Image" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          cat trivy-backend.txt 2>/dev/null || echo "Scan output not available"
+          cat trivy-backend.txt 2>/dev/null >> $GITHUB_STEP_SUMMARY || echo "Scan output not available" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Frontend Image" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          cat trivy-frontend.txt 2>/dev/null || echo "Scan output not available"
+          cat trivy-frontend.txt 2>/dev/null >> $GITHUB_STEP_SUMMARY || echo "Scan output not available" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
