@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A personal web application for tracking job applications end-to-end — from discovering companies and positions to managing CVs, cover letters, and application statuses. Designed for a single user initially but architected to support multiple users later. Includes AI-powered features for CV optimization and cover letter generation based on job descriptions.
+A full-stack web application for tracking job applications end-to-end — from discovering companies and positions to managing interviews, documents, and application status. Backend API in Kotlin/Spring Boot, frontend in Next.js with kanban board and responsive design. Designed for a single user initially but architected for multi-user.
 
 ## Core Value
 
@@ -12,63 +12,73 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ User authentication (register, login, logout, sessions) — v1.0
+- ✓ Company management (CRUD, list, detail) — v1.0
+- ✓ Job posting management (CRUD, company link, description storage) — v1.0
+- ✓ Application tracking with 8-status state machine — v1.0
+- ✓ Kanban board with drag-and-drop status transitions — v1.0
+- ✓ Sortable/filterable table/list view — v1.0
+- ✓ Application search across companies, jobs, notes — v1.0
+- ✓ Document upload/download (PDF/DOCX via MinIO S3) — v1.0
+- ✓ Document linking to applications — v1.0
+- ✓ Interview scheduling with rounds, types, locations — v1.0
+- ✓ Interview round tracking (screening, technical, behavioral, final) — v1.0
+- ✓ Chronological timeline per application — v1.0
+- ✓ Responsive layout (sidebar, mobile hamburger, theme toggle) — v1.0
+- ✓ Docker Compose local dev (PostgreSQL, Redis, MinIO) — v1.0
+- ✓ Flyway-managed database schema (15 migrations) — v1.0
+- ✓ Module-specific CLAUDE.md files and project skills — v1.0
 
 ### Active
 
-- [ ] User authentication (register/login with JWT)
-- [ ] Company management (add/edit companies of interest)
-- [ ] Job posting management (add jobs with descriptions, URLs, company link)
-- [ ] Application tracking with status flow (Interested → Applied → Interview → Offer → Rejected/Accepted)
-- [ ] Dual view: table/list view AND kanban board for application status
-- [ ] Document management: upload CVs, cover letters, other docs (PDF/DOCX)
-- [ ] Link documents to specific job applications (which CV, which cover letter was used)
-- [ ] Track application dates and timeline
-- [ ] AI: Analyze company + job description + CV and suggest CV adjustments
+- [ ] Interview notes UI (backend complete, needs frontend component in InterviewsTab)
+- [ ] Document version management UI (backend complete, needs version history panel)
+- [ ] Password reset email delivery (Better Auth callback needs SMTP transport)
+- [ ] AI: Analyze job description + CV and suggest adjustments
 - [ ] AI: Generate or improve cover letters tailored to specific jobs
-- [ ] URL scraping for job posting details (v2 — start with manual entry)
+- [ ] Visibility & Sharing (private/public/shared companies and jobs)
 
 ### Out of Scope
 
 - Real-time notifications/alerts — not needed for single-user MVP
-- Mobile native app — web-first, responsive design sufficient
+- Mobile native app — responsive web sufficient, PWA if needed later
 - Job board integrations (LinkedIn, Indeed APIs) — manual entry first
-- Collaborative features (sharing job lists) — single user focus
 - In-app document editor — upload files only, no rich text editing
+- Browser extension — separate codebase, manual entry acceptable
+- Email integration/parsing — unreliable, privacy concerns
+- Gamification — job search is stressful, clean analytics better
 
 ## Context
 
-- Personal project to support an active job search
-- Developer wants to learn Kotlin alongside building something useful
-- AI features are deliberately deferred to later phases — core tracking comes first
-- Monorepo structure: `/backend`, `/frontend`, `/infra` in a single repository
-- Nested CLAUDE.md files per module for specialized AI assistance
-- Dedicated project-level skills for Claude Code
+Shipped v1.0 MVP in 4 days (2026-03-19 to 2026-03-22).
+Codebase: ~18,300 LOC (8k Kotlin, 10k TypeScript, 300 SQL).
+Tech stack: Kotlin + Spring Boot 4.0.4, Next.js 16.2, PostgreSQL, Redis, MinIO.
+212 git commits across 9 phases and 30 plans.
+3 known gaps accepted as tech debt (interview notes UI, doc version UI, password reset email).
 
 ## Constraints
 
-- **Tech Stack (Backend)**: Kotlin + Spring Boot 4.x, Spring Security + JWT, Spring Data JPA + PostgreSQL, Flyway migrations
-- **Tech Stack (Frontend)**: React 18+ with TypeScript, Next.js (with Turbopack), TanStack Query, Tailwind CSS / shadcn/ui
-- **Tech Stack (AI)**: Spring AI with flexible provider abstraction (Claude, OpenAI, swappable)
-- **Infrastructure**: Docker + Docker Compose for local dev first, Kubernetes (Helm) for production later
-- **Database**: PostgreSQL in container
-- **Deployment**: Docker Compose for local dev (PostgreSQL in container, backend on host via Gradle). Production deployment deferred — evaluate VPS + Docker Compose vs K8s when backend API is complete (after Phase 6)
-- **Architecture**: Monorepo (`/backend`, `/frontend`, `/infra`), designed for eventual multi-user
+- **Tech Stack (Backend)**: Kotlin + Spring Boot 4.0.4, Spring Security + JWT + Better Auth session filter, Spring Data JPA + PostgreSQL, Flyway migrations
+- **Tech Stack (Frontend)**: React 19 + TypeScript, Next.js 16.2 (Turbopack), TanStack Query, Tailwind CSS 4.0 / shadcn/ui, Better Auth, Zod v4
+- **Tech Stack (AI)**: Spring AI with flexible provider abstraction (deferred to v2)
+- **Infrastructure**: Docker Compose for local dev (PostgreSQL, Redis, MinIO in containers)
+- **Architecture**: Monorepo (`/backend`, `/frontend`, `/infra`), multi-user ready
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Kotlin over Java | More modern, learning opportunity, great Spring Boot support | Confirmed (Phase 1) |
-| Spring Boot 4.0.4 over 3.5.9 | Access to Spring AI 2.0.0-M3, accept milestone risks | Confirmed (Phase 1) |
-| No API versioning | Monorepo means frontend/backend evolve in lockstep; flat `/api/` prefix | Confirmed (Audit) |
-| Spring Actuator for health monitoring | /actuator/health with DB, Flyway, disk indicators; expose health, info, flyway | Confirmed |
-| Next.js over Vite SPA | SSR capabilities, built-in routing, Turbopack bundler | Confirmed (Phase 7) |
-| Monorepo structure | Simpler management, one PR for full features, split later if needed | Confirmed (Phase 1) |
-| Flexible AI provider | Avoid vendor lock-in, swap between Claude/OpenAI as needed | — Pending |
-| Upload-only documents | Simpler than building a rich text editor, covers the core need | — Pending |
-| Docker Compose first | Get running locally fast, evaluate production deployment after Phase 6 | Confirmed (Phase 1) |
-| Multi-user ready architecture | Design for one user but don't hardcode single-tenancy | — Pending |
+| Kotlin over Java | Modern language, learning opportunity, Spring Boot support | ✓ Good |
+| Spring Boot 4.0.4 | Access to latest Spring AI, accept milestone risks | ✓ Good |
+| Better Auth over custom JWT for frontend | Own DB tables, full auth UI components, session cookies | ✓ Good |
+| Backend-first development | Build and test API before frontend, stable contracts | ✓ Good |
+| No API versioning | Monorepo lockstep evolution, flat `/api/` prefix | ✓ Good |
+| MinIO for document storage | S3-compatible, local dev via Docker, production-ready | ✓ Good |
+| Dice UI Kanban composables | Drag validation, column dimming, click vs drag discrimination | ✓ Good |
+| Fixed sidebar + sticky topbar | Prevents horizontal scroll displacement on kanban | ✓ Good |
+| BetterAuthSessionFilter before JWT filter | Cookie auth first, JWT fallback for API testing | ✓ Good |
+| standardSchemaResolver for forms | Zod v4 incompatible with zodResolver, Standard Schema works | ✓ Good |
+| Phase 6.1 deferred to v2 | Visibility & Sharing not needed for MVP, reduces scope | ✓ Good |
 
 ---
-*Last updated: 2026-03-20 after phase 5 completion audit*
+*Last updated: 2026-03-22 after v1.0 milestone*
