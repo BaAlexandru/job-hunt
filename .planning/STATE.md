@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: completed
+stopped_at: Completed 13-01-PLAN.md
+last_updated: "2026-03-22T23:35:18.759Z"
+last_activity: 2026-03-22 — Completed Phase 11 Visibility & Sharing (all 4 plans)
+progress:
+  total_phases: 9
+  completed_phases: 5
+  total_plans: 12
+  completed_plans: 12
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.1
+milestone_name: Infrastructure & Deployment
+status: completed
 stopped_at: Phase 13 context gathered
 last_updated: "2026-03-22T22:15:17.671Z"
 last_activity: 2026-03-22 — Completed Phase 11 Visibility & Sharing (all 4 plans)
 progress:
-  total_phases: 9
+  [██████████] 100%
   completed_phases: 4
   total_plans: 11
   completed_plans: 11
@@ -74,6 +90,8 @@ Recent decisions affecting current work:
 - Split sidebar into mainNavItems and secondaryNavItems with Separator for discovery features
 - isOwner defaults to true when undefined for backwards compatibility with existing data
 - Non-owner detail pages hide jobs section, edit/delete, visibility controls, and share manager
+- [Phase 13-ci-pipeline]: MinIO health check uses curl against /minio/health/live instead of mc ready local in GH Actions service containers
+- [Phase 13-ci-pipeline]: Trivy exit-code 0 (report-only) to avoid blocking builds on upstream CVEs
 
 ### Pending Todos
 
@@ -87,6 +105,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T22:15:17.668Z
-Stopped at: Phase 13 context gathered
-Resume file: .planning/phases/13-ci-pipeline/13-CONTEXT.md
+Last session: 2026-03-22T23:35:18.756Z
+Stopped at: Completed 13-01-PLAN.md
+Resume file: None

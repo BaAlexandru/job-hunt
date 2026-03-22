@@ -35,7 +35,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 - [ ] **Phase 10: Gap Closure** - Complete missing UI features and email delivery from v1.0 `[parallel-A]`
 - [x] **Phase 11: Visibility & Sharing** - Backend + frontend for private/public/shared visibility on resources `[parallel-A]` (completed 2026-03-22)
 - [ ] **Phase 12: Production Docker Images** - Multi-stage Dockerfiles for backend and frontend `[parallel-A]`
-- [ ] **Phase 13: CI Pipeline** - GitHub Actions builds, tests, scans, and pushes images to GHCR
+- [x] **Phase 13: CI Pipeline** - GitHub Actions builds, tests, scans, and pushes images to GHCR (completed 2026-03-22)
 - [ ] **Phase 14: AWS Infrastructure** - EC2 instance provisioned via OpenTofu with VPC and networking `[parallel-B]`
 - [ ] **Phase 15: K3s Cluster Setup** - Kubernetes cluster with namespace separation and Kustomize manifests
 - [ ] **Phase 16: Data Stores on K8s** - PostgreSQL, Redis, MinIO deployed with persistence and backups
@@ -139,7 +139,7 @@ Plans:
   1. Merging a PR to master triggers a GitHub Actions workflow that builds and pushes images to ghcr.io
   2. CI pipeline runs backend tests and fails the build on test failure
   3. Container images are scanned for vulnerabilities and results are visible in the workflow summary
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
 - [ ] 13-01-PLAN.md — GitHub Actions CI workflow (test, build-push, scan) and README badge
 
@@ -215,7 +215,7 @@ Plans:
 | 10. Gap Closure | v1.1 | 0/? | Not started | - |
 | 11. Visibility & Sharing | 4/4 | Complete    | 2026-03-22 | - |
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
-| 13. CI Pipeline | v1.1 | 0/1 | Planned | - |
+| 13. CI Pipeline | 1/1 | Complete   | 2026-03-22 | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
 | 15. K3s Cluster Setup | v1.1 | 0/? | Not started | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
