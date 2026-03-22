@@ -126,7 +126,10 @@ Wave 6:                Phase 18 ──── depends on Phase 17
   1. Backend Docker image builds successfully with multi-stage build and is under 200MB
   2. Frontend Docker image builds successfully with Next.js standalone output and is under 200MB
   3. Both images start and serve traffic correctly when run with `docker run`
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 12-01-PLAN.md — Backend multi-stage Dockerfile with Spring Boot layer extraction
+- [ ] 12-02-PLAN.md — Frontend standalone Dockerfile + compose.prod.yaml integration
 
 ### Phase 13: CI Pipeline
 **Goal**: Every merge to master automatically builds, tests, scans, and publishes container images
@@ -209,7 +212,7 @@ Wave 6:                Phase 18 ──── depends on Phase 17
 | 9. Frontend Integration Polish | v1.0 | 2/2 | Complete | 2026-03-22 |
 | 10. Gap Closure | v1.1 | 0/? | Not started | - |
 | 11. Visibility & Sharing | v1.1 | 0/? | Not started | - |
-| 12. Production Docker Images | v1.1 | 0/? | Not started | - |
+| 12. Production Docker Images | v1.1 | 0/2 | Planned | - |
 | 13. CI Pipeline | v1.1 | 0/? | Not started | - |
 | 14. AWS Infrastructure | 2/2 | Complete    | 2026-03-22 | - |
 | 15. K3s Cluster Setup | v1.1 | 0/? | Not started | - |
