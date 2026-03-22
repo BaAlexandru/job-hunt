@@ -30,8 +30,8 @@ re_verification: false
 | 9  | User can inline-edit a note's content with save-on-blur | VERIFIED | `NoteRow` component with `onBlur={handleBlur}` calling `updateNote.mutate` |
 | 10 | User can delete a note with confirmation | VERIFIED | `ConfirmDialog` title "Delete Note"; `deleteNote.mutate` on confirm |
 | 11 | Each note displays a colored badge for its type | VERIFIED | `NOTE_TYPE_COLORS` Record with 5 types (PREPARATION, QUESTION_ASKED, FEEDBACK, FOLLOW_UP, GENERAL); badge rendered from color map |
-| 12 | User receives a password reset email when requesting a reset | VERIFIED | `PasswordResetService.requestReset()` calls `emailService.sendPasswordResetEmail(user.email, resetUrl)`; Better Auth `sendResetPassword` callback calls `/api/auth/send-reset-email` |
-| 13 | If SMTP fails, the reset flow does not break (falls back to logging) | VERIFIED | `EmailService.sendPasswordResetEmail` wraps `mailSender.send` in try/catch; catch block logs "Password reset link (email failed): $resetUrl" |
+| 12 | User receives a password reset email when requesting a reset | VERIFIED | `PasswordResetService.requestReset()` calls `emailService.sendPasswordResetEmail(user.email, token)`; Better Auth `sendResetPassword` callback calls `/api/auth/send-reset-email` with `X-Internal-Secret` header |
+| 13 | If SMTP fails, the reset flow does not break (falls back to logging) | VERIFIED | `EmailService.sendPasswordResetEmail` wraps `mailSender.send` in try/catch; catch block logs error without PII |
 
 **Score:** 13/13 truths verified
 
@@ -49,7 +49,7 @@ re_verification: false
 | `backend/src/main/resources/application.yml` | SMTP config nested under existing `spring:` key | VERIFIED | `spring.mail.*` block at lines 20-28; `app.*` block at lines 30-32; no duplicate `spring:` key |
 | `backend/build.gradle.kts` | `spring-boot-starter-mail` dependency | VERIFIED | `implementation("org.springframework.boot:spring-boot-starter-mail")` at line 42 |
 | `backend/src/main/kotlin/.../service/PasswordResetService.kt` | Constructor-injected `EmailService`, calls `sendPasswordResetEmail` | VERIFIED | `emailService: EmailService` and `@Value frontendBaseUrl` in constructor; `emailService.sendPasswordResetEmail(user.email, resetUrl)` in `requestReset()` |
-| `frontend/lib/auth.ts` | `sendResetPassword` callback sends email via backend | VERIFIED | Callback calls `fetch(/api/auth/send-reset-email)` with error handling; no bare console.log of reset URL |
+| `frontend/lib/auth.ts` | `sendResetPassword` callback sends email via backend | VERIFIED | Fire-and-forget `fetch().catch()` pattern per Better Auth best practices; `X-Internal-Secret` header; `revokeSessionsOnPasswordReset: true` enabled |
 
 ---
 
@@ -62,7 +62,7 @@ re_verification: false
 | `api.ts` `InterviewNoteResponse` | backend `InterviewNoteDtos.kt` | DTO fields match | VERIFIED | 6-field TypeScript interface matches backend Kotlin data class: id, interviewId, content, noteType, createdAt, updatedAt |
 | `PasswordResetService.kt` | `EmailService.kt` | Constructor injection; `emailService.sendPasswordResetEmail` | VERIFIED | `emailService` in constructor; direct call at line 48 in `requestReset()` |
 | `application.yml` | `JavaMailSender` auto-configuration | `spring.mail.*` properties | VERIFIED | `spring.mail.host: smtp.gmail.com`, `port: 587`, SMTP_USERNAME/SMTP_PASSWORD env vars |
-| `auth.ts` `sendResetPassword` | `AuthController.kt` `/api/auth/send-reset-email` | `fetch` POST call | VERIFIED | Callback POSTs to `${apiUrl}/auth/send-reset-email`; endpoint at `AuthController` line 120 wired to `emailService.sendPasswordResetEmail` |
+| `auth.ts` `sendResetPassword` | `AuthController.kt` `/api/auth/send-reset-email` | `fetch` POST with `X-Internal-Secret` | VERIFIED | Callback POSTs with shared secret header; endpoint validates secret and returns 403 on mismatch; prevents external abuse |
 
 ---
 
@@ -85,6 +85,20 @@ All 3 requirements declared across the 3 plans are accounted for. No orphaned re
 | None found | — | — | — | — |
 
 No TODOs, FIXMEs, placeholder returns, or empty handlers detected in phase-modified files.
+
+### Post-Review Security Hardening (2026-03-22)
+
+Findings from PR review addressed in commit `dee4f89` and subsequent security fix:
+
+| Finding | Severity | Fix Applied |
+|---------|----------|-------------|
+| Frontend sent attacker-controlled `url` to backend | Critical | Send `token` only; backend constructs URL from trusted `app.frontend-base-url` config |
+| PII (email, reset URL) logged in production | Warning | Removed email/URL from log messages |
+| HTML injection in email template via reset URL | Warning | Added `escapeHtml()` for XSS prevention in email HTML |
+| `void fetch()` with dead `try/catch` | Warning | Replaced with `fetch().catch()` per Better Auth fire-and-forget best practice |
+| `/send-reset-email` endpoint unauthenticated — email relay risk | Critical | Added `X-Internal-Secret` header validation; returns 403 on mismatch |
+| Missing `revokeSessionsOnPasswordReset` | Warning | Enabled `revokeSessionsOnPasswordReset: true` per Better Auth docs |
+| Unused `url` param destructured in callback | Info | Removed from destructured params (only `token` needed) |
 
 ---
 

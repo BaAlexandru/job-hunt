@@ -95,6 +95,7 @@ Each task was committed atomically:
 - HTML email template stored inline in Kotlin rather than using Thymeleaf/Freemarker (only one template needed)
 - Backend endpoint /api/auth/send-reset-email added so Better Auth callback can trigger email via existing EmailService
 - Real entity instances used in unit tests instead of mocking JPA entities (avoids MockK ClassCastException with generic save methods)
+- Shared internal secret (`X-Internal-Secret` header) chosen to secure `/send-reset-email` endpoint over alternatives (nodemailer in frontend, network-level restriction)
 
 ## Deviations from Plan
 
@@ -108,10 +109,23 @@ Each task was committed atomically:
 - **Verification:** `./gradlew :backend:test` passes (all tests green)
 - **Committed in:** fb50d2d
 
+**2. [PR Review] Security hardening — address critical and warning findings**
+- **Found during:** PR review (commit `dee4f89`)
+- **Issues:** Attacker-controlled URL sent to backend, PII in logs, XSS in email, unauthenticated endpoint
+- **Fix:** Token-only approach, HTML escaping, PII removal from logs, `void fetch()` → `fetch().catch()`
+- **Committed in:** dee4f89
+
+**3. [Best Practices Review] Better Auth alignment — endpoint security and session revocation**
+- **Found during:** Post-PR review using Better Auth skills and Context7 docs
+- **Issues:** `/send-reset-email` endpoint open to abuse as email relay; missing `revokeSessionsOnPasswordReset`
+- **Fix:** Added `X-Internal-Secret` header validation on endpoint (403 on mismatch); enabled `revokeSessionsOnPasswordReset: true`; replaced dead `try/catch` with proper `fetch().catch()` pattern
+- **Verification:** `./gradlew :backend:test` passes; `npx tsc --noEmit` passes
+- **Pending commit**
+
 ---
 
-**Total deviations:** 1 auto-fixed (1 missing critical)
-**Impact on plan:** Test addition required for completeness. No scope creep.
+**Total deviations:** 3 auto-fixed (1 missing critical, 2 security hardening)
+**Impact on plan:** Security improvements required for production readiness. No scope creep.
 
 ## Issues Encountered
 - MockK relaxed mocks on JPA repositories return Object instead of entity type for generic save() methods, causing ClassCastException. Resolved by explicitly stubbing `save()` with `answers { firstArg() }` and using real entity instances instead of mocking JPA entities.
@@ -123,6 +137,7 @@ Password reset email requires Gmail SMTP credentials:
 - `SMTP_PASSWORD` - Google App Password (16-char, from myaccount.google.com/apppasswords)
 - `FRONTEND_BASE_URL` - Frontend URL (defaults to http://localhost:3000)
 - `MAIL_FROM` - Sender address (defaults to noreply@job-hunt.dev)
+- `INTERNAL_API_SECRET` - Shared secret between frontend and backend for `/send-reset-email` endpoint (must match in both `.env.local` and `application.yml`; defaults to dev value for local)
 
 ## Next Phase Readiness
 - All 3 plans in Phase 10 complete

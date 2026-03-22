@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -33,7 +34,8 @@ class AuthController(
     private val jwtTokenProvider: JwtTokenProvider,
     private val emailVerificationService: EmailVerificationService,
     private val passwordResetService: PasswordResetService,
-    private val emailService: EmailService
+    private val emailService: EmailService,
+    @org.springframework.beans.factory.annotation.Value("\${app.internal-api-secret}") private val internalApiSecret: String,
 ) {
 
     @PostMapping("/register")
@@ -118,7 +120,13 @@ class AuthController(
     }
 
     @PostMapping("/send-reset-email")
-    fun sendResetEmail(@Valid @RequestBody request: SendResetEmailRequest): ResponseEntity<MessageResponse> {
+    fun sendResetEmail(
+        @RequestHeader("X-Internal-Secret") secret: String?,
+        @Valid @RequestBody request: SendResetEmailRequest,
+    ): ResponseEntity<MessageResponse> {
+        if (secret != internalApiSecret) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(MessageResponse("Forbidden"))
+        }
         emailService.sendPasswordResetEmail(request.email, request.token)
         return ResponseEntity.ok(MessageResponse("Reset email sent"))
     }
