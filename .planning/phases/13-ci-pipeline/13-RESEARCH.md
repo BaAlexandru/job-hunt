@@ -65,7 +65,7 @@ None -- discussion stayed within phase scope
 ### Core Actions
 | Action | Version | Purpose | Why Standard |
 |--------|---------|---------|--------------|
-| actions/checkout | v4 | Check out repository | Standard, required for all workflows |
+| actions/checkout | v5 | Check out repository | Standard, required for all workflows |
 | actions/setup-java | v4 | Install Temurin JDK 24 | Official action, supports Temurin distribution |
 | actions/setup-node | v4 | Install Node.js + pnpm cache | Built-in pnpm cache support |
 | pnpm/action-setup | v4 | Install pnpm | Official pnpm installer for GH Actions |
