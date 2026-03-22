@@ -1,0 +1,25 @@
+# Build artifacts
+backend/build/
+backend/.gradle/
+.gradle/
+
+# IDE
+.idea/
+*.iml
+
+# Git
+.git/
+.gitignore
+
+# Frontend (not needed for backend build)
+frontend/
+
+# Planning docs
+.planning/
+.agents/
+.claude/
+
+# Docker files
+**/Dockerfile
+**/.dockerignore
+*.md
