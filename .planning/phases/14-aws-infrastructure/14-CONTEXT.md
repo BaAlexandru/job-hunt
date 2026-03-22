@@ -14,10 +14,14 @@ Provision a running EC2 t3.small instance with networking (VPC, subnet, security
 ## Implementation Decisions
 
 ### OpenTofu state backend
-- S3 bucket + DynamoDB table for remote state with locking
-- Separate bootstrap module (`infra/tofu/bootstrap/`) creates the S3 bucket + DynamoDB table using local state, then the main module (`infra/tofu/main/`) references that backend
+- S3 bucket with native S3 locking (`use_lockfile = true`) for remote state — no DynamoDB table needed
+- S3 bucket versioning enabled (required for `use_lockfile` and enables state recovery from accidental corruption)
+- State encryption at rest via `encrypt = true` in backend config
+- Separate bootstrap module (`infra/tofu/bootstrap/`) creates the S3 bucket (with versioning + encryption) using local state, then the main module (`infra/tofu/main/`) references that backend
 - State and all resources in the same region (eu-central-1)
 - OpenTofu code lives under `infra/tofu/` — two modules: `bootstrap/` and `main/`
+
+**Note:** OpenTofu's native S3 locking (`use_lockfile = true`) replaces the legacy DynamoDB-based locking. This simplifies the bootstrap module (one fewer resource), reduces IAM permissions needed, and is the forward-looking approach per OpenTofu docs. The lock is implemented via conditional S3 PutObject with `IfNoneMatch`, creating a `.lock` object alongside the state file.
 
 ### SSH access policy
 - SSH key pair generated locally; public key imported via OpenTofu as `aws_key_pair`
@@ -31,21 +35,29 @@ Provision a running EC2 t3.small instance with networking (VPC, subnet, security
 - 30GB gp3 root volume (matches free tier limit, sufficient for OS + containers + PVCs)
 
 ### AWS account & cost
-- Account is within free tier (t3.small covered for 750 hrs/mo, 30GB EBS free)
+- **t3.small is NOT free-tier eligible** — AWS Free Tier covers t2.micro/t3.micro only. Downgrading to t3.micro (1GB RAM) is not viable: K3s alone needs ~350MB, leaving insufficient headroom for the application stack.
 - Region: eu-central-1 (Frankfurt) — closest to user, Cloudflare PoP available
-- CloudWatch billing alarm at $10 threshold with SNS email notification — provisioned by OpenTofu
-- Expected monthly cost: ~$0 while on free tier
+- CloudWatch billing alarm at **$25 threshold** with SNS email notification — provisioned by OpenTofu
+- Expected monthly cost breakdown:
+  - EC2 t3.small: ~$15/mo ($0.0208/hr × 730 hrs in eu-central-1)
+  - 30GB gp3 EBS: ~$0 (free tier covers 30GB/mo for 12 months)
+  - Elastic IP (attached to running instance): ~$0
+  - S3 state bucket: negligible
+  - **Total: ~$15/mo**
 
 ### Security groups
 - Inbound: SSH (22) restricted to `allowed_ssh_cidr`, HTTP (80) open, HTTPS (443) open
 - Outbound: all traffic allowed
 - HTTP/HTTPS open because Cloudflare proxy will route traffic here in Phase 18
 
+### Accepted trade-offs
+- **Inline security group rules**: Plans use inline `ingress`/`egress` blocks inside `aws_security_group` rather than separate `aws_vpc_security_group_ingress_rule`/`egress_rule` resources. AWS Provider v6 recommends the separate-resource pattern, but inline rules are simpler and sufficient for this use case with only 3 ingress + 1 egress rules. The key constraint is consistency — never mix inline and separate rules on the same security group.
+- **S3 bucket name collision risk**: The state bucket name `jobhunt-tofu-state` is in the global S3 namespace. If the name is already taken, `tofu apply` will fail with "BucketAlreadyExists". Mitigation: append an account-specific suffix (e.g., `jobhunt-tofu-state-{account-id-fragment}`) if collision occurs. Low risk for a personal project.
+
 ### Claude's Discretion
 - VPC CIDR block sizing and subnet layout
 - Exact user-data script implementation details
 - OpenTofu module structure beyond bootstrap/main split
-- DynamoDB table configuration (capacity mode, etc.)
 - Swap file size (1GB or 2GB) based on research
 
 </decisions>
@@ -81,6 +93,15 @@ Provision a running EC2 t3.small instance with networking (VPC, subnet, security
 - Elastic IP output from this phase feeds into Phase 18 (Cloudflare DNS A record)
 - EC2 instance ID/IP feeds into Phase 15 (K3s installation target)
 - Security group IDs may need updating in Phase 15 if K3s requires additional ports (e.g., 6443 for K8s API)
+
+### Required OpenTofu Outputs
+The main module MUST expose these outputs for downstream phase handoff (v1.0 retrospective lesson: stable contracts reduce integration friction):
+- `elastic_ip` — Phase 18 needs this for Cloudflare DNS A record
+- `instance_id` — Phase 15 needs this as K3s installation target
+- `instance_public_dns` — Convenience for SSH access
+- `security_group_id` — Phase 15 may need to add K3s API port (6443)
+- `vpc_id` — Future reference for additional networking
+- `subnet_id` — Future reference for additional resources
 
 </code_context>
 
