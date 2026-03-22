@@ -13,6 +13,14 @@ spring:
     redis:
       host: localhost
       port: 6379
+  mail:
+    host: localhost
+    port: 1025
+    username: test
+    password: test
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
   jpa:
     hibernate:
       ddl-auto: validate
@@ -29,6 +37,11 @@ jwt:
   secret: ${JWT_SECRET:dGhpcy1pcy1hLWxvY2FsLWRldi1zZWNyZXQta2V5LXRoYXQtaXMtbG9uZy1lbm91Z2gtZm9yLUhTMjU2}
   access-expiration-ms: 900000
   refresh-expiration-ms: 604800000
+
+app:
+  frontend-base-url: http://localhost:3000
+  mail-from: noreply@test.com
+  internal-api-secret: test-internal-secret
 
 storage:
   endpoint: http://localhost:9000
