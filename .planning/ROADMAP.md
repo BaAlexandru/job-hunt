@@ -36,7 +36,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 - [ ] **Phase 11: Visibility & Sharing** - Backend + frontend for private/public/shared visibility on resources `[parallel-A]`
 - [ ] **Phase 12: Production Docker Images** - Multi-stage Dockerfiles for backend and frontend `[parallel-A]`
 - [ ] **Phase 13: CI Pipeline** - GitHub Actions builds, tests, scans, and pushes images to GHCR
-- [x] **Phase 14: AWS Infrastructure** - EC2 instance provisioned via OpenTofu with VPC and networking `[parallel-B]` (completed 2026-03-22)
+- [ ] **Phase 14: AWS Infrastructure** - EC2 instance provisioned via OpenTofu with VPC and networking `[parallel-B]`
 - [ ] **Phase 15: K3s Cluster Setup** - Kubernetes cluster with namespace separation and Kustomize manifests
 - [ ] **Phase 16: Data Stores on K8s** - PostgreSQL, Redis, MinIO deployed with persistence and backups
 - [ ] **Phase 17: App Deployment & ArgoCD** - Application pods running, GitOps pipeline managing all resources
@@ -85,8 +85,6 @@ Wave 6:                Phase 18 ──── depends on Phase 17
 - Production runs continuously with replicas=1
 - If sustained memory pressure is observed, upgrade to t3.medium (4GB, ~$30/mo)
 
-**Monthly cost estimate (t3.small in eu-central-1):** ~$15/mo for EC2 (t3.small is NOT free-tier eligible). EBS 30GB and Elastic IP are covered by free tier. Total: ~$15/mo baseline.
-
 **JVM tuning (required in Dockerfile):**
 - `-XX:MaxRAMPercentage=75.0 -XX:+UseContainerSupport -XX:+ExitOnOutOfMemoryError`
 - K8s resource limits: `requests: 384Mi / limits: 512Mi`
@@ -102,7 +100,11 @@ Wave 6:                Phase 18 ──── depends on Phase 17
   1. User can view existing interview notes and add new notes per interview round in the InterviewsTab
   2. User can see document version history and upload a new version of an existing document
   3. User receives a password reset email at their registered address when requesting a reset
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 10-01-PLAN.md — Document version history panel (GAP-02)
+- [ ] 10-02-PLAN.md — Interview notes UI in InterviewsTab (GAP-01)
+- [ ] 10-03-PLAN.md — Password reset email via SMTP (GAP-03)
 
 ### Phase 11: Visibility & Sharing
 **Goal**: Users can control visibility of their companies and jobs as private, public, or shared with specific users
@@ -126,10 +128,7 @@ Wave 6:                Phase 18 ──── depends on Phase 17
   1. Backend Docker image builds successfully with multi-stage build and is under 200MB
   2. Frontend Docker image builds successfully with Next.js standalone output and is under 200MB
   3. Both images start and serve traffic correctly when run with `docker run`
-**Plans:** 2 plans
-Plans:
-- [x] 12-01-PLAN.md — Backend multi-stage Dockerfile with Spring Boot layer extraction
-- [x] 12-02-PLAN.md — Frontend standalone Dockerfile + compose.prod.yaml integration
+**Plans**: TBD
 
 ### Phase 13: CI Pipeline
 **Goal**: Every merge to master automatically builds, tests, scans, and publishes container images
@@ -210,11 +209,11 @@ Plans:
 | 7. Frontend Shell & Auth UI | v1.0 | 3/3 | Complete | 2026-03-20 |
 | 8. Frontend Core Views | v1.0 | 11/11 | Complete | 2026-03-21 |
 | 9. Frontend Integration Polish | v1.0 | 2/2 | Complete | 2026-03-22 |
-| 10. Gap Closure | v1.1 | 0/? | Not started | - |
+| 10. Gap Closure | v1.1 | 0/3 | Planned | - |
 | 11. Visibility & Sharing | v1.1 | 0/? | Not started | - |
-| 12. Production Docker Images | v1.1 | 2/2 | Complete | 2026-03-22 |
+| 12. Production Docker Images | v1.1 | 0/? | Not started | - |
 | 13. CI Pipeline | v1.1 | 0/? | Not started | - |
-| 14. AWS Infrastructure | 2/2 | Complete    | 2026-03-22 | - |
+| 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
 | 15. K3s Cluster Setup | v1.1 | 0/? | Not started | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
 | 17. App Deployment & ArgoCD | v1.1 | 0/? | Not started | - |
