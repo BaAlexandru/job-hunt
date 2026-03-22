@@ -138,6 +138,7 @@ class JobService(
         currency = currency,
         salaryPeriod = salaryPeriod,
         closingDate = closingDate,
+        visibility = visibility.name,
         archived = archived,
         archivedAt = archivedAt,
         createdAt = createdAt,

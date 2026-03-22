@@ -2,6 +2,8 @@ package com.alex.job.hunt.jobhunt.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -19,6 +21,10 @@ class CompanyEntity(
 
     @Column(name = "user_id", nullable = false)
     val userId: UUID,
+
+    @Column(name = "visibility", nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
+    var visibility: Visibility = Visibility.PRIVATE,
 
     @Column(nullable = false, length = 255)
     var name: String,
