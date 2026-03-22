@@ -74,7 +74,7 @@ None -- discussion stayed within phase scope
 | docker/login-action | v3 | Authenticate to GHCR | Standard registry auth with GITHUB_TOKEN |
 | docker/metadata-action | v5 | Generate tags + OCI labels | SHA + date + latest tagging from Git context |
 | docker/build-push-action | v6 | Build and push images | Industry standard, supports GHA cache backend |
-| aquasecurity/trivy-action | v0.33.1 | Vulnerability scanning | De facto standard for container scanning in GH Actions |
+| aquasecurity/trivy-action | v0.35.0 | Vulnerability scanning | De facto standard for container scanning in GH Actions |
 
 ### Alternatives Considered
 | Instead of | Could Use | Tradeoff |
@@ -172,7 +172,7 @@ services:
 ```yaml
 # Source: trivy-action README + trivy docs
 - name: Scan backend image
-  uses: aquasecurity/trivy-action@0.33.1
+  uses: aquasecurity/trivy-action@0.35.0
   with:
     scan-type: image
     image-ref: ghcr.io/baalexandru/jobhunt-backend:sha-${{ github.sha }}
@@ -214,7 +214,7 @@ services:
 | Image tagging | Shell script to generate SHA/date tags | `docker/metadata-action@v5` | Handles edge cases, OCI labels, Handlebars expressions |
 | Gradle caching | Manual `actions/cache` with Gradle paths | `gradle/actions/setup-gradle@v4` | Smarter cache key generation, automatic cleanup, avoids stale caches |
 | GHCR authentication | Manual `docker login` command | `docker/login-action@v3` | Secure credential handling, works with GITHUB_TOKEN |
-| Container scanning | Manual `trivy` CLI install + run | `aquasecurity/trivy-action@0.33.1` | Handles DB downloads, caching, output formatting |
+| Container scanning | Manual `trivy` CLI install + run | `aquasecurity/trivy-action@0.35.0` | Handles DB downloads, caching, output formatting |
 | pnpm installation | Manual `npm install -g pnpm` | `pnpm/action-setup@v4` | Reads packageManager from package.json, proper corepack handling |
 
 ## Common Pitfalls
@@ -394,7 +394,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Scan backend image
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@0.35.0
         with:
           scan-type: image
           image-ref: ghcr.io/baalexandru/jobhunt-backend:latest
@@ -403,7 +403,7 @@ jobs:
           severity: CRITICAL,HIGH,MEDIUM
           exit-code: '0'
       - name: Scan frontend image
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@0.35.0
         with:
           scan-type: image
           image-ref: ghcr.io/baalexandru/jobhunt-frontend:latest
@@ -490,7 +490,7 @@ jobs:
 ### Secondary (MEDIUM confidence)
 - [gradle/actions/setup-gradle docs](https://github.com/gradle/actions/blob/main/docs/setup-gradle.md) -- Gradle caching strategy
 - [pnpm CI docs](https://pnpm.io/continuous-integration) -- pnpm + setup-node caching
-- [aquasecurity/trivy-action](https://github.com/aquasecurity/trivy-action) -- trivy-action inputs, version 0.33.1
+- [aquasecurity/trivy-action](https://github.com/aquasecurity/trivy-action) -- trivy-action inputs, version 0.35.0
 - [docker/metadata-action@v5](https://github.com/docker/metadata-action) -- tag types, Handlebars expressions
 - [Next.js env vars docs](https://nextjs.org/docs/pages/guides/environment-variables) -- NEXT_PUBLIC build-time inlining behavior
 
