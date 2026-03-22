@@ -18,7 +18,7 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 - [x] **VISI-01**: User can set visibility (PRIVATE/PUBLIC/SHARED) on companies and jobs
 - [x] **VISI-02**: User can share specific companies or jobs with other users (by email)
 - [x] **VISI-03**: User can browse public companies and jobs from other users
-- [ ] **VISI-04**: User can view items shared with them
+- [x] **VISI-04**: User can view items shared with them
 - [x] **VISI-05**: Shared users can only VIEW (not edit/delete) — view-only always, no edit permission grant
 
 ### Docker & CI
@@ -93,7 +93,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | VISI-01 | Phase 11 | Complete |
 | VISI-02 | Phase 11 | Complete |
 | VISI-03 | Phase 11 | Complete |
-| VISI-04 | Phase 11 | Pending |
+| VISI-04 | Phase 11 | Complete |
 | VISI-05 | Phase 11 | Complete |
 | DOCK-01 | Phase 12 | Pending |
 | DOCK-02 | Phase 12 | Pending |
