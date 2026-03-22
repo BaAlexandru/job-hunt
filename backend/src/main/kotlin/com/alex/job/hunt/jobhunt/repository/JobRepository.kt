@@ -2,6 +2,8 @@ package com.alex.job.hunt.jobhunt.repository
 
 import com.alex.job.hunt.jobhunt.entity.JobEntity
 import com.alex.job.hunt.jobhunt.entity.JobType
+import com.alex.job.hunt.jobhunt.entity.ResourceShareEntity
+import com.alex.job.hunt.jobhunt.entity.Visibility
 import com.alex.job.hunt.jobhunt.entity.WorkMode
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -37,4 +39,43 @@ interface JobRepository : JpaRepository<JobEntity, UUID> {
         includeArchived: Boolean,
         pageable: Pageable
     ): Page<JobEntity>
+
+    @Query(
+        """
+        SELECT j FROM JobEntity j
+        WHERE j.id = :id
+        AND (
+            j.userId = :userId
+            OR j.visibility = com.alex.job.hunt.jobhunt.entity.Visibility.PUBLIC
+            OR (j.visibility = com.alex.job.hunt.jobhunt.entity.Visibility.SHARED AND EXISTS (
+                SELECT 1 FROM ResourceShareEntity s
+                WHERE s.resourceType = com.alex.job.hunt.jobhunt.entity.ResourceType.JOB
+                AND s.resourceId = j.id
+                AND s.sharedWithId = :userId
+            ))
+        )
+        """
+    )
+    fun findByIdWithVisibility(id: UUID, userId: UUID): JobEntity?
+
+    @Query(
+        """
+        SELECT j FROM JobEntity j
+        WHERE j.visibility = com.alex.job.hunt.jobhunt.entity.Visibility.PUBLIC
+        AND (:title IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', CAST(:title AS string), '%')))
+        """
+    )
+    fun findPublic(title: String?, pageable: Pageable): Page<JobEntity>
+
+    @Query(
+        """
+        SELECT j FROM JobEntity j
+        WHERE j.id IN (
+            SELECT s.resourceId FROM ResourceShareEntity s
+            WHERE s.sharedWithId = :userId
+            AND s.resourceType = com.alex.job.hunt.jobhunt.entity.ResourceType.JOB
+        )
+        """
+    )
+    fun findSharedWithUser(userId: UUID, pageable: Pageable): Page<JobEntity>
 }

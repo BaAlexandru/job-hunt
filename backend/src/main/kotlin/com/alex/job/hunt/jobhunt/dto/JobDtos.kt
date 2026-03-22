@@ -93,8 +93,10 @@ data class JobResponse(
     val currency: String?,
     val salaryPeriod: SalaryPeriod?,
     val closingDate: LocalDate?,
+    val visibility: String,
     val archived: Boolean,
     val archivedAt: Instant?,
     val createdAt: Instant,
-    val updatedAt: Instant
+    val updatedAt: Instant,
+    val isOwner: Boolean = true
 )

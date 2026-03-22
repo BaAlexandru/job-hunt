@@ -73,6 +73,7 @@ class CompanyService(
         website = website,
         location = location,
         notes = notes,
+        visibility = visibility.name,
         archived = archived,
         archivedAt = archivedAt,
         createdAt = createdAt,
