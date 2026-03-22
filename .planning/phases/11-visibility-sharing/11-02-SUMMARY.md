@@ -45,7 +45,7 @@ patterns-established:
   - "Visibility-aware reads: getById uses findByIdWithVisibility, computes isOwner dynamically"
   - "Owner-only writes: update/archive/setVisibility use findByIdAndUserId"
   - "Browse public: batch-fetch owner emails via userRepository.findAllById to avoid N+1"
-  - "Share cleanup: deleteByResourceTypeAndResourceId before archive to prevent orphaned shares"
+  - "Shares persist on archive: archiving does NOT delete shares (CONTEXT.md requirement)"
 
 requirements-completed: [VISI-01, VISI-02, VISI-03, VISI-04, VISI-05]
 

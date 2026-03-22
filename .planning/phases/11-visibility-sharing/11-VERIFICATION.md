@@ -169,5 +169,43 @@ Five human verification items remain — these are all UI/UX behaviors (dialogs,
 
 ---
 
+## Post-Audit Fixes (2026-03-22)
+
+A review audit identified 2 bugs and 1 minor inconsistency. All were fixed in commit `07f1bb6`.
+
+### Fix 1: Shares persist on archive (CONTEXT.md compliance)
+
+**Issue:** `CompanyService.archive()` and `JobService.archive()` deleted shares before archiving, violating CONTEXT.md: _"Shares persist when a resource is archived — not revoked; shared users see it as archived."_
+
+**Fix:** Removed `resourceShareRepository.deleteByResourceTypeAndResourceId()` from both `archive()` methods. Updated tests to assert `resourceShareRepository.count() == 1` after archiving (shares preserved).
+
+**Files changed:**
+- `backend/src/main/kotlin/.../service/CompanyService.kt` — removed share cleanup from archive()
+- `backend/src/main/kotlin/.../service/JobService.kt` — removed share cleanup from archive()
+- `backend/src/test/kotlin/.../visibility/CompanyVisibilityServiceTest.kt` — renamed test to `archiving company preserves associated shares`, asserts count=1
+- `backend/src/test/kotlin/.../visibility/JobVisibilityServiceTest.kt` — same pattern
+
+### Fix 2: TestHelper deterministic token selection
+
+**Issue:** `TestHelper.registerAndGetToken()` used `emailVerificationTokenRepository.findAll().last().token` which selects tokens by UUID ordering — non-deterministic when multiple users are registered. Caused `SharedWithMeControllerTest` "GET shared jobs" to fail with 400 "Token already used".
+
+**Fix:** Changed to `emailVerificationTokenRepository.findAll().first { !it.used }.token` — filters for the unused verification token instead of relying on ordering.
+
+**Files changed:**
+- `backend/src/test/kotlin/.../TestHelper.kt` — line 34
+
+### Minor: Shared jobs tab inline Card
+
+**Issue:** `shared/page.tsx` Jobs tab uses an inline Card component instead of a dedicated JobCard, creating slight inconsistency with the Companies tab pattern.
+
+**Status:** Not fixed — functional, cosmetic only. No user-facing impact.
+
+### Post-Audit Test Results
+
+All 175 backend tests pass (0 failures). Frontend TypeScript compiles clean.
+
+---
+
 _Verified: 2026-03-22T16:00:00Z_
 _Verifier: Claude (gsd-verifier)_
+_Post-audit: 2026-03-22T18:44:00Z_
