@@ -33,7 +33,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 **Parallel execution:** Phases marked with the same parallel group (A, B) can run concurrently on separate branches.
 
 - [ ] **Phase 10: Gap Closure** - Complete missing UI features and email delivery from v1.0 `[parallel-A]`
-- [ ] **Phase 11: Visibility & Sharing** - Backend + frontend for private/public/shared visibility on resources `[parallel-A]`
+- [x] **Phase 11: Visibility & Sharing** - Backend + frontend for private/public/shared visibility on resources `[parallel-A]` (completed 2026-03-22)
 - [ ] **Phase 12: Production Docker Images** - Multi-stage Dockerfiles for backend and frontend `[parallel-A]`
 - [ ] **Phase 13: CI Pipeline** - GitHub Actions builds, tests, scans, and pushes images to GHCR
 - [ ] **Phase 14: AWS Infrastructure** - EC2 instance provisioned via OpenTofu with VPC and networking `[parallel-B]`
@@ -113,7 +113,7 @@ Wave 6:                Phase 18 ──── depends on Phase 17
   3. User can browse public companies and jobs from all users via API
   4. Shared items appear in a dedicated "Shared with me" page accessible to the recipient (view-only)
   5. Default visibility is PRIVATE — no behavior change for existing data
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 Plans:
 - [ ] 11-01-PLAN.md — Backend schema, entities, repositories, DTOs (V16 migration + Visibility enum + ResourceShareEntity)
 - [ ] 11-02-PLAN.md — Backend services and controllers (ShareService, visibility endpoints, browse, shared-with-me)
@@ -211,7 +211,7 @@ Plans:
 | 8. Frontend Core Views | v1.0 | 11/11 | Complete | 2026-03-21 |
 | 9. Frontend Integration Polish | v1.0 | 2/2 | Complete | 2026-03-22 |
 | 10. Gap Closure | v1.1 | 0/? | Not started | - |
-| 11. Visibility & Sharing | 3/4 | In Progress|  | - |
+| 11. Visibility & Sharing | 4/4 | Complete   | 2026-03-22 | - |
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
 | 13. CI Pipeline | v1.1 | 0/? | Not started | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
