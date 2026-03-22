@@ -2,6 +2,7 @@
 
 import { MapPin, Briefcase, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardAction } from "@/components/ui/card"
+import { VisibilityBadge } from "@/components/shared/visibility-badge"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -17,6 +18,7 @@ interface CompanyCardProps {
   onEdit: () => void
   onDelete: () => void
   onClick: () => void
+  hideActions?: boolean
 }
 
 export function CompanyCard({
@@ -25,6 +27,7 @@ export function CompanyCard({
   onEdit,
   onDelete,
   onClick,
+  hideActions = false,
 }: CompanyCardProps) {
   return (
     <Card
@@ -32,7 +35,11 @@ export function CompanyCard({
       onClick={onClick}
     >
       <CardHeader>
-        <CardTitle className="text-sm font-semibold">{company.name}</CardTitle>
+        <div className="flex items-center gap-1">
+          <VisibilityBadge visibility={company.visibility} />
+          <CardTitle className="text-sm font-semibold">{company.name}</CardTitle>
+        </div>
+        {!hideActions && (
         <CardAction>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -68,6 +75,7 @@ export function CompanyCard({
             </DropdownMenuContent>
           </DropdownMenu>
         </CardAction>
+        )}
       </CardHeader>
       <CardContent className="flex flex-col gap-1.5">
         {company.website && (
