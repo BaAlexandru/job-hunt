@@ -202,12 +202,13 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8080/api
     ports:
       - "3000:3000"
-    environment:
-      NEXT_PUBLIC_API_URL: http://backend:8080/api
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 ```
 
 ### Anti-Patterns to Avoid
