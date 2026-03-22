@@ -3,6 +3,37 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 09-02-PLAN.md
+last_updated: "2026-03-21T23:26:45.885Z"
+last_activity: 2026-03-21 -- Completed 08-09 gap closure (dialog UX + dashboard timestamps)
+progress:
+  total_phases: 9
+  completed_phases: 9
+  total_plans: 30
+  completed_plans: 30
+  percent: 97
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Phase 9 UI-SPEC approved
+last_updated: "2026-03-21T23:03:48.303Z"
+last_activity: 2026-03-21 -- Completed 08-09 gap closure (dialog UX + dashboard timestamps)
+progress:
+  [██████████] 97%
+  completed_phases: 8
+  total_plans: 28
+  completed_plans: 28
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 08-11-PLAN.md (gap closure - status dropdown fix + dashboard deep linking)
 last_updated: "2026-03-21T20:42:36.713Z"
 last_activity: 2026-03-21 -- Completed 08-09 gap closure (dialog UX + dashboard timestamps)
@@ -124,6 +155,8 @@ Progress: [█████████░] 26/28 plans complete
 | Phase 08 P09 | 3 | 2 tasks | 2 files |
 | Phase 08 P10 | 4 | 2 tasks | 4 files |
 | Phase 08 P11 | 5 | 2 tasks | 3 files |
+| Phase 09 P01 | 2 | 2 tasks | 3 files |
+| Phase 09 P02 | 4 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -187,6 +220,8 @@ Recent decisions affecting current work:
 - [Phase 08]: Fixed positioning for sidebar instead of flex-based layout to prevent horizontal scroll displacement
 - [Phase 08]: min-h-0 on scroll wrapper to override flex min-height:auto default for Sheet panel mobile scroll
 - [Phase 08]: Radix modal={false} removes viewport overlay blocking scroll in inline table dropdowns
+- [Phase 09]: Preserved applicationKeys.transitions key factory despite removing useApplicationTransitions to avoid breaking optimistic update rollback
+- [Phase 09]: Backend field mapping (date->occurredAt, summary->title, details->metadata) done in useTimeline queryFn
 
 ### Roadmap Evolution
 
@@ -206,6 +241,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-21T19:35:56.847Z
-Stopped at: Completed 08-11-PLAN.md (gap closure - status dropdown fix + dashboard deep linking)
+Last session: 2026-03-21T23:22:40.187Z
+Stopped at: Completed 09-02-PLAN.md
 Resume file: None
