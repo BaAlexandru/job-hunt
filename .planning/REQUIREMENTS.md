@@ -30,7 +30,7 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 
 ### Kubernetes Infrastructure
 
-- [ ] **K8S-01**: EC2 instance (t3.small) provisioned via OpenTofu with VPC, security groups, Elastic IP
+- [x] **K8S-01**: EC2 instance (t3.small) provisioned via OpenTofu with VPC, security groups, Elastic IP
 - [ ] **K8S-02**: K3s cluster installed and running on EC2 instance
 - [ ] **K8S-03**: Staging and production namespaces configured with resource quotas
 - [ ] **K8S-04**: Kustomize base + overlays for staging and production environments
@@ -99,7 +99,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DOCK-02 | Phase 12 | Pending |
 | DOCK-03 | Phase 13 | Pending |
 | DOCK-04 | Phase 13 | Pending |
-| K8S-01 | Phase 14 | Pending |
+| K8S-01 | Phase 14 | Complete |
 | K8S-02 | Phase 15 | Pending |
 | K8S-03 | Phase 15 | Pending |
 | K8S-04 | Phase 15 | Pending |
