@@ -12,47 +12,32 @@ import java.time.Instant
 import java.util.UUID
 
 @Entity
-@Table(name = "companies")
-class CompanyEntity(
+@Table(name = "resource_shares")
+class ResourceShareEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false, nullable = false)
     val id: UUID? = null,
 
-    @Column(name = "user_id", nullable = false)
-    val userId: UUID,
-
-    @Column(name = "visibility", nullable = false, length = 20)
+    @Column(name = "resource_type", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    var visibility: Visibility = Visibility.PRIVATE,
+    val resourceType: ResourceType,
 
-    @Column(nullable = false, length = 255)
-    var name: String,
+    @Column(name = "resource_id", nullable = false)
+    val resourceId: UUID,
 
-    @Column(length = 500)
-    var website: String? = null,
+    @Column(name = "owner_id", nullable = false)
+    val ownerId: UUID,
 
-    @Column(length = 255)
-    var location: String? = null,
-
-    @Column(columnDefinition = "TEXT")
-    var notes: String? = null,
-
-    @Column(nullable = false)
-    var archived: Boolean = false,
-
-    @Column(name = "archived_at")
-    var archivedAt: Instant? = null,
+    @Column(name = "shared_with_id", nullable = false)
+    val sharedWithId: UUID,
 
     @Column(name = "created_at", updatable = false, nullable = false)
-    val createdAt: Instant = Instant.now(),
-
-    @Column(name = "updated_at", nullable = false)
-    var updatedAt: Instant = Instant.now()
+    val createdAt: Instant = Instant.now()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is CompanyEntity) return false
+        if (other !is ResourceShareEntity) return false
         return id != null && id == other.id
     }
 

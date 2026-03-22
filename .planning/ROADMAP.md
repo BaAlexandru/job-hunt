@@ -32,8 +32,8 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 **Parallel execution:** Phases marked with the same parallel group (A, B) can run concurrently on separate branches.
 
-- [x] **Phase 10: Gap Closure** - Complete missing UI features and email delivery from v1.0 `[parallel-A]` (completed 2026-03-22)
-- [ ] **Phase 11: Visibility & Sharing** - Backend + frontend for private/public/shared visibility on resources `[parallel-A]`
+- [ ] **Phase 10: Gap Closure** - Complete missing UI features and email delivery from v1.0 `[parallel-A]`
+- [x] **Phase 11: Visibility & Sharing** - Backend + frontend for private/public/shared visibility on resources `[parallel-A]` (completed 2026-03-22)
 - [ ] **Phase 12: Production Docker Images** - Multi-stage Dockerfiles for backend and frontend `[parallel-A]`
 - [ ] **Phase 13: CI Pipeline** - GitHub Actions builds, tests, scans, and pushes images to GHCR
 - [ ] **Phase 14: AWS Infrastructure** - EC2 instance provisioned via OpenTofu with VPC and networking `[parallel-B]`
@@ -100,11 +100,7 @@ Wave 6:                Phase 18 ──── depends on Phase 17
   1. User can view existing interview notes and add new notes per interview round in the InterviewsTab
   2. User can see document version history and upload a new version of an existing document
   3. User receives a password reset email at their registered address when requesting a reset
-**Plans:** 3/3 plans complete
-Plans:
-- [ ] 10-01-PLAN.md — Document version history panel (GAP-02)
-- [ ] 10-02-PLAN.md — Interview notes UI in InterviewsTab (GAP-01)
-- [ ] 10-03-PLAN.md — Password reset email via SMTP (GAP-03)
+**Plans**: TBD
 
 ### Phase 11: Visibility & Sharing
 **Goal**: Users can control visibility of their companies and jobs as private, public, or shared with specific users
@@ -115,9 +111,14 @@ Plans:
   1. User can set visibility (PRIVATE/PUBLIC/SHARED) on any company or job
   2. User can share a company or job with another user by email, and the recipient can view it
   3. User can browse public companies and jobs from all users via API
-  4. Shared items appear in the recipient's list views with appropriate read-only or edit access
+  4. Shared items appear in a dedicated "Shared with me" page accessible to the recipient (view-only)
   5. Default visibility is PRIVATE — no behavior change for existing data
-**Plans**: TBD
+**Plans:** 4/4 plans complete
+Plans:
+- [ ] 11-01-PLAN.md — Backend schema, entities, repositories, DTOs (V16 migration + Visibility enum + ResourceShareEntity)
+- [ ] 11-02-PLAN.md — Backend services and controllers (ShareService, visibility endpoints, browse, shared-with-me)
+- [ ] 11-03-PLAN.md — Frontend types, hooks, and reusable components (VisibilityBadge, ShareManager, BrowseCard)
+- [ ] 11-04-PLAN.md — Frontend page integration (browse page, shared page, sidebar, detail page controls, read-only view)
 
 ### Phase 12: Production Docker Images
 **Goal**: Both backend and frontend produce optimized, production-ready container images
@@ -209,8 +210,8 @@ Plans:
 | 7. Frontend Shell & Auth UI | v1.0 | 3/3 | Complete | 2026-03-20 |
 | 8. Frontend Core Views | v1.0 | 11/11 | Complete | 2026-03-21 |
 | 9. Frontend Integration Polish | v1.0 | 2/2 | Complete | 2026-03-22 |
-| 10. Gap Closure | 3/3 | Complete    | 2026-03-22 | - |
-| 11. Visibility & Sharing | v1.1 | 0/? | Not started | - |
+| 10. Gap Closure | v1.1 | 0/? | Not started | - |
+| 11. Visibility & Sharing | 4/4 | Complete    | 2026-03-22 | - |
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
 | 13. CI Pipeline | v1.1 | 0/? | Not started | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |

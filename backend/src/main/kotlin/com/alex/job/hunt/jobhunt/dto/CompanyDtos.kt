@@ -39,8 +39,10 @@ data class CompanyResponse(
     val website: String?,
     val location: String?,
     val notes: String?,
+    val visibility: String,
     val archived: Boolean,
     val archivedAt: Instant?,
     val createdAt: Instant,
-    val updatedAt: Instant
+    val updatedAt: Instant,
+    val isOwner: Boolean = true
 )

@@ -24,6 +24,10 @@ class JobEntity(
     @Column(name = "user_id", nullable = false)
     val userId: UUID,
 
+    @Column(name = "visibility", nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
+    var visibility: Visibility = Visibility.PRIVATE,
+
     @Column(name = "company_id")
     var companyId: UUID? = null,
 

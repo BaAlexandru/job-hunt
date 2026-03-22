@@ -2,13 +2,15 @@
 
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { ArrowLeft, ExternalLink, MapPin, Pencil, Trash2, Plus } from "lucide-react"
+import { ArrowLeft, ExternalLink, MapPin, Pencil, Trash2, Plus, Eye } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { DataTable, type ColumnDef } from "@/components/shared/data-table"
 import { CompanyForm } from "@/components/companies/company-form"
+import { VisibilityControl } from "@/components/shared/visibility-control"
+import { ShareManager } from "@/components/shared/share-manager"
 import { useCompany, useDeleteCompany } from "@/hooks/use-companies"
 import { useJobs } from "@/hooks/use-jobs"
 import type { JobResponse } from "@/types/api"
@@ -59,6 +61,7 @@ export default function CompanyDetailPage() {
   const [confirmDelete, setConfirmDelete] = useState(false)
 
   const jobs = jobsData?.content ?? []
+  const isOwner = company?.isOwner !== false
 
   const handleDelete = () => {
     if (!company) return
@@ -97,6 +100,15 @@ export default function CompanyDetailPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      {!isOwner && (
+        <div className="flex items-center gap-2 rounded-md bg-muted px-4 py-2 text-sm text-muted-foreground">
+          <Eye className="size-4" />
+          {company.visibility === "PUBLIC"
+            ? "You are viewing a public resource"
+            : "You are viewing this as a shared resource"}
+        </div>
+      )}
+
       <div>
         <Button
           variant="ghost"
@@ -132,43 +144,63 @@ export default function CompanyDetailPage() {
               <p className="mt-2 text-sm text-muted-foreground">{company.notes}</p>
             )}
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => setFormOpen(true)}>
-              <Pencil className="size-4" />
-              Edit
-            </Button>
+          {isOwner && (
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => setFormOpen(true)}>
+                <Pencil className="size-4" />
+                Edit
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => setConfirmDelete(true)}
+              >
+                <Trash2 className="size-4" />
+                Delete
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {isOwner && (
+        <div className="flex flex-col gap-4">
+          <VisibilityControl
+            resourceType="companies"
+            resourceId={company.id}
+            resourceName={company.name}
+            currentVisibility={company.visibility}
+          />
+          <ShareManager
+            resourceType="companies"
+            resourceId={company.id}
+            resourceName={company.name}
+          />
+        </div>
+      )}
+
+      {isOwner && (
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-base font-semibold">
+              Jobs at {company.name}
+            </h2>
             <Button
-              variant="destructive"
               size="sm"
-              onClick={() => setConfirmDelete(true)}
+              onClick={() => router.push(`/jobs?companyId=${company.id}`)}
             >
-              <Trash2 className="size-4" />
-              Delete
+              <Plus className="size-4" />
+              Add Job
             </Button>
           </div>
-        </div>
-      </div>
 
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold">
-            Jobs at {company.name}
-          </h2>
-          <Button
-            size="sm"
-            onClick={() => router.push(`/jobs?companyId=${company.id}`)}
-          >
-            <Plus className="size-4" />
-            Add Job
-          </Button>
+          {jobsLoading ? (
+            <Skeleton className="h-48 w-full rounded-xl" />
+          ) : (
+            <DataTable columns={jobColumns} data={jobs} />
+          )}
         </div>
-
-        {jobsLoading ? (
-          <Skeleton className="h-48 w-full rounded-xl" />
-        ) : (
-          <DataTable columns={jobColumns} data={jobs} />
-        )}
-      </div>
+      )}
 
       <CompanyForm
         open={formOpen}
