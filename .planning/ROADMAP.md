@@ -139,7 +139,9 @@ Plans:
   1. Merging a PR to master triggers a GitHub Actions workflow that builds and pushes images to ghcr.io
   2. CI pipeline runs backend tests and fails the build on test failure
   3. Container images are scanned for vulnerabilities and results are visible in the workflow summary
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 13-01-PLAN.md — GitHub Actions CI workflow (test, build-push, scan) and README badge
 
 ### Phase 14: AWS Infrastructure
 **Goal**: A running EC2 instance with networking ready to host K3s
@@ -213,7 +215,7 @@ Plans:
 | 10. Gap Closure | v1.1 | 0/? | Not started | - |
 | 11. Visibility & Sharing | 4/4 | Complete    | 2026-03-22 | - |
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
-| 13. CI Pipeline | v1.1 | 0/? | Not started | - |
+| 13. CI Pipeline | v1.1 | 0/1 | Planned | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
 | 15. K3s Cluster Setup | v1.1 | 0/? | Not started | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |

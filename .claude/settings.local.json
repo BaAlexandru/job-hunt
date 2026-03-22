@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); cmd=d.get\\(''''tool_input'''',{}\\).get\\(''''command'''',''''''''\\); exit\\(0 if ''''trivy'''' in cmd else 1\\)\")",
+      "Bash(node -e \"let d='''''''';process.stdin.on\\(''''data'''',c=>d+=c\\);process.stdin.on\\(''''end'''',\\(\\)=>{const j=JSON.parse\\(d\\);if\\(j.tool_input&&j.tool_input.command&&j.tool_input.command.includes\\(''''trivy''''\\)\\){console.log\\(JSON.stringify\\({hookSpecificOutput:{hookEventName:''''PreToolUse'''',additionalContext:''''TRIVY COMMAND DETECTED: Follow the trivy-scanning skill rules from .claude/skills/rules/trivy-scanning.md. Use best practices: filter by severity \\(--severity HIGH,CRITICAL\\), use appropriate output format, and apply project-specific scanning patterns.''''}}\\)\\)}}\\);\")",
+      "Bash(node -e \"const s=require\\(''fs''\\).readFileSync\\(''d:/dev/projects/job-hunt/.claude/settings.json'',''utf8''\\);const j=JSON.parse\\(s\\);const hook=j.hooks.PreToolUse[0];console.log\\(''matcher:'', hook.matcher\\);console.log\\(''type:'', hook.hooks[0].type\\);console.log\\(''command starts with:'', hook.hooks[0].command.substring\\(0,30\\)\\);console.log\\(''JSON valid: true''\\);\")"
+    ]
+  }
+}
