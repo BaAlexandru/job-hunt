@@ -8,6 +8,6 @@ data class SendResetEmailRequest(
     @field:Email(message = "Invalid email format")
     val email: String,
 
-    @field:NotBlank(message = "Reset URL is required")
-    val resetUrl: String
+    @field:NotBlank(message = "Token is required")
+    val token: String
 )

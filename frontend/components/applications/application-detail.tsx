@@ -74,7 +74,7 @@ import {
   useDocuments,
   useLinkDocumentToApplication,
   useUnlinkDocument,
-  useDownloadVersionUrl,
+  getDownloadVersionUrl,
 } from "@/hooks/use-documents"
 import { TimelineTab } from "@/components/applications/timeline-tab"
 
@@ -641,7 +641,6 @@ function InterviewsTab({ applicationId }: { applicationId: string }) {
 function InterviewNotesPanel({ interviewId }: { interviewId: string }) {
   const { data: notes, isLoading } = useInterviewNotes(interviewId)
   const createNote = useCreateInterviewNote()
-  const updateNote = useUpdateInterviewNote()
   const deleteNote = useDeleteInterviewNote()
   const [newContent, setNewContent] = useState("")
   const [newNoteType, setNewNoteType] = useState("GENERAL")
@@ -678,7 +677,6 @@ function InterviewNotesPanel({ interviewId }: { interviewId: string }) {
             key={note.id}
             note={note}
             interviewId={interviewId}
-            updateNote={updateNote}
             onDelete={(noteId) => setDeleteNoteId(noteId)}
           />
         ))}
@@ -761,14 +759,13 @@ function InterviewNotesPanel({ interviewId }: { interviewId: string }) {
 function NoteRow({
   note,
   interviewId,
-  updateNote,
   onDelete,
 }: {
   note: InterviewNoteResponse
   interviewId: string
-  updateNote: ReturnType<typeof useUpdateInterviewNote>
   onDelete: (noteId: string) => void
 }) {
+  const updateNote = useUpdateInterviewNote()
   const [editContent, setEditContent] = useState(note.content)
 
   function handleBlur() {
@@ -1141,7 +1138,7 @@ function DownloadLink({
   documentId: string
   versionId: string
 }) {
-  const url = useDownloadVersionUrl(documentId, versionId)
+  const url = getDownloadVersionUrl(documentId, versionId)
   return (
     <Button variant="ghost" size="icon-xs" asChild>
       <a href={url} target="_blank" rel="noopener noreferrer">

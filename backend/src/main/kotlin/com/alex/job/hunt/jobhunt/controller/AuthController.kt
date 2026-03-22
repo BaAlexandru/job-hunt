@@ -119,7 +119,7 @@ class AuthController(
 
     @PostMapping("/send-reset-email")
     fun sendResetEmail(@Valid @RequestBody request: SendResetEmailRequest): ResponseEntity<MessageResponse> {
-        emailService.sendPasswordResetEmail(request.email, request.resetUrl)
+        emailService.sendPasswordResetEmail(request.email, request.token)
         return ResponseEntity.ok(MessageResponse("Reset email sent"))
     }
 

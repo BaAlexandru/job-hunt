@@ -16,7 +16,6 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID
 import kotlin.test.assertEquals
-import kotlin.test.assertContains
 import kotlin.test.assertTrue
 
 class PasswordResetServiceTests {
@@ -27,8 +26,6 @@ class PasswordResetServiceTests {
     private lateinit var rateLimiter: RateLimiter
     private lateinit var emailService: EmailService
     private lateinit var passwordResetService: PasswordResetService
-
-    private val frontendBaseUrl = "http://localhost:3000"
 
     private fun testUser(email: String = "user@example.com") = UserEntity(
         id = UUID.randomUUID(),
@@ -55,7 +52,6 @@ class PasswordResetServiceTests {
             passwordEncoder = passwordEncoder,
             rateLimiter = rateLimiter,
             emailService = emailService,
-            frontendBaseUrl = frontendBaseUrl,
         )
     }
 
@@ -70,17 +66,19 @@ class PasswordResetServiceTests {
     }
 
     @Test
-    fun `requestReset sends email with correct reset URL format`() {
+    fun `requestReset sends token to email service`() {
         val user = testUser()
         every { userRepository.findByEmail("user@example.com") } returns user
 
-        val urlSlot = slot<String>()
-        every { emailService.sendPasswordResetEmail(any(), capture(urlSlot)) } returns Unit
+        val tokenSlot = slot<String>()
+        every { emailService.sendPasswordResetEmail(any(), capture(tokenSlot)) } returns Unit
 
         passwordResetService.requestReset("user@example.com")
 
-        val capturedUrl = urlSlot.captured
-        assertContains(capturedUrl, "http://localhost:3000/auth/reset-password?token=")
+        val capturedToken = tokenSlot.captured
+        // Token should be a UUID string, not a full URL
+        assertTrue(capturedToken.matches(Regex("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")),
+            "Token should be a UUID, not a URL. Got: $capturedToken")
     }
 
     @Test

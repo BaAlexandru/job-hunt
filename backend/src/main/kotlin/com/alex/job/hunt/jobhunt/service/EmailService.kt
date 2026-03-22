@@ -10,25 +10,33 @@ import org.springframework.stereotype.Service
 class EmailService(
     private val mailSender: JavaMailSender,
     @Value("\${app.mail-from}") private val mailFrom: String,
+    @Value("\${app.frontend-base-url}") private val frontendBaseUrl: String,
 ) {
 
     private val logger = LoggerFactory.getLogger(EmailService::class.java)
 
-    fun sendPasswordResetEmail(to: String, resetUrl: String) {
+    fun sendPasswordResetEmail(to: String, token: String) {
+        val resetUrl = "$frontendBaseUrl/auth/reset-password?token=$token"
         try {
             val message = mailSender.createMimeMessage()
             val helper = MimeMessageHelper(message, true, "UTF-8")
             helper.setTo(to)
             helper.setFrom(mailFrom)
             helper.setSubject("Reset your JobHunt password")
-            helper.setText(buildResetEmailHtml(resetUrl), true)
+            helper.setText(buildResetEmailHtml(escapeHtml(resetUrl)), true)
             mailSender.send(message)
-            logger.info("Password reset email sent to $to")
+            logger.info("Password reset email sent successfully")
         } catch (e: Exception) {
-            logger.error("Failed to send password reset email to $to", e)
-            logger.info("Password reset link (email failed): $resetUrl")
+            logger.error("Failed to send password reset email", e)
         }
     }
+
+    private fun escapeHtml(input: String): String =
+        input.replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("\"", "&quot;")
+            .replace("'", "&#x27;")
 
     private fun buildResetEmailHtml(resetUrl: String): String = """
         <!DOCTYPE html>

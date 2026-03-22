@@ -15,7 +15,7 @@ import {
   useCreateDocumentVersion,
   useSetCurrentVersion,
   useDeleteDocumentVersion,
-  useDownloadVersionUrl,
+  getDownloadVersionUrl,
 } from "@/hooks/use-documents"
 import type { DocumentResponse, DocumentVersionResponse } from "@/types/api"
 import { cn } from "@/lib/utils"
@@ -56,7 +56,7 @@ function VersionDownloadButton({
   documentId: string
   versionId: string
 }) {
-  const downloadUrl = useDownloadVersionUrl(documentId, versionId)
+  const downloadUrl = getDownloadVersionUrl(documentId, versionId)
   return (
     <Button variant="ghost" size="icon-xs" asChild>
       <a href={downloadUrl} download onClick={(e) => e.stopPropagation()}>
@@ -266,10 +266,14 @@ function VersionPanel({ documentId }: { documentId: string }) {
             {
               onSuccess: () => {
                 toast.success("Version deleted")
+                setDeleteTarget(null)
+              },
+              onError: () => {
+                toast.error("Failed to delete version")
+                setDeleteTarget(null)
               },
             },
           )
-          setDeleteTarget(null)
         }}
       />
     </div>
@@ -288,7 +292,7 @@ function ActionCell({
   onDelete: (doc: DocumentResponse) => void
 }) {
   const downloadUrl = doc.currentVersion
-    ? useDownloadVersionUrl(doc.id, doc.currentVersion.id)
+    ? getDownloadVersionUrl(doc.id, doc.currentVersion.id)
     : null
 
   return (

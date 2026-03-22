@@ -5,7 +5,6 @@ import com.alex.job.hunt.jobhunt.entity.PasswordResetToken
 import com.alex.job.hunt.jobhunt.repository.PasswordResetTokenRepository
 import com.alex.job.hunt.jobhunt.repository.UserRepository
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,7 +21,6 @@ class PasswordResetService(
     private val passwordEncoder: PasswordEncoder,
     private val rateLimiter: RateLimiter,
     private val emailService: EmailService,
-    @Value("\${app.frontend-base-url}") private val frontendBaseUrl: String,
 ) {
 
     private val logger = LoggerFactory.getLogger(PasswordResetService::class.java)
@@ -44,8 +42,7 @@ class PasswordResetService(
             )
             passwordResetTokenRepository.save(resetToken)
 
-            val resetUrl = "$frontendBaseUrl/auth/reset-password?token=$token"
-            emailService.sendPasswordResetEmail(user.email, resetUrl)
+            emailService.sendPasswordResetEmail(user.email, token)
         }
 
         return MessageResponse("If an account with that email exists, a reset link has been sent.")
