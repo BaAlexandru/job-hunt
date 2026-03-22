@@ -146,13 +146,61 @@ export function useCreateInterviewNote() {
     mutationFn: ({
       interviewId,
       content,
+      noteType,
     }: {
       interviewId: string
       content: string
+      noteType?: string
     }) =>
       apiClient<InterviewNoteResponse>(
         `/interviews/${interviewId}/notes`,
-        { method: "POST", body: JSON.stringify({ content }) },
+        { method: "POST", body: JSON.stringify({ content, noteType }) },
+      ),
+    onSuccess: (_data, { interviewId }) => {
+      queryClient.invalidateQueries({
+        queryKey: interviewKeys.notes(interviewId),
+      })
+    },
+  })
+}
+
+export function useUpdateInterviewNote() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      interviewId,
+      noteId,
+      content,
+    }: {
+      interviewId: string
+      noteId: string
+      content: string
+    }) =>
+      apiClient<InterviewNoteResponse>(
+        `/interviews/${interviewId}/notes/${noteId}`,
+        { method: "PUT", body: JSON.stringify({ content }) },
+      ),
+    onSuccess: (_data, { interviewId }) => {
+      queryClient.invalidateQueries({
+        queryKey: interviewKeys.notes(interviewId),
+      })
+    },
+  })
+}
+
+export function useDeleteInterviewNote() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      interviewId,
+      noteId,
+    }: {
+      interviewId: string
+      noteId: string
+    }) =>
+      apiClient<void>(
+        `/interviews/${interviewId}/notes/${noteId}`,
+        { method: "DELETE" },
       ),
     onSuccess: (_data, { interviewId }) => {
       queryClient.invalidateQueries({

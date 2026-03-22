@@ -6,9 +6,11 @@ import com.alex.job.hunt.jobhunt.dto.MessageResponse
 import com.alex.job.hunt.jobhunt.dto.PasswordResetConfirmRequest
 import com.alex.job.hunt.jobhunt.dto.PasswordResetRequest
 import com.alex.job.hunt.jobhunt.dto.RegisterRequest
+import com.alex.job.hunt.jobhunt.dto.SendResetEmailRequest
 import com.alex.job.hunt.jobhunt.security.JwtTokenProvider
 import com.alex.job.hunt.jobhunt.service.AuthService
 import com.alex.job.hunt.jobhunt.service.EmailVerificationService
+import com.alex.job.hunt.jobhunt.service.EmailService
 import com.alex.job.hunt.jobhunt.service.PasswordResetService
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
@@ -30,7 +32,8 @@ class AuthController(
     private val authService: AuthService,
     private val jwtTokenProvider: JwtTokenProvider,
     private val emailVerificationService: EmailVerificationService,
-    private val passwordResetService: PasswordResetService
+    private val passwordResetService: PasswordResetService,
+    private val emailService: EmailService
 ) {
 
     @PostMapping("/register")
@@ -112,6 +115,12 @@ class AuthController(
     fun requestPasswordReset(@Valid @RequestBody request: PasswordResetRequest): ResponseEntity<MessageResponse> {
         val result = passwordResetService.requestReset(request.email)
         return ResponseEntity.ok(result)
+    }
+
+    @PostMapping("/send-reset-email")
+    fun sendResetEmail(@Valid @RequestBody request: SendResetEmailRequest): ResponseEntity<MessageResponse> {
+        emailService.sendPasswordResetEmail(request.email, request.resetUrl)
+        return ResponseEntity.ok(MessageResponse("Reset email sent"))
     }
 
     @PostMapping("/password-reset/confirm")
