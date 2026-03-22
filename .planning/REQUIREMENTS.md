@@ -80,38 +80,38 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GAP-01 | TBD | Pending |
-| GAP-02 | TBD | Pending |
-| GAP-03 | TBD | Pending |
-| GAP-04 | TBD | Pending |
-| DOCK-01 | TBD | Pending |
-| DOCK-02 | TBD | Pending |
-| DOCK-03 | TBD | Pending |
-| DOCK-04 | TBD | Pending |
-| K8S-01 | TBD | Pending |
-| K8S-02 | TBD | Pending |
-| K8S-03 | TBD | Pending |
-| K8S-04 | TBD | Pending |
-| K8S-05 | TBD | Pending |
-| DATA-01 | TBD | Pending |
-| DATA-02 | TBD | Pending |
-| DATA-03 | TBD | Pending |
-| DATA-04 | TBD | Pending |
-| ARGO-01 | TBD | Pending |
-| ARGO-02 | TBD | Pending |
-| ARGO-03 | TBD | Pending |
-| ARGO-04 | TBD | Pending |
-| DNS-01 | TBD | Pending |
-| DNS-02 | TBD | Pending |
-| DNS-03 | TBD | Pending |
-| DNS-04 | TBD | Pending |
-| DNS-05 | TBD | Pending |
+| GAP-01 | Phase 10 | Pending |
+| GAP-02 | Phase 10 | Pending |
+| GAP-03 | Phase 10 | Pending |
+| GAP-04 | Phase 10 | Pending |
+| DOCK-01 | Phase 11 | Pending |
+| DOCK-02 | Phase 11 | Pending |
+| DOCK-03 | Phase 12 | Pending |
+| DOCK-04 | Phase 12 | Pending |
+| K8S-01 | Phase 13 | Pending |
+| K8S-02 | Phase 14 | Pending |
+| K8S-03 | Phase 14 | Pending |
+| K8S-04 | Phase 14 | Pending |
+| K8S-05 | Phase 16 | Pending |
+| DATA-01 | Phase 15 | Pending |
+| DATA-02 | Phase 15 | Pending |
+| DATA-03 | Phase 15 | Pending |
+| DATA-04 | Phase 15 | Pending |
+| ARGO-01 | Phase 16 | Pending |
+| ARGO-02 | Phase 16 | Pending |
+| ARGO-03 | Phase 16 | Pending |
+| ARGO-04 | Phase 16 | Pending |
+| DNS-01 | Phase 17 | Pending |
+| DNS-02 | Phase 17 | Pending |
+| DNS-03 | Phase 17 | Pending |
+| DNS-04 | Phase 17 | Pending |
+| DNS-05 | Phase 17 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 26 total
-- Mapped to phases: 0
-- Unmapped: 26
+- Mapped to phases: 26
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-22*
-*Last updated: 2026-03-22 after initial definition*
+*Last updated: 2026-03-22 after roadmap creation*
