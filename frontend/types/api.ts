@@ -139,10 +139,12 @@ export interface CompanyResponse {
   website: string | null
   location: string | null
   notes: string | null
+  visibility: Visibility
   archived: boolean
   archivedAt: string | null
   createdAt: string
   updatedAt: string
+  isOwner?: boolean
 }
 
 export interface CreateCompanyRequest {
@@ -174,6 +176,7 @@ export interface JobResponse {
   jobType: string | null
   companyId: string | null
   companyName: string | null
+  visibility: Visibility
   salaryType: string | null
   salaryMin: number | null
   salaryMax: number | null
@@ -185,6 +188,7 @@ export interface JobResponse {
   archivedAt: string | null
   createdAt: string
   updatedAt: string
+  isOwner?: boolean
 }
 
 export interface CreateJobRequest {
@@ -347,4 +351,38 @@ export interface TimelineEntry {
   description: string | null
   occurredAt: string
   metadata: Record<string, unknown> | null
+}
+
+// ============================================================================
+// Visibility & Sharing
+// ============================================================================
+
+export type Visibility = "PRIVATE" | "PUBLIC" | "SHARED"
+
+export interface ShareResponse {
+  id: string
+  email: string
+  sharedAt: string
+}
+
+export interface BrowseCompanyResponse {
+  id: string
+  name: string
+  website: string | null
+  location: string | null
+  notes: string | null
+  ownerEmail: string
+  createdAt: string
+}
+
+export interface BrowseJobResponse {
+  id: string
+  title: string
+  description: string | null
+  location: string | null
+  workMode: string | null
+  jobType: string | null
+  companyName: string | null
+  ownerEmail: string
+  createdAt: string
 }
