@@ -329,7 +329,9 @@ export interface NoteResponse {
 
 export interface InterviewNoteResponse {
   id: string
+  interviewId: string
   content: string
+  noteType: string
   createdAt: string
   updatedAt: string
 }
