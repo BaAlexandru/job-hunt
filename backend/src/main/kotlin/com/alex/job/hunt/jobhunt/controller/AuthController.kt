@@ -6,9 +6,11 @@ import com.alex.job.hunt.jobhunt.dto.MessageResponse
 import com.alex.job.hunt.jobhunt.dto.PasswordResetConfirmRequest
 import com.alex.job.hunt.jobhunt.dto.PasswordResetRequest
 import com.alex.job.hunt.jobhunt.dto.RegisterRequest
+import com.alex.job.hunt.jobhunt.dto.SendResetEmailRequest
 import com.alex.job.hunt.jobhunt.security.JwtTokenProvider
 import com.alex.job.hunt.jobhunt.service.AuthService
 import com.alex.job.hunt.jobhunt.service.EmailVerificationService
+import com.alex.job.hunt.jobhunt.service.EmailService
 import com.alex.job.hunt.jobhunt.service.PasswordResetService
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -30,7 +33,9 @@ class AuthController(
     private val authService: AuthService,
     private val jwtTokenProvider: JwtTokenProvider,
     private val emailVerificationService: EmailVerificationService,
-    private val passwordResetService: PasswordResetService
+    private val passwordResetService: PasswordResetService,
+    private val emailService: EmailService,
+    @org.springframework.beans.factory.annotation.Value("\${app.internal-api-secret}") private val internalApiSecret: String,
 ) {
 
     @PostMapping("/register")
@@ -112,6 +117,18 @@ class AuthController(
     fun requestPasswordReset(@Valid @RequestBody request: PasswordResetRequest): ResponseEntity<MessageResponse> {
         val result = passwordResetService.requestReset(request.email)
         return ResponseEntity.ok(result)
+    }
+
+    @PostMapping("/send-reset-email")
+    fun sendResetEmail(
+        @RequestHeader("X-Internal-Secret") secret: String?,
+        @Valid @RequestBody request: SendResetEmailRequest,
+    ): ResponseEntity<MessageResponse> {
+        if (secret != internalApiSecret) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(MessageResponse("Forbidden"))
+        }
+        emailService.sendPasswordResetEmail(request.email, request.token)
+        return ResponseEntity.ok(MessageResponse("Reset email sent"))
     }
 
     @PostMapping("/password-reset/confirm")

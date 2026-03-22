@@ -11,6 +11,8 @@ import {
   LinkIcon,
   UnlinkIcon,
   MapPinIcon,
+  ChevronRight,
+  Trash2,
 } from "lucide-react"
 import {
   Sheet,
@@ -43,7 +45,11 @@ import { Label } from "@/components/ui/label"
 import { StatusBadge } from "@/components/applications/status-badge"
 import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { STATUS_TRANSITIONS, STATUS_LABELS } from "@/types/api"
-import type { ApplicationStatus, InterviewResponse } from "@/types/api"
+import type {
+  ApplicationStatus,
+  InterviewResponse,
+  InterviewNoteResponse,
+} from "@/types/api"
 import {
   useApplication,
   useUpdateApplication,
@@ -58,13 +64,17 @@ import {
   useCreateInterview,
   useUpdateInterview,
   useDeleteInterview,
+  useInterviewNotes,
+  useCreateInterviewNote,
+  useUpdateInterviewNote,
+  useDeleteInterviewNote,
 } from "@/hooks/use-interviews"
 import {
   useDocumentLinksForApplication,
   useDocuments,
   useLinkDocumentToApplication,
   useUnlinkDocument,
-  useDownloadVersionUrl,
+  getDownloadVersionUrl,
 } from "@/hooks/use-documents"
 import { TimelineTab } from "@/components/applications/timeline-tab"
 
@@ -450,12 +460,57 @@ const INTERVIEW_STAGES = [
   "OTHER",
 ] as const
 
+const NOTE_TYPE_COLORS: Record<string, { bg: string; text: string }> = {
+  PREPARATION: {
+    bg: "bg-blue-100 dark:bg-blue-900/30",
+    text: "text-blue-800 dark:text-blue-300",
+  },
+  QUESTION_ASKED: {
+    bg: "bg-purple-100 dark:bg-purple-900/30",
+    text: "text-purple-800 dark:text-purple-300",
+  },
+  FEEDBACK: {
+    bg: "bg-green-100 dark:bg-green-900/30",
+    text: "text-green-800 dark:text-green-300",
+  },
+  FOLLOW_UP: {
+    bg: "bg-amber-100 dark:bg-amber-900/30",
+    text: "text-amber-800 dark:text-amber-300",
+  },
+  GENERAL: {
+    bg: "bg-gray-100 dark:bg-gray-900/30",
+    text: "text-gray-800 dark:text-gray-300",
+  },
+}
+
+const NOTE_TYPE_LABELS: Record<string, string> = {
+  PREPARATION: "Preparation",
+  QUESTION_ASKED: "Question Asked",
+  FEEDBACK: "Feedback",
+  FOLLOW_UP: "Follow Up",
+  GENERAL: "General",
+}
+
+const NOTE_TYPES = [
+  "PREPARATION",
+  "QUESTION_ASKED",
+  "FEEDBACK",
+  "FOLLOW_UP",
+  "GENERAL",
+] as const
+
 function InterviewsTab({ applicationId }: { applicationId: string }) {
   const { data: interviewsData, isLoading } = useInterviews(applicationId)
   const createInterview = useCreateInterview()
   const deleteInterview = useDeleteInterview()
   const [formOpen, setFormOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [expandedInterviewId, setExpandedInterviewId] = useState<string | null>(
+    null,
+  )
+
+  const toggleExpand = (id: string) =>
+    setExpandedInterviewId((prev) => (prev === id ? null : id))
 
   const interviews = interviewsData?.content ?? []
 
@@ -476,7 +531,9 @@ function InterviewsTab({ applicationId }: { applicationId: string }) {
       </Button>
 
       {interviews.length === 0 && (
-        <p className="text-sm text-muted-foreground">No interviews scheduled.</p>
+        <p className="text-sm text-muted-foreground">
+          No interviews scheduled.
+        </p>
       )}
 
       {interviews.map((interview) => (
@@ -484,23 +541,40 @@ function InterviewsTab({ applicationId }: { applicationId: string }) {
           key={interview.id}
           className="flex flex-col gap-1.5 rounded-md border p-3"
         >
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium">
-                {interview.interviewType} - {interview.stage}
-                {interview.stageLabel ? ` (${interview.stageLabel})` : ""}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {format(
-                  new Date(interview.scheduledAt),
-                  "MMM d, yyyy 'at' h:mm a",
-                )}
-              </p>
+          <div
+            className="flex cursor-pointer items-start justify-between"
+            onClick={() => toggleExpand(interview.id)}
+          >
+            <div className="flex items-start gap-2">
+              <ChevronRight
+                className="mt-0.5 size-3.5 transition-transform duration-200"
+                style={{
+                  transform:
+                    expandedInterviewId === interview.id
+                      ? "rotate(90deg)"
+                      : undefined,
+                }}
+              />
+              <div>
+                <p className="text-sm font-medium">
+                  {interview.interviewType} - {interview.stage}
+                  {interview.stageLabel ? ` (${interview.stageLabel})` : ""}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {format(
+                    new Date(interview.scheduledAt),
+                    "MMM d, yyyy 'at' h:mm a",
+                  )}
+                </p>
+              </div>
             </div>
             <Button
               variant="ghost"
               size="icon-xs"
-              onClick={() => setDeleteId(interview.id)}
+              onClick={(e) => {
+                e.stopPropagation()
+                setDeleteId(interview.id)
+              }}
             >
               <TrashIcon className="size-3" />
             </Button>
@@ -515,6 +589,9 @@ function InterviewsTab({ applicationId }: { applicationId: string }) {
             <p className="text-xs text-muted-foreground">
               {interview.durationMinutes} min
             </p>
+          )}
+          {expandedInterviewId === interview.id && (
+            <InterviewNotesPanel interviewId={interview.id} />
           )}
         </div>
       ))}
@@ -553,6 +630,193 @@ function InterviewsTab({ applicationId }: { applicationId: string }) {
           }
         }}
       />
+    </div>
+  )
+}
+
+// ==========================================================================
+// Interview Notes Panel (expandable per interview)
+// ==========================================================================
+
+function InterviewNotesPanel({ interviewId }: { interviewId: string }) {
+  const { data: notes, isLoading } = useInterviewNotes(interviewId)
+  const createNote = useCreateInterviewNote()
+  const deleteNote = useDeleteInterviewNote()
+  const [newContent, setNewContent] = useState("")
+  const [newNoteType, setNewNoteType] = useState("GENERAL")
+  const [deleteNoteId, setDeleteNoteId] = useState<string | null>(null)
+
+  if (isLoading) {
+    return (
+      <div className="ml-4 mt-2 border-l-2 border-muted pl-4 pb-4">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="mt-2 h-4 w-full" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="ml-4 mt-2 border-l-2 border-muted pl-4 pb-4">
+      {(!notes || notes.length === 0) && (
+        <div className="mb-3">
+          <p className="text-sm text-muted-foreground">No notes yet</p>
+          <p className="text-xs text-muted-foreground">
+            Add your first note for this interview.
+          </p>
+        </div>
+      )}
+
+      {notes
+        ?.slice()
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        )
+        .map((note) => (
+          <NoteRow
+            key={note.id}
+            note={note}
+            interviewId={interviewId}
+            onDelete={(noteId) => setDeleteNoteId(noteId)}
+          />
+        ))}
+
+      {/* Add note form */}
+      <div className="mt-3 flex flex-col gap-2">
+        <Textarea
+          value={newContent}
+          onChange={(e) => setNewContent(e.target.value)}
+          placeholder="Add a note..."
+          className="min-h-[60px] text-sm"
+        />
+        <div className="flex items-center gap-2">
+          <Select value={newNoteType} onValueChange={setNewNoteType}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Note type" />
+            </SelectTrigger>
+            <SelectContent>
+              {NOTE_TYPES.map((t) => (
+                <SelectItem key={t} value={t}>
+                  {NOTE_TYPE_LABELS[t]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            size="sm"
+            disabled={!newContent.trim() || createNote.isPending}
+            onClick={() =>
+              createNote.mutate(
+                {
+                  interviewId,
+                  content: newContent.trim(),
+                  noteType: newNoteType,
+                },
+                {
+                  onSuccess: () => {
+                    toast.success("Note added")
+                    setNewContent("")
+                    setNewNoteType("GENERAL")
+                  },
+                  onError: () =>
+                    toast.error("Failed to save note. Please try again."),
+                },
+              )
+            }
+          >
+            <PlusIcon className="size-3.5" />
+            Add Note
+          </Button>
+        </div>
+      </div>
+
+      <ConfirmDialog
+        open={deleteNoteId !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteNoteId(null)
+        }}
+        title="Delete Note"
+        description="This note will be permanently deleted. This action cannot be undone."
+        actionLabel="Delete"
+        onConfirm={() => {
+          if (deleteNoteId) {
+            deleteNote.mutate(
+              { interviewId, noteId: deleteNoteId },
+              {
+                onSuccess: () => {
+                  toast.success("Note deleted")
+                  setDeleteNoteId(null)
+                },
+              },
+            )
+          }
+        }}
+      />
+    </div>
+  )
+}
+
+function NoteRow({
+  note,
+  interviewId,
+  onDelete,
+}: {
+  note: InterviewNoteResponse
+  interviewId: string
+  onDelete: (noteId: string) => void
+}) {
+  const updateNote = useUpdateInterviewNote()
+  const [editContent, setEditContent] = useState(note.content)
+
+  function handleBlur() {
+    if (editContent.trim() !== note.content) {
+      updateNote.mutate(
+        { interviewId, noteId: note.id, content: editContent.trim() },
+        {
+          onSuccess: () => toast.success("Note updated"),
+          onError: () => {
+            toast.error("Failed to save note. Please try again.")
+            setEditContent(note.content)
+          },
+        },
+      )
+    }
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Escape") {
+      setEditContent(note.content)
+      ;(e.target as HTMLTextAreaElement).blur()
+    }
+  }
+
+  const colors = NOTE_TYPE_COLORS[note.noteType]
+
+  return (
+    <div className="mb-2 flex items-start gap-2">
+      <span
+        className={`inline-flex shrink-0 items-center rounded-md px-2 py-0.5 text-xs font-medium ${colors?.bg ?? ""} ${colors?.text ?? ""}`}
+      >
+        {NOTE_TYPE_LABELS[note.noteType] ?? note.noteType}
+      </span>
+      <Textarea
+        value={editContent}
+        onChange={(e) => setEditContent(e.target.value)}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        className={`min-h-[2rem] flex-1 text-sm ${updateNote.isPending ? "opacity-50" : ""}`}
+        disabled={updateNote.isPending}
+      />
+      <span className="shrink-0 text-xs text-muted-foreground whitespace-nowrap">
+        {format(new Date(note.createdAt), "MMM d")}
+      </span>
+      <Button
+        variant="ghost"
+        size="icon-xs"
+        onClick={() => onDelete(note.id)}
+      >
+        <Trash2 className="size-3 text-destructive" />
+      </Button>
     </div>
   )
 }
@@ -874,7 +1138,7 @@ function DownloadLink({
   documentId: string
   versionId: string
 }) {
-  const url = useDownloadVersionUrl(documentId, versionId)
+  const url = getDownloadVersionUrl(documentId, versionId)
   return (
     <Button variant="ghost" size="icon-xs" asChild>
       <a href={url} target="_blank" rel="noopener noreferrer">

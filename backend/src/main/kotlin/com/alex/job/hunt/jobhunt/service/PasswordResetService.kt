@@ -19,7 +19,8 @@ class PasswordResetService(
     private val userRepository: UserRepository,
     private val passwordResetTokenRepository: PasswordResetTokenRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val rateLimiter: RateLimiter
+    private val rateLimiter: RateLimiter,
+    private val emailService: EmailService,
 ) {
 
     private val logger = LoggerFactory.getLogger(PasswordResetService::class.java)
@@ -41,7 +42,7 @@ class PasswordResetService(
             )
             passwordResetTokenRepository.save(resetToken)
 
-            logger.info("Password reset link: http://localhost:8080/api/auth/password-reset/confirm?token=$token")
+            emailService.sendPasswordResetEmail(user.email, token)
         }
 
         return MessageResponse("If an account with that email exists, a reset link has been sent.")

@@ -217,7 +217,7 @@ export function useSetCurrentVersion() {
   })
 }
 
-export function useDownloadVersionUrl(
+export function getDownloadVersionUrl(
   documentId: string,
   versionId: string,
 ): string {
