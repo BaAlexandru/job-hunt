@@ -23,7 +23,7 @@ Install K3s on the EC2 instance provisioned in Phase 14, create namespace-based 
 
 ### Kubeconfig setup
 - Separate `infra/scripts/setup-kubeconfig.sh` script: one-time SCP of `/etc/rancher/k3s/k3s.yaml`, rewrites server URL to `https://127.0.0.1:6443` (for SSH tunnel), merges into `~/.kube/config`
-- Scripts read SSH private key path and Elastic IP dynamically from `tofu -chdir=infra/tofu/main output` (outputs: `elastic_ip`, `ssh_private_key_path`)
+- Scripts read SSH key path and Elastic IP dynamically from `tofu -chdir=infra/tofu/main output`
 
 ### Namespace setup
 - Two application namespaces: `jobhunt-staging` and `jobhunt-prod`
@@ -46,13 +46,7 @@ Install K3s on the EC2 instance provisioned in Phase 14, create namespace-based 
 
 ### Backend production profile
 - Create `backend/src/main/resources/application-prod.yml` in this phase
-- All config via environment variable placeholders matching current application.yml sections:
-  - Database: DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD
-  - Redis: REDIS_HOST, REDIS_PORT
-  - Storage: MINIO_HOST, MINIO_PORT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_BUCKET, MINIO_REGION
-  - Auth: JWT_SECRET, JWT_ACCESS_EXPIRATION_MS, JWT_REFRESH_EXPIRATION_MS
-  - Mail: SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, MAIL_FROM
-  - App: FRONTEND_BASE_URL, INTERNAL_API_SECRET
+- All config via environment variable placeholders (DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD, REDIS_HOST, REDIS_PORT, MINIO_HOST, MINIO_PORT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, JWT_SECRET, etc.)
 - Natural pairing with K8s ConfigMap/Secret manifests that inject these vars
 
 ### Convenience scripts
@@ -60,7 +54,7 @@ Install K3s on the EC2 instance provisioned in Phase 14, create namespace-based 
 - `infra/scripts/staging-down.sh`: scales all staging to replicas=0, waits for termination, prints status summary
 - `infra/scripts/connect.sh`: opens SSH tunnel on local port 6443 for kubectl access, sets KUBECONFIG
 - `infra/scripts/setup-kubeconfig.sh`: one-time kubeconfig fetch and merge (separate from daily-use connect.sh)
-- All scripts read Elastic IP and SSH private key path from OpenTofu outputs (`tofu output -raw elastic_ip`, `tofu output -raw ssh_private_key_path`)
+- All scripts read Elastic IP and SSH key path from OpenTofu outputs (`tofu output -raw`)
 
 ### Claude's Discretion
 - Exact K3s install command flags beyond the defaults
@@ -92,7 +86,7 @@ Install K3s on the EC2 instance provisioned in Phase 14, create namespace-based 
 
 ### Existing code
 - `infra/tofu/main/outputs.tf` — OpenTofu outputs that scripts will read (elastic_ip, instance_id, instance_public_dns)
-- `infra/tofu/main/variables.tf` — SSH key path variables (ssh_public_key_path, ssh_private_key_path)
+- `infra/tofu/main/variables.tf` — SSH key path variable
 - `infra/CLAUDE.md` — Infrastructure conventions (needs update for K8s)
 - `backend/src/main/resources/application.yml` — Current dev config (reference for production profile)
 
