@@ -3,62 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: completed
-stopped_at: Completed 16-02-PLAN.md (Phase 16 complete)
-last_updated: "2026-03-24T11:50:56.778Z"
-last_activity: 2026-03-24 — Completed 16-02 operational tooling
-progress:
-  total_phases: 9
-  completed_phases: 7
-  total_plans: 17
-  completed_plans: 17
----
-
----
-gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Infrastructure & Deployment
-status: completed
-stopped_at: Completed 16-01-PLAN.md
-last_updated: "2026-03-24T11:45:58.552Z"
-last_activity: 2026-03-24 — Completed 16-01 storage foundation
-progress:
-  total_phases: 9
-  completed_phases: 7
-  total_plans: 17
-  completed_plans: 17
-  percent: 100
----
-
----
-gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Infrastructure & Deployment
-status: completed
-stopped_at: Phase 16 context gathered
-last_updated: "2026-03-24T11:39:25.421Z"
-last_activity: 2026-03-23 — Completed 15-02 namespaces and base manifests
-progress:
-  [██████████] 100%
-  completed_phases: 6
-  total_plans: 17
-  completed_plans: 16
-  percent: 93
----
-
----
-gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Infrastructure & Deployment
-status: completed
-stopped_at: Completed 13-01-PLAN.md
-last_updated: "2026-03-23T15:01:54.482Z"
+stopped_at: Phase 15 context gathered
+last_updated: "2026-03-23T11:59:08.229Z"
 last_activity: 2026-03-22 — Completed Phase 11 Visibility & Sharing (all 4 plans)
 progress:
-  [█████████░] 93%
+  total_phases: 9
   completed_phases: 5
-  total_plans: 15
-  completed_plans: 14
-  percent: 93
+  total_plans: 12
+  completed_plans: 12
 ---
 
 ---
@@ -180,6 +132,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T11:44:56Z
-Stopped at: Completed 16-02-PLAN.md (Phase 16 complete)
-Resume file: Next phase
+Last session: 2026-03-23T11:59:08.226Z
+Stopped at: Phase 15 context gathered
+Resume file: .planning/phases/15-k3s-cluster-setup/15-CONTEXT.md
