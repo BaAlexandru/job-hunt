@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: completed
-stopped_at: Completed 15-02-PLAN.md
-last_updated: "2026-03-23T15:02:33.558Z"
+stopped_at: Completed 15-01-PLAN.md
+last_updated: "2026-03-23T15:03:25.937Z"
 last_activity: 2026-03-23 — Completed 15-02 namespaces and base manifests
 progress:
   total_phases: 9
@@ -126,6 +126,8 @@ Recent decisions affecting current work:
 - [Phase 13-ci-pipeline]: Trivy exit-code 0 (report-only) to avoid blocking builds on upstream CVEs
 - [Phase 15-02]: Namespaces kept outside Kustomize overlays to avoid namespace transformer gotcha
 - [Phase 15-02]: LimitRange identical for staging and prod (safety net, not enforcement)
+- [Phase 15]: All scripts read tofu outputs dynamically via tofu -chdir -- no hardcoded IPs
+- [Phase 15]: application-prod.yml uses env var placeholders matching future K8s ConfigMap/Secret keys
 
 ### Pending Todos
 
@@ -139,6 +141,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T15:00:37Z
-Stopped at: Completed 15-02-PLAN.md
+Last session: 2026-03-23T15:03:25.934Z
+Stopped at: Completed 15-01-PLAN.md
 Resume file: None
