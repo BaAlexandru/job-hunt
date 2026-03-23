@@ -20,7 +20,12 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
-RUN addgroup -S app && adduser -S app -G app
+RUN apk update && apk upgrade --no-cache && \
+    rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+           /opt/yarn* /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+           /usr/local/bin/yarn /usr/local/bin/yarnpkg \
+           /var/cache/apk/* && \
+    addgroup -S app && adduser -S app -G app
 COPY --from=builder --chown=app:app /app/public ./public
 RUN mkdir .next && chown app:app .next
 COPY --from=builder --chown=app:app /app/.next/standalone ./
