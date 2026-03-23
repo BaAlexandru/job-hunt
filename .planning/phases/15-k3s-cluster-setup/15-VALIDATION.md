@@ -42,7 +42,7 @@ created: 2026-03-23
 | 15-01-02 | 01 | 1 | K8S-02 | smoke | `bash -n infra/scripts/bootstrap-k3s.sh` | ❌ W0 | ⬜ pending |
 | 15-01-03 | 01 | 1 | K8S-02 | smoke | `bash -n infra/scripts/setup-kubeconfig.sh` | ❌ W0 | ⬜ pending |
 | 15-02-01 | 02 | 1 | K8S-03 | manual | `kubectl get ns jobhunt-staging jobhunt-prod` | N/A - cluster test | ⬜ pending |
-| 15-02-02 | 02 | 1 | K8S-03 | smoke | `kubectl apply --dry-run=client -f infra/k8s/namespaces/` | ❌ W0 | ⬜ pending |
+| 15-02-02 | 02 | 1 | K8S-03 | smoke | `kustomize build infra/k8s/namespaces > /dev/null` | ❌ W0 | ⬜ pending |
 | 15-03-01 | 03 | 2 | K8S-04 | smoke | `kustomize build infra/k8s/overlays/staging > /dev/null` | ❌ W0 | ⬜ pending |
 | 15-03-02 | 03 | 2 | K8S-04 | smoke | `kustomize build infra/k8s/overlays/prod > /dev/null` | ❌ W0 | ⬜ pending |
 
