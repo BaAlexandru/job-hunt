@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: completed
-stopped_at: Completed 15-01-PLAN.md
-last_updated: "2026-03-23T15:03:25.937Z"
+stopped_at: Completed 15-03-PLAN.md
+last_updated: "2026-03-23T15:05:25.730Z"
 last_activity: 2026-03-23 — Completed 15-02 namespaces and base manifests
 progress:
   total_phases: 9
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
   percent: 93
 ---
 
@@ -128,6 +128,8 @@ Recent decisions affecting current work:
 - [Phase 15-02]: LimitRange identical for staging and prod (safety net, not enforcement)
 - [Phase 15]: All scripts read tofu outputs dynamically via tofu -chdir -- no hardcoded IPs
 - [Phase 15]: application-prod.yml uses env var placeholders matching future K8s ConfigMap/Secret keys
+- [Phase 15]: Used replicas shorthand instead of JSON patches for scale-to-zero
+- [Phase 15]: Standard K8s Ingress API (networking.k8s.io/v1) over Traefik IngressRoute CRD
 
 ### Pending Todos
 
@@ -141,6 +143,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T15:03:25.934Z
-Stopped at: Completed 15-01-PLAN.md
+Last session: 2026-03-23T15:05:25.727Z
+Stopped at: Completed 15-03-PLAN.md
 Resume file: None
