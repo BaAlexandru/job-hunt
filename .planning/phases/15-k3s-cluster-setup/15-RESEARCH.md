@@ -438,15 +438,6 @@ spring:
   flyway:
     connect-retries: 10
     connect-retries-interval: 2
-  mail:
-    host: ${SMTP_HOST:smtp.gmail.com}
-    port: ${SMTP_PORT:587}
-    username: ${SMTP_USERNAME}
-    password: ${SMTP_PASSWORD}
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
-      mail.smtp.starttls.required: true
 
 storage:
   endpoint: http://${MINIO_HOST}:${MINIO_PORT:9000}
@@ -459,6 +450,12 @@ jwt:
   secret: ${JWT_SECRET}
   access-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000}
   refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
+
+spring.mail:
+  host: ${SMTP_HOST:smtp.gmail.com}
+  port: ${SMTP_PORT:587}
+  username: ${SMTP_USERNAME}
+  password: ${SMTP_PASSWORD}
 
 app:
   frontend-base-url: ${FRONTEND_BASE_URL:https://job-hunt.dev}
