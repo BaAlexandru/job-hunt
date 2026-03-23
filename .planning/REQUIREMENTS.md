@@ -32,7 +32,7 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 
 - [ ] **K8S-01**: EC2 instance (t3.small) provisioned via OpenTofu with VPC, security groups, Elastic IP
 - [ ] **K8S-02**: K3s cluster installed and running on EC2 instance
-- [ ] **K8S-03**: Staging and production namespaces configured with resource quotas
+- [ ] **K8S-03**: Staging and production namespaces configured with LimitRange (no ResourceQuota — staging protection via replicas=0)
 - [ ] **K8S-04**: Kustomize base + overlays for staging and production environments
 - [ ] **K8S-05**: Application pods (backend + frontend) deployed and healthy on K8s
 
