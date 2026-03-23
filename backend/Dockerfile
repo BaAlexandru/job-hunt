@@ -16,7 +16,11 @@ RUN java -Djarmode=tools -jar application.jar extract --layers --destination ext
 FROM eclipse-temurin:24-jre-alpine AS runtime
 WORKDIR /application
 
-RUN addgroup -S app && adduser -S app -G app
+RUN apk update && apk upgrade --no-cache && \
+    apk del --no-cache gnupg gnupg-dirmngr gnupg-gpgconf gnupg-keyboxd \
+      gnupg-utils gnupg-wks-client gpg gpg-agent gpg-wks-server gpgsm gpgv 2>/dev/null; \
+    rm -rf /var/cache/apk/* && \
+    addgroup -S app && adduser -S app -G app
 
 COPY --from=extractor --chown=app:app /extract/extracted/dependencies/ ./
 COPY --from=extractor --chown=app:app /extract/extracted/spring-boot-loader/ ./
