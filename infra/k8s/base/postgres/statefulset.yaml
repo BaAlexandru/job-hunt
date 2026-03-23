@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+    app.kubernetes.io/part-of: jobhunt
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      securityContext:
+        runAsUser: 999
+        fsGroup: 999
+      containers:
+        - name: postgres
+          image: postgres:17
+          ports:
+            - containerPort: 5432
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 256Mi
+              cpu: 500m
+          envFrom:
+            - secretRef:
+                name: postgres-secrets
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 10Gi

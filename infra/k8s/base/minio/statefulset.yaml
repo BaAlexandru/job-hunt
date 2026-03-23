@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+  labels:
+    app: minio
+    app.kubernetes.io/part-of: jobhunt
+spec:
+  serviceName: minio
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: minio
+          image: minio/minio:latest
+          command: ["server", "/data", "--console-address", ":9001"]
+          ports:
+            - containerPort: 9000
+              name: api
+            - containerPort: 9001
+              name: console
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 192Mi
+              cpu: 500m
+          envFrom:
+            - secretRef:
+                name: minio-secrets
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          livenessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: 9000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /minio/health/ready
+              port: 9000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 10Gi
