@@ -37,8 +37,8 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 - [ ] **Phase 12: Production Docker Images** - Multi-stage Dockerfiles for backend and frontend `[parallel-A]`
 - [x] **Phase 13: CI Pipeline** - GitHub Actions builds, tests, scans, and pushes images to GHCR (completed 2026-03-22)
 - [ ] **Phase 14: AWS Infrastructure** - EC2 instance provisioned via OpenTofu with VPC and networking `[parallel-B]`
-- [x] **Phase 15: K3s Cluster Setup** - Kubernetes cluster with namespace separation and Kustomize manifests (completed 2026-03-23)
-- [x] **Phase 16: Data Stores on K8s** - PostgreSQL, Redis, MinIO deployed with persistence and backups (completed 2026-03-24)
+- [ ] **Phase 15: K3s Cluster Setup** - Kubernetes cluster with namespace separation and Kustomize manifests
+- [ ] **Phase 16: Data Stores on K8s** - PostgreSQL, Redis, MinIO deployed with persistence and backups
 - [ ] **Phase 17: App Deployment & ArgoCD** - Application pods running, GitOps pipeline managing all resources
 - [ ] **Phase 18: Domain & TLS** - job-hunt.dev live with Cloudflare proxy, HTTPS, and staging subdomain
 
@@ -160,10 +160,14 @@ Plans:
 **Requirements**: K8S-02, K8S-03, K8S-04
 **Success Criteria** (what must be TRUE):
   1. K3s is installed and `kubectl get nodes` shows the node as Ready
-  2. Staging and production namespaces exist with resource quotas applied
+  2. Staging and production namespaces exist with LimitRange applied (no ResourceQuota — staging protection via replicas=0)
   3. Kustomize base + overlays generate valid manifests for both environments
   4. Staging overlay sets `replicas: 0` by default (scale-to-zero mitigation for 2GB memory constraint)
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 15-01-PLAN.md — Operational scripts (bootstrap-k3s, setup-kubeconfig, connect, staging-up/down) and application-prod.yml
+- [ ] 15-02-PLAN.md — Namespace/LimitRange YAML and Kustomize base manifests (5 components)
+- [ ] 15-03-PLAN.md — Kustomize overlays for staging (replicas: 0) and production (replicas: 1)
 
 ### Phase 16: Data Stores on K8s
 **Goal**: All persistent data services are running on K8s with data that survives pod restarts
@@ -174,10 +178,7 @@ Plans:
   2. Redis is running on K8s with persistence enabled
   3. MinIO StatefulSet is running with persistent volume and accessible via S3 API
   4. Automated daily pg_dump CronJob runs and stores backups successfully
-**Plans:** 2/2 plans complete
-Plans:
-- [ ] 16-01-PLAN.md — StorageClass with Retain policy, Redis conversion to StatefulSet with RDB persistence, PostgreSQL/MinIO PVC updates
-- [ ] 16-02-PLAN.md — MinIO bucket init Job, PostgreSQL backup CronJob, download-backups.sh script
+**Plans**: TBD
 
 ### Phase 17: App Deployment & ArgoCD
 **Goal**: Backend and frontend pods are running on K8s, managed by ArgoCD GitOps pipeline
@@ -220,8 +221,8 @@ Plans:
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
 | 13. CI Pipeline | 1/1 | Complete    | 2026-03-22 | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
-| 15. K3s Cluster Setup | 3/3 | Complete    | 2026-03-23 | - |
-| 16. Data Stores on K8s | 2/2 | Complete    | 2026-03-24 | - |
+| 15. K3s Cluster Setup | v1.1 | 0/3 | Planned | - |
+| 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
 | 17. App Deployment & ArgoCD | v1.1 | 0/? | Not started | - |
 | 18. Domain & TLS | v1.1 | 0/? | Not started | - |
 
