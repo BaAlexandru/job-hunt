@@ -217,7 +217,7 @@ Plans:
 | 12. Production Docker Images | v1.1 | 0/? | Not started | - |
 | 13. CI Pipeline | 1/1 | Complete    | 2026-03-22 | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
-| 15. K3s Cluster Setup | v1.1 | 0/? | Not started | - |
+| 15. K3s Cluster Setup | 2/3 | In Progress|  | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
 | 17. App Deployment & ArgoCD | v1.1 | 0/? | Not started | - |
 | 18. Domain & TLS | v1.1 | 0/? | Not started | - |

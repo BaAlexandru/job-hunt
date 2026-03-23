@@ -3,11 +3,43 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: completed
+stopped_at: Completed 15-02-PLAN.md
+last_updated: "2026-03-23T15:02:33.558Z"
+last_activity: 2026-03-23 — Completed 15-02 namespaces and base manifests
+progress:
+  total_phases: 9
+  completed_phases: 5
+  total_plans: 15
+  completed_plans: 14
+  percent: 93
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.1
+milestone_name: Infrastructure & Deployment
+status: completed
+stopped_at: Completed 13-01-PLAN.md
+last_updated: "2026-03-23T15:01:54.482Z"
+last_activity: 2026-03-22 — Completed Phase 11 Visibility & Sharing (all 4 plans)
+progress:
+  [█████████░] 93%
+  completed_phases: 5
+  total_plans: 15
+  completed_plans: 14
+  percent: 93
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.1
+milestone_name: Infrastructure & Deployment
+status: completed
 stopped_at: Completed 13-01-PLAN.md
 last_updated: "2026-03-22T23:41:21.252Z"
 last_activity: 2026-03-22 — Completed Phase 11 Visibility & Sharing (all 4 plans)
 progress:
-  total_phases: 9
+  [█████████░] 93%
   completed_phases: 5
   total_plans: 12
   completed_plans: 12
@@ -52,16 +84,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Track jobs you've applied to with their status, documents, and timeline so nothing falls through the cracks during a job search.
-**Current focus:** v1.1 Infrastructure & Deployment — Phase 11 (Visibility & Sharing)
+**Current focus:** v1.1 Infrastructure & Deployment — Phase 15 (K3s Cluster Setup)
 
 ## Current Position
 
-Phase: 11 of 18 (Visibility & Sharing)
-Plan: 4 of 4
-Status: Phase Complete
-Last activity: 2026-03-22 — Completed Phase 11 Visibility & Sharing (all 4 plans)
+Phase: 15 of 18 (K3s Cluster Setup)
+Plan: 2 of 3
+Status: In Progress
+Last activity: 2026-03-23 — Completed 15-02 namespaces and base manifests
 
-Progress: [██████████] 100%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -92,6 +124,8 @@ Recent decisions affecting current work:
 - Non-owner detail pages hide jobs section, edit/delete, visibility controls, and share manager
 - [Phase 13-ci-pipeline]: MinIO health check uses curl against /minio/health/live instead of mc ready local in GH Actions service containers
 - [Phase 13-ci-pipeline]: Trivy exit-code 0 (report-only) to avoid blocking builds on upstream CVEs
+- [Phase 15-02]: Namespaces kept outside Kustomize overlays to avoid namespace transformer gotcha
+- [Phase 15-02]: LimitRange identical for staging and prod (safety net, not enforcement)
 
 ### Pending Todos
 
@@ -105,6 +139,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T23:35:18.756Z
-Stopped at: Completed 13-01-PLAN.md
+Last session: 2026-03-23T15:00:37Z
+Stopped at: Completed 15-02-PLAN.md
 Resume file: None
