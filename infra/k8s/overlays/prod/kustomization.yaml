@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: jobhunt-prod
+
+resources:
+  - ../../base
+  - configmap.yaml
+  - secrets.yaml
+  - ingress.yaml
+
+images:
+  - name: jobhunt-backend
+    newName: ghcr.io/baalexandru/jobhunt-backend
+    newTag: latest
+  - name: jobhunt-frontend
+    newName: ghcr.io/baalexandru/jobhunt-frontend
+    newTag: latest
+
+replicas:
+  - name: backend
+    count: 1
+  - name: frontend
+    count: 1
+  - name: redis
+    count: 1
+  - name: postgres
+    count: 1
+  - name: minio
+    count: 1
