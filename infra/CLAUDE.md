@@ -37,4 +37,4 @@
 - State locking: S3 native locking (use_lockfile = true), no DynamoDB
 - All resources tagged with Project = "jobhunt"
 - Variables for environment-specific values (SSH CIDR, alert email, key path)
-- Required outputs from main module: elastic_ip, instance_id, instance_public_dns, security_group_id, vpc_id, subnet_id
+- Required outputs from main module: elastic_ip, instance_id, instance_public_dns, security_group_id, vpc_id, subnet_id, ssh_private_key_path

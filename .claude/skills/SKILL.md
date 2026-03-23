@@ -27,6 +27,21 @@ Trivy security scanner: container images, filesystem, IaC configs, K8s clusters,
 Auto-triggers when trivy commands are used or security scanning is discussed.
 - Rules: rules/trivy-scanning.md
 
+### docker-build-push
+Docker image build and push with metadata tagging (SHA+date+latest) via GitHub Actions.
+Auto-triggers when editing CI workflows or Dockerfiles referencing GHCR.
+- Rules: rules/docker-build-push.md
+
+### opentofu-infrastructure
+OpenTofu CLI commands, S3 backend config, reading outputs with -raw/-json for scripts, HCL patterns, state management. Covers the infra/tofu/ modules and all downstream script patterns that consume tofu output.
+Auto-triggers when running tofu commands or editing .tf/.tfvars files.
+- Rules: rules/opentofu-infrastructure.md
+
+### k3s-cluster-management
+K3s installation, configuration, Kustomize base+overlay manifests, namespace separation, LimitRange, operational scripts (staging scale, SSH tunnel, kubeconfig setup). Covers the full K8s infrastructure for this project's single-node EC2 deployment.
+Auto-triggers when writing K8s manifests, Kustomize files, or running kubectl/k3s commands.
+- Rules: rules/k3s-cluster-management.md
+
 ## Usage
 
 These skills are auto-loaded by Claude Code agents working on this project.

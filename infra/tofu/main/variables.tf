@@ -20,6 +20,12 @@ variable "ssh_public_key_path" {
   default     = "~/.ssh/jobhunt-deployer.pub"
 }
 
+variable "ssh_private_key_path" {
+  description = "Path to SSH private key file (used by infra/scripts/ for SSH access)"
+  type        = string
+  default     = "~/.ssh/jobhunt-deployer"
+}
+
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string

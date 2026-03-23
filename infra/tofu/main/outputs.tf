@@ -14,7 +14,7 @@ output "instance_public_dns" {
 }
 
 output "security_group_id" {
-  description = "Security group ID (Phase 15 may add K3s API port 6443)"
+  description = "Security group ID (port 6443 NOT exposed — kubectl access via SSH tunnel only)"
   value       = aws_security_group.main.id
 }
 
@@ -26,4 +26,10 @@ output "vpc_id" {
 output "subnet_id" {
   description = "Public subnet ID for future resources"
   value       = aws_subnet.public.id
+}
+
+output "ssh_private_key_path" {
+  description = "Path to SSH private key (Phase 15+ scripts use this for SSH/SCP access)"
+  value       = var.ssh_private_key_path
+  sensitive   = true
 }
