@@ -35,5 +35,15 @@ docker-compose.override.yml
 *.tfvars
 !*.tfvars.example
 
+# Private keys (deploy keys, SSH keys)
+argocd-deploy-key
+*.pem
+id_ed25519
+id_rsa
+
+# Plaintext K8s secrets (sealed versions are safe to commit)
+infra/k8s/overlays/*/secrets.yaml
+infra/k8s/overlays/*/secrets.yaml.bak
+
 # Database backups (downloaded via infra/scripts/download-backups.sh)
 backups/
