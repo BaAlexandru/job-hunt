@@ -45,7 +45,7 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 
 ### GitOps & ArgoCD
 
-- [ ] **ARGO-01**: ArgoCD installed in core-mode on the cluster
+- [ ] **ARGO-01**: ArgoCD installed (full install with web UI) on the cluster
 - [ ] **ARGO-02**: App-of-apps pattern managing all K8s resources
 - [ ] **ARGO-03**: Sealed Secrets for managing credentials in Git
 - [ ] **ARGO-04**: Auto-sync enabled -- Git push triggers deployment to staging, manual promote to production

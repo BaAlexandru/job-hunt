@@ -38,14 +38,14 @@ created: 2026-03-24
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 17-01-01 | 01 | 1 | ARGO-03 | smoke | `kubectl get pods -n kube-system -l app.kubernetes.io/name=sealed-secrets` returns Running | No — Wave 0 | ⬜ pending |
-| 17-01-02 | 01 | 1 | ARGO-03 | smoke | `kubectl get secret backend-secrets -n jobhunt-prod` exists after sealing | No — Wave 0 | ⬜ pending |
-| 17-02-01 | 02 | 1 | ARGO-01 | smoke | `kubectl get pods -n argocd` — all pods Running | No — Wave 0 | ⬜ pending |
-| 17-02-02 | 02 | 1 | ARGO-02 | smoke | `kubectl get applications -n argocd` — shows jobhunt, jobhunt-staging, jobhunt-prod | No — Wave 0 | ⬜ pending |
-| 17-03-01 | 03 | 2 | K8S-05 | smoke | `kubectl get pods -n jobhunt-prod -l app=backend -o jsonpath='{.items[0].status.phase}'` returns Running | No — Wave 0 | ⬜ pending |
-| 17-03-02 | 03 | 2 | K8S-05 | smoke | `kubectl get pods -n jobhunt-prod -l app=frontend -o jsonpath='{.items[0].status.phase}'` returns Running | No — Wave 0 | ⬜ pending |
-| 17-04-01 | 04 | 2 | ARGO-04 | smoke | `kubectl get app jobhunt-staging -n argocd -o jsonpath='{.spec.syncPolicy.automated}'` returns non-empty | No — Wave 0 | ⬜ pending |
-| 17-04-02 | 04 | 2 | ARGO-04 | functional | CI push triggers staging kustomization.yaml update with `[skip ci]` commit | No — Wave 0 | ⬜ pending |
+| 17-01-T1a | 01 | 1 | ARGO-01 | smoke | `kubectl get pods -n argocd` — all pods Running | No — Wave 0 | ⬜ pending |
+| 17-01-T1b | 01 | 1 | ARGO-02 | smoke | `kubectl get applications -n argocd` — shows jobhunt, jobhunt-staging, jobhunt-prod | No — Wave 0 | ⬜ pending |
+| 17-01-T2a | 01 | 1 | ARGO-03 | smoke | `kubectl get pods -n kube-system -l app.kubernetes.io/name=sealed-secrets` returns Running | No — Wave 0 | ⬜ pending |
+| 17-01-T2b | 01 | 1 | ARGO-03 | smoke | `kubectl get secret backend-secrets -n jobhunt-prod` exists after sealing | No — Wave 0 | ⬜ pending |
+| 17-02-T1a | 02 | 2 | K8S-05 | smoke | `kubectl get pods -n jobhunt-prod -l app=backend -o jsonpath='{.items[0].status.phase}'` returns Running | No — Wave 0 | ⬜ pending |
+| 17-02-T1b | 02 | 2 | K8S-05 | smoke | `kubectl get pods -n jobhunt-prod -l app=frontend -o jsonpath='{.items[0].status.phase}'` returns Running | No — Wave 0 | ⬜ pending |
+| 17-02-T2a | 02 | 2 | ARGO-04 | smoke | `kubectl get app jobhunt-staging -n argocd -o jsonpath='{.spec.syncPolicy.automated}'` returns non-empty | No — Wave 0 | ⬜ pending |
+| 17-02-T2b | 02 | 2 | ARGO-04 | functional | CI push triggers staging kustomization.yaml update with `[skip ci]` commit | No — Wave 0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
