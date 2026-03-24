@@ -38,7 +38,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 - [x] **Phase 13: CI Pipeline** - GitHub Actions builds, tests, scans, and pushes images to GHCR (completed 2026-03-22)
 - [ ] **Phase 14: AWS Infrastructure** - EC2 instance provisioned via OpenTofu with VPC and networking `[parallel-B]`
 - [x] **Phase 15: K3s Cluster Setup** - Kubernetes cluster with namespace separation and Kustomize manifests (completed 2026-03-23)
-- [ ] **Phase 16: Data Stores on K8s** - PostgreSQL, Redis, MinIO deployed with persistence and backups
+- [x] **Phase 16: Data Stores on K8s** - PostgreSQL, Redis, MinIO deployed with persistence and backups (completed 2026-03-24)
 - [ ] **Phase 17: App Deployment & ArgoCD** - Application pods running, GitOps pipeline managing all resources
 - [ ] **Phase 18: Domain & TLS** - job-hunt.dev live with Cloudflare proxy, HTTPS, and staging subdomain
 
@@ -174,7 +174,7 @@ Plans:
   2. Redis is running on K8s with persistence enabled
   3. MinIO StatefulSet is running with persistent volume and accessible via S3 API
   4. Automated daily pg_dump CronJob runs and stores backups successfully
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 16-01-PLAN.md — StorageClass with Retain policy, Redis conversion to StatefulSet with RDB persistence, PostgreSQL/MinIO PVC updates
 - [ ] 16-02-PLAN.md — MinIO bucket init Job, PostgreSQL backup CronJob, download-backups.sh script
@@ -221,7 +221,7 @@ Plans:
 | 13. CI Pipeline | 1/1 | Complete    | 2026-03-22 | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
 | 15. K3s Cluster Setup | 3/3 | Complete    | 2026-03-23 | - |
-| 16. Data Stores on K8s | 1/2 | In Progress|  | - |
+| 16. Data Stores on K8s | 2/2 | Complete   | 2026-03-24 | - |
 | 17. App Deployment & ArgoCD | v1.1 | 0/? | Not started | - |
 | 18. Domain & TLS | v1.1 | 0/? | Not started | - |
 

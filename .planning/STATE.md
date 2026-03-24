@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: completed
+stopped_at: Completed 16-01-PLAN.md
+last_updated: "2026-03-24T11:45:58.552Z"
+last_activity: 2026-03-24 — Completed 16-01 storage foundation
+progress:
+  total_phases: 9
+  completed_phases: 7
+  total_plans: 17
+  completed_plans: 17
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.1
+milestone_name: Infrastructure & Deployment
+status: completed
 stopped_at: Phase 16 context gathered
 last_updated: "2026-03-24T11:39:25.421Z"
 last_activity: 2026-03-23 — Completed 15-02 namespaces and base manifests
 progress:
-  total_phases: 9
+  [██████████] 100%
   completed_phases: 6
   total_plans: 17
   completed_plans: 16
@@ -89,11 +105,11 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 16 of 18 (Data Stores on K8s)
-Plan: 1 of 2 (completed)
-Status: In Progress
-Last activity: 2026-03-24 — Completed 16-01 storage foundation
+Plan: 2 of 2 (completed)
+Status: Phase Complete
+Last activity: 2026-03-24 — Completed 16-02 operational tooling
 
-Progress: [█████████░] 94%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -133,6 +149,9 @@ Recent decisions affecting current work:
 - [Phase 16-01]: local-path-retain StorageClass explicit-only (no default annotation) to prevent accidental use
 - [Phase 16-01]: Redis RDB save policy with graduated thresholds (3600/1, 300/100, 60/10000)
 - [Phase 16-01]: MinIO pinned to RELEASE.2025-04-22T22-12-26Z for reproducibility
+- [Phase 16-02]: mc CLI downloaded at runtime in backup CronJob (avoids custom image)
+- [Phase 16-02]: Bucket init Job backoffLimit:5 to handle MinIO startup delay
+- [Phase 16-02]: Staging suspends CronJob only; bucket init Job left to fail/retry on-demand
 
 ### Pending Todos
 
@@ -146,6 +165,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T11:38:20Z
-Stopped at: Completed 16-01-PLAN.md
-Resume file: .planning/phases/16-data-stores-on-k8s/16-02-PLAN.md
+Last session: 2026-03-24T11:44:56Z
+Stopped at: Completed 16-02-PLAN.md (Phase 16 complete)
+Resume file: Next phase

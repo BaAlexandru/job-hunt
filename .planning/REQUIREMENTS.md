@@ -41,7 +41,7 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 - [x] **DATA-01**: PostgreSQL deployed as StatefulSet with persistent volume (reclaimPolicy: Retain)
 - [x] **DATA-02**: Redis deployed on K8s with persistence
 - [x] **DATA-03**: MinIO deployed as StatefulSet with persistent volume
-- [ ] **DATA-04**: Automated daily pg_dump backup CronJob to S3
+- [x] **DATA-04**: Automated daily pg_dump backup CronJob to S3
 
 ### GitOps & ArgoCD
 
@@ -107,7 +107,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-01 | Phase 16 | Complete |
 | DATA-02 | Phase 16 | Complete |
 | DATA-03 | Phase 16 | Complete |
-| DATA-04 | Phase 16 | Pending |
+| DATA-04 | Phase 16 | Complete |
 | ARGO-01 | Phase 17 | Pending |
 | ARGO-02 | Phase 17 | Pending |
 | ARGO-03 | Phase 17 | Pending |
