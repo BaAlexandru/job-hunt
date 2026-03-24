@@ -174,7 +174,7 @@ Plans:
   2. Redis is running on K8s with persistence enabled
   3. MinIO StatefulSet is running with persistent volume and accessible via S3 API
   4. Automated daily pg_dump CronJob runs and stores backups successfully
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 - [ ] 16-01-PLAN.md — StorageClass with Retain policy, Redis conversion to StatefulSet with RDB persistence, PostgreSQL/MinIO PVC updates
 - [ ] 16-02-PLAN.md — MinIO bucket init Job, PostgreSQL backup CronJob, download-backups.sh script
@@ -221,7 +221,7 @@ Plans:
 | 13. CI Pipeline | 1/1 | Complete    | 2026-03-22 | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
 | 15. K3s Cluster Setup | 3/3 | Complete    | 2026-03-23 | - |
-| 16. Data Stores on K8s | v1.1 | 0/2 | Planned | - |
+| 16. Data Stores on K8s | 1/2 | In Progress|  | - |
 | 17. App Deployment & ArgoCD | v1.1 | 0/? | Not started | - |
 | 18. Domain & TLS | v1.1 | 0/? | Not started | - |
 

@@ -4,13 +4,13 @@ milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: completed
 stopped_at: Phase 16 context gathered
-last_updated: "2026-03-24T10:46:09.093Z"
+last_updated: "2026-03-24T11:39:25.421Z"
 last_activity: 2026-03-23 — Completed 15-02 namespaces and base manifests
 progress:
   total_phases: 9
   completed_phases: 6
-  total_plans: 15
-  completed_plans: 15
+  total_plans: 17
+  completed_plans: 16
   percent: 93
 ---
 
@@ -84,16 +84,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Track jobs you've applied to with their status, documents, and timeline so nothing falls through the cracks during a job search.
-**Current focus:** v1.1 Infrastructure & Deployment — Phase 15 (K3s Cluster Setup)
+**Current focus:** v1.1 Infrastructure & Deployment — Phase 16 (Data Stores on K8s)
 
 ## Current Position
 
-Phase: 15 of 18 (K3s Cluster Setup)
-Plan: 2 of 3
+Phase: 16 of 18 (Data Stores on K8s)
+Plan: 1 of 2 (completed)
 Status: In Progress
-Last activity: 2026-03-23 — Completed 15-02 namespaces and base manifests
+Last activity: 2026-03-24 — Completed 16-01 storage foundation
 
-Progress: [█████████░] 93%
+Progress: [█████████░] 94%
 
 ## Performance Metrics
 
@@ -130,6 +130,9 @@ Recent decisions affecting current work:
 - [Phase 15]: application-prod.yml uses env var placeholders matching future K8s ConfigMap/Secret keys
 - [Phase 15]: Used replicas shorthand instead of JSON patches for scale-to-zero
 - [Phase 15]: Standard K8s Ingress API (networking.k8s.io/v1) over Traefik IngressRoute CRD
+- [Phase 16-01]: local-path-retain StorageClass explicit-only (no default annotation) to prevent accidental use
+- [Phase 16-01]: Redis RDB save policy with graduated thresholds (3600/1, 300/100, 60/10000)
+- [Phase 16-01]: MinIO pinned to RELEASE.2025-04-22T22-12-26Z for reproducibility
 
 ### Pending Todos
 
@@ -143,6 +146,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T10:46:09.089Z
-Stopped at: Phase 16 context gathered
-Resume file: .planning/phases/16-data-stores-on-k8s/16-CONTEXT.md
+Last session: 2026-03-24T11:38:20Z
+Stopped at: Completed 16-01-PLAN.md
+Resume file: .planning/phases/16-data-stores-on-k8s/16-02-PLAN.md
