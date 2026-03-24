@@ -63,5 +63,5 @@ kubeseal --controller-name="$CONTROLLER_NAME" \
   --format=yaml > "${OUTPUT_DIR}/minio-sealed-secret.yaml"
 
 echo "Sealed secrets written to ${OUTPUT_DIR}/"
-echo "IMPORTANT: DB_PASSWORD and POSTGRES_PASSWORD match: $DB_PASSWORD"
-echo "IMPORTANT: MINIO_ACCESS_KEY and MINIO_ROOT_USER match: $MINIO_ACCESS_KEY"
+echo "INFO: DB_PASSWORD and POSTGRES_PASSWORD use the same generated value"
+echo "INFO: MINIO_ACCESS_KEY and MINIO_ROOT_USER use the same generated value"
