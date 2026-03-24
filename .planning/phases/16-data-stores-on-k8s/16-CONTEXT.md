@@ -25,6 +25,7 @@ All persistent data services (PostgreSQL, Redis, MinIO) running on K8s with data
 - StorageClass is NOT the cluster default — PVC templates reference it explicitly
 - Update all data store PVC templates (PostgreSQL, MinIO, Redis) to use `storageClassName: local-path-retain`
 - StorageClass manifest lives in `infra/k8s/base/` (shared across all data stores)
+- Additionally set `persistentVolumeClaimRetentionPolicy: { whenDeleted: Retain, whenScaled: Retain }` on all StatefulSets as an extra safety layer
 
 ### Backup strategy
 - Daily pg_dump CronJob at 02:00 UTC
@@ -81,6 +82,79 @@ All persistent data services (PostgreSQL, Redis, MinIO) running on K8s with data
 - `infra/k8s/overlays/prod/configmap.yaml` — Backend and frontend ConfigMaps
 
 </canonical_refs>
+
+<skills>
+## Recommended Skills
+
+**Downstream agents SHOULD activate these skills during planning and execution.**
+
+### Primary Skills (must use)
+
+| Skill | Reason |
+|---|---|
+| `kubernetes-specialist` | Phase is 90% K8s manifest work: StatefulSets, CronJobs, Jobs, StorageClasses, PVCs, headless Services, resource limits, pod security contexts, persistentVolumeClaimRetentionPolicy |
+| `verification-before-completion` | Verify all manifests render cleanly with `kustomize build`, validate YAML correctness, confirm staging overlay patches cover new Redis StatefulSet |
+
+### Secondary Skills (helpful)
+
+| Skill | Reason |
+|---|---|
+| `sequential-thinking` | Multi-step deployment ordering: StorageClass must exist before StatefulSets, MinIO must be ready before init Job, PostgreSQL must be ready before backup CronJob |
+| `docker-helper` | Understanding container images used in Jobs/CronJobs (`minio/mc` for bucket init + backup upload, `postgres:17` for pg_dump) |
+
+### Context7 Libraries (query during planning/execution)
+
+| Library ID | Topic | Why |
+|---|---|---|
+| `/websites/kubernetes_io` | StatefulSet, StorageClass, CronJob, Job, PVC API | Core K8s API docs for all manifest authoring — reclaimPolicy options, persistentVolumeClaimRetentionPolicy, CronJob schedule syntax |
+| `/kubernetes-sigs/kustomize` | overlays, patches, resources, kustomization.yaml | Kustomize patterns for adding new resources to base, patching existing StatefulSets, staging overlay updates |
+| `/websites/redis_io` | RDB persistence, save configuration, BGSAVE | Redis persistence config — confirm `--save` arg syntax, default save intervals, volume mount path `/data` |
+| `/minio/docs` | ILM lifecycle rules, bucket expiration | MinIO lifecycle management — `mc ilm rule add` syntax for 7-day object expiry on `jobhunt-backups` |
+| `/minio/mc` | mc mb, mc alias, mc cp, mc ilm | mc CLI commands for bucket creation (`mc mb --ignore-existing`), alias setup, file operations, lifecycle rules |
+| `/k3s-io/docs` | local-path-provisioner, StorageClass, PVC | K3s storage — confirm `rancher.io/local-path` provisioner name, custom StorageClass creation, PVC binding behavior |
+
+### Not Applicable (confirmed by analysis)
+
+All Spring/Kotlin/Java, frontend/React/Next.js, auth, Gradle, CI/CD, and testing skills are irrelevant — Phase 16 is purely infrastructure manifest and script work. No application code changes.
+
+</skills>
+
+<tech_findings>
+## Context7 Technical Findings
+
+Key findings from documentation research that downstream agents should be aware of:
+
+### StorageClass with Retain
+- K8s StorageClass supports `reclaimPolicy: Retain` as a first-class field (options: `Delete`, `Retain`, `Recycle`)
+- Default for dynamically provisioned PVs is `Delete` — must explicitly set `Retain`
+- K3s local-path-provisioner name: `rancher.io/local-path`
+- Custom StorageClass just needs: `provisioner: rancher.io/local-path` + `reclaimPolicy: Retain` + `volumeBindingMode: WaitForFirstConsumer`
+
+### StatefulSet PVC Retention Policy
+- StatefulSet spec supports `persistentVolumeClaimRetentionPolicy` with `whenDeleted` and `whenScaled` fields
+- Both default to `Retain` — but setting explicitly documents intent and survives API version changes
+- This is a second layer of protection on top of the StorageClass reclaimPolicy
+
+### Redis RDB Persistence
+- Redis `--save` CLI args configure RDB snapshots: `--save "3600 1" --save "300 100" --save "60 10000"`
+- `--dir /data` sets the RDB dump file location
+- `BGSAVE` runs async — safe for production use, no downtime during snapshots
+- RDB file is `dump.rdb` in the configured dir
+
+### MinIO mc CLI
+- `mc mb ALIAS/BUCKET --ignore-existing` — idempotent bucket creation
+- `mc ilm rule add ALIAS/BUCKET --expiry-days 7` — set object lifecycle expiry
+- `mc alias set NAME ENDPOINT ACCESS_KEY SECRET_KEY` — configure connection
+- Docker image: `minio/mc` with `entrypoint: ['']` override for K8s Jobs
+- `mc cp` for file upload, `mc ls` for listing, `mc mirror` for sync
+
+### K3s Local-Path-Provisioner
+- Default StorageClass in K3s: `local-path` with provisioner `rancher.io/local-path`
+- Stores data at `/var/lib/rancher/k3s/storage/` on the host node
+- Does NOT support `reclaimPolicy: Retain` out of the box — must create custom StorageClass
+- PVCs bind immediately (`volumeBindingMode: Immediate` is default, but `WaitForFirstConsumer` is safer for scheduling)
+
+</tech_findings>
 
 <code_context>
 ## Existing Code Insights
