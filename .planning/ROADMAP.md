@@ -221,7 +221,7 @@ Plans:
 | 13. CI Pipeline | 1/1 | Complete    | 2026-03-22 | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
 | 15. K3s Cluster Setup | 3/3 | Complete    | 2026-03-23 | - |
-| 16. Data Stores on K8s | 2/2 | Complete   | 2026-03-24 | - |
+| 16. Data Stores on K8s | 2/2 | Complete    | 2026-03-24 | - |
 | 17. App Deployment & ArgoCD | v1.1 | 0/? | Not started | - |
 | 18. Domain & TLS | v1.1 | 0/? | Not started | - |
 
