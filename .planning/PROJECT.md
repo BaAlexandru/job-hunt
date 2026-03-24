@@ -37,7 +37,7 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 - [ ] Password reset email delivery (Better Auth callback needs SMTP transport)
 - [ ] Visibility & Sharing (private/public/shared companies and jobs)
 - [ ] Production Docker images (multi-stage builds for backend + frontend)
-- [ ] Self-managed K3s on AWS EC2 (t3.small, single cluster)
+- [ ] Self-managed K3s on AWS EC2 (m7i-flex.large, single cluster)
 - [ ] Namespace-based staging/production separation
 - [ ] ArgoCD + GitOps deployment pipeline (core-mode)
 - [ ] Cloudflare DNS (job-hunt.dev) + proxy TLS + HTTPS-only
@@ -69,7 +69,7 @@ The ONE thing that must work: tracking jobs you've applied to with their status,
 - v1.0 gap closure (interview notes UI, doc version UI, password reset email)
 - Visibility & Sharing (private/public/shared on companies and jobs, share by email)
 - Production-ready Docker images (multi-stage builds, <200MB each)
-- K3s on AWS EC2 t3.small (single cluster, namespace-based staging/prod, staging scale-to-zero)
+- K3s on AWS EC2 m7i-flex.large (single cluster, namespace-based staging/prod, staging scale-to-zero)
 - ArgoCD core-mode + GitOps CI/CD pipeline
 - Cloudflare proxy TLS + Origin CA cert (Full Strict mode)
 - Data stores on K8s (PostgreSQL, Redis, MinIO with StatefulSets + backups)

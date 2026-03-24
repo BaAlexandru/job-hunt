@@ -28,7 +28,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 **Milestone Goal:** Close v1.0 UI gaps, then build a full deployment pipeline with K3s on AWS EC2, ArgoCD GitOps, namespace-based staging/prod, and go live at job-hunt.dev.
 
-**Memory constraint:** Single t3.small (2GB) runs both staging and production via namespaces. Staging pods default to 0 replicas and are scaled up on-demand (`kubectl scale`) to avoid exceeding the ~2GB memory budget. Only production runs continuously.
+**Memory constraint:** Single m7i-flex.large (8GB) runs both staging and production via namespaces. Staging pods default to 0 replicas and are scaled up on-demand (`kubectl scale`). With 8GB, both environments can run simultaneously if needed.
 
 **Parallel execution:** Phases marked with the same parallel group (A, B) can run concurrently on separate branches.
 
@@ -63,28 +63,28 @@ Wave 6:                Phase 18 ──── depends on Phase 17
 
 ## Memory Budget & Mitigation
 
-**Constraint:** Single t3.small EC2 (2GB RAM) hosts both staging and production namespaces.
+**Constraint:** Single m7i-flex.large EC2 (8GB RAM) hosts both staging and production namespaces.
 
-**Production-only memory budget (~1,610MB of 2,048MB):**
+**Production-only memory budget (~2,100MB of 8,192MB):**
 | Component | RAM |
 |-----------|-----|
 | K3s system (kubelet, Traefik, CoreDNS) | ~350MB |
 | ArgoCD (full install with web UI) | ~400MB |
 | Sealed Secrets controller | ~50MB |
-| PostgreSQL | ~256MB |
-| Backend (Spring Boot JVM, `-XX:MaxRAMPercentage=75.0`) | ~384MB |
-| Frontend (Node.js) | ~128MB |
-| Redis | ~64MB |
-| MinIO | ~128MB |
-| **Total** | **~1,760MB** |
-| **Headroom** | **~288MB** |
+| PostgreSQL | ~512MB |
+| Backend (Spring Boot JVM, `-XX:MaxRAMPercentage=75.0`) | ~768MB |
+| Frontend (Node.js) | ~256MB |
+| Redis | ~128MB |
+| MinIO | ~512MB |
+| **Total** | **~2,976MB** |
+| **Headroom** | **~5,216MB** |
 
-**Mitigation strategy — staging scale-to-zero:**
+**Staging strategy — scale-to-zero by default (but can run alongside prod):**
 - Staging namespace Kustomize overlay sets `replicas: 0` for all Deployments/StatefulSets by default
 - Developer scales staging up on-demand: `kubectl scale -n jobhunt-staging deploy --all --replicas=1`
 - A convenience script `infra/scripts/staging-up.sh` / `staging-down.sh` handles the full stack
 - Production runs continuously with replicas=1
-- If sustained memory pressure is observed, upgrade to t3.medium (4GB, ~$30/mo)
+- With 8GB, both environments can run simultaneously without memory pressure
 
 **JVM tuning (required in Dockerfile):**
 - `-XX:MaxRAMPercentage=75.0 -XX:+UseContainerSupport -XX:+ExitOnOutOfMemoryError`

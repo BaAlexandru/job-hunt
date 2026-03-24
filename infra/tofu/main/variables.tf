@@ -29,5 +29,5 @@ variable "ssh_private_key_path" {
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
-  default     = "t3.small"
+  default     = "m7i-flex.large"
 }

@@ -8,8 +8,8 @@ apt-get upgrade -y
 # Install basic tools
 apt-get install -y curl jq unzip
 
-# Create 2GB swap file (OOM safety net for t3.small with 2GB RAM)
-fallocate -l 2G /swapfile
+# Create 4GB swap file (OOM safety net for m7i-flex.large with 8GB RAM)
+fallocate -l 4G /swapfile
 chmod 600 /swapfile
 mkswap /swapfile
 swapon /swapfile
