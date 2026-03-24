@@ -9,7 +9,9 @@ resources:
   - frontend/service.yaml
   - postgres/statefulset.yaml
   - postgres/service.yaml
+  - postgres/backup-cronjob.yaml
   - redis/statefulset.yaml
   - redis/service.yaml
   - minio/statefulset.yaml
   - minio/service.yaml
+  - minio/bucket-init-job.yaml
