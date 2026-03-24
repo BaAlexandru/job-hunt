@@ -45,7 +45,7 @@ spec:
               memory: 512Mi
               cpu: 250m
             limits:
-              memory: 768Mi
+              memory: 1Gi
               cpu: "2"
           env:
             - name: SPRING_PROFILES_ACTIVE
