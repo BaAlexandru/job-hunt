@@ -2,8 +2,8 @@
 phase: 16
 slug: data-stores-on-k8s
 status: draft
-nyquist_compliant: false
-wave_0_complete: false
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-03-24
 ---
 
@@ -40,8 +40,9 @@ created: 2026-03-24
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
 | 16-01-01 | 01 | 1 | DATA-01 | manifest validation | `kustomize build infra/k8s/overlays/prod \| grep -A5 "local-path-retain"` | N/A | ⬜ pending |
 | 16-01-02 | 01 | 1 | DATA-02 | manifest validation | `kustomize build infra/k8s/overlays/prod \| grep -A20 "kind: StatefulSet" \| grep -A20 "name: redis"` | N/A | ⬜ pending |
-| 16-02-01 | 02 | 1 | DATA-03 | manifest validation | `kustomize build infra/k8s/overlays/prod \| grep "bucket-init"` | N/A | ⬜ pending |
-| 16-03-01 | 03 | 2 | DATA-04 | manifest validation | `kustomize build infra/k8s/overlays/prod \| grep -A5 "CronJob" \| grep "schedule"` | N/A | ⬜ pending |
+| 16-02-01 | 02 | 2 | DATA-03, DATA-04 | manifest validation | `kustomize build infra/k8s/overlays/prod \| grep "bucket-init"` | N/A | ⬜ pending |
+| 16-02-02 | 02 | 2 | DATA-04 | manifest validation | `kustomize build infra/k8s/overlays/prod \| grep -A5 "CronJob" \| grep "schedule"` | N/A | ⬜ pending |
+| 16-02-03 | 02 | 2 | — | manifest validation | `kustomize build infra/k8s/overlays/staging \| grep -A5 "CronJob" \| grep "suspend: true"` | N/A | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -68,11 +69,11 @@ None — Kustomize is already available, base manifests exist from Phase 15, no 
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 5s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 5s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** approved (review-audit 2026-03-24)

@@ -206,6 +206,7 @@ spec:
               mc alias set myminio http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD &&
               mc mb myminio/jobhunt-documents --ignore-existing &&
               mc mb myminio/jobhunt-backups --ignore-existing &&
+              mc ilm rule ls myminio/jobhunt-backups --json | grep -q '"expiration"' ||
               mc ilm rule add myminio/jobhunt-backups --expire-days 7
           envFrom:
             - secretRef:
@@ -234,6 +235,7 @@ spec:
       template:
         spec:
           restartPolicy: OnFailure
+          automountServiceAccountToken: false
           containers:
             - name: backup
               image: postgres:17
