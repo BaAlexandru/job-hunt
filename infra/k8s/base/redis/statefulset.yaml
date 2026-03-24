@@ -1,15 +1,21 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: redis
   labels:
     app: redis
     app.kubernetes.io/part-of: jobhunt
 spec:
+  serviceName: redis
   replicas: 1
   selector:
     matchLabels:
       app: redis
+  updateStrategy:
+    type: RollingUpdate
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
   template:
     metadata:
       labels:
@@ -23,6 +29,12 @@ spec:
       containers:
         - name: redis
           image: redis:7-alpine
+          command: ["redis-server"]
+          args:
+            - "--save"
+            - "3600 1 300 100 60 10000"
+            - "--dir"
+            - "/data"
           ports:
             - containerPort: 6379
           resources:
@@ -32,6 +44,9 @@ spec:
             limits:
               memory: 96Mi
               cpu: 250m
+          volumeMounts:
+            - name: data
+              mountPath: /data
           livenessProbe:
             exec:
               command: ["redis-cli", "ping"]
@@ -44,3 +59,12 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
             failureThreshold: 3
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path-retain
+        resources:
+          requests:
+            storage: 1Gi
