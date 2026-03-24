@@ -190,7 +190,7 @@ Plans:
   2. ArgoCD (full install with web UI) is installed and managing all K8s resources via app-of-apps pattern
   3. Credentials are managed via Sealed Secrets and stored encrypted in Git
   4. Pushing to master auto-syncs to staging; production requires manual promotion in ArgoCD
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 - [ ] 17-01-PLAN.md — ArgoCD Helm values, app-of-apps manifests, Sealed Secrets scripts, overlay kustomization updates
 - [ ] 17-02-PLAN.md — Backend init containers for startup ordering, CI image tag update job, verification script
@@ -227,7 +227,7 @@ Plans:
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
 | 15. K3s Cluster Setup | v1.1 | 0/3 | Planned | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
-| 17. App Deployment & ArgoCD | v1.1 | 0/2 | Planned | - |
+| 17. App Deployment & ArgoCD | 1/2 | In Progress|  | - |
 | 18. Domain & TLS | v1.1 | 0/? | Not started | - |
 
 ## Deferred

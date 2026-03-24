@@ -45,9 +45,9 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 
 ### GitOps & ArgoCD
 
-- [ ] **ARGO-01**: ArgoCD installed (full install with web UI) on the cluster
-- [ ] **ARGO-02**: App-of-apps pattern managing all K8s resources
-- [ ] **ARGO-03**: Sealed Secrets for managing credentials in Git
+- [x] **ARGO-01**: ArgoCD installed (full install with web UI) on the cluster
+- [x] **ARGO-02**: App-of-apps pattern managing all K8s resources
+- [x] **ARGO-03**: Sealed Secrets for managing credentials in Git
 - [ ] **ARGO-04**: Auto-sync enabled -- Git push triggers deployment to staging, manual promote to production
 
 ### Domain & TLS
@@ -108,9 +108,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-02 | Phase 16 | Complete |
 | DATA-03 | Phase 16 | Complete |
 | DATA-04 | Phase 16 | Complete |
-| ARGO-01 | Phase 17 | Pending |
-| ARGO-02 | Phase 17 | Pending |
-| ARGO-03 | Phase 17 | Pending |
+| ARGO-01 | Phase 17 | Complete |
+| ARGO-02 | Phase 17 | Complete |
+| ARGO-03 | Phase 17 | Complete |
 | ARGO-04 | Phase 17 | Pending |
 | DNS-01 | Phase 18 | Pending |
 | DNS-02 | Phase 18 | Pending |
