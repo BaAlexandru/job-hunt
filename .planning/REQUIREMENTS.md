@@ -34,7 +34,7 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 - [x] **K8S-02**: K3s cluster installed and running on EC2 instance
 - [x] **K8S-03**: Staging and production namespaces configured with LimitRange (no ResourceQuota — staging protection via replicas=0)
 - [x] **K8S-04**: Kustomize base + overlays for staging and production environments
-- [ ] **K8S-05**: Application pods (backend + frontend) deployed and healthy on K8s
+- [x] **K8S-05**: Application pods (backend + frontend) deployed and healthy on K8s
 
 ### Data Stores
 
@@ -45,10 +45,10 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 
 ### GitOps & ArgoCD
 
-- [ ] **ARGO-01**: ArgoCD installed in core-mode on the cluster
-- [ ] **ARGO-02**: App-of-apps pattern managing all K8s resources
-- [ ] **ARGO-03**: Sealed Secrets for managing credentials in Git
-- [ ] **ARGO-04**: Auto-sync enabled -- Git push triggers deployment to staging, manual promote to production
+- [x] **ARGO-01**: ArgoCD installed (full install with web UI) on the cluster
+- [x] **ARGO-02**: App-of-apps pattern managing all K8s resources
+- [x] **ARGO-03**: Sealed Secrets for managing credentials in Git
+- [x] **ARGO-04**: Auto-sync enabled -- Git push triggers deployment to staging, manual promote to production
 
 ### Domain & TLS
 
@@ -103,15 +103,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | K8S-02 | Phase 15 | Complete |
 | K8S-03 | Phase 15 | Complete |
 | K8S-04 | Phase 15 | Complete |
-| K8S-05 | Phase 17 | Pending |
+| K8S-05 | Phase 17 | Complete |
 | DATA-01 | Phase 16 | Complete |
 | DATA-02 | Phase 16 | Complete |
 | DATA-03 | Phase 16 | Complete |
 | DATA-04 | Phase 16 | Complete |
-| ARGO-01 | Phase 17 | Pending |
-| ARGO-02 | Phase 17 | Pending |
-| ARGO-03 | Phase 17 | Pending |
-| ARGO-04 | Phase 17 | Pending |
+| ARGO-01 | Phase 17 | Complete |
+| ARGO-02 | Phase 17 | Complete |
+| ARGO-03 | Phase 17 | Complete |
+| ARGO-04 | Phase 17 | Complete |
 | DNS-01 | Phase 18 | Pending |
 | DNS-02 | Phase 18 | Pending |
 | DNS-03 | Phase 18 | Pending |

@@ -3,11 +3,43 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: completed
+stopped_at: Completed 17-02-PLAN.md
+last_updated: "2026-03-24T13:10:14.108Z"
+last_activity: 2026-03-24 — Completed 17-01 ArgoCD manifests and Sealed Secrets scripts
+progress:
+  total_phases: 9
+  completed_phases: 8
+  total_plans: 19
+  completed_plans: 19
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.1
+milestone_name: Infrastructure & Deployment
+status: completed
+stopped_at: Completed 17-01-PLAN.md
+last_updated: "2026-03-24T13:04:41.293Z"
+last_activity: 2026-03-24 — Completed 16-02 operational tooling
+progress:
+  [██████████] 100%
+  completed_phases: 7
+  total_plans: 19
+  completed_plans: 18
+  percent: 95
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.1
+milestone_name: Infrastructure & Deployment
+status: completed
 stopped_at: Phase 15 context gathered
 last_updated: "2026-03-23T11:59:08.229Z"
 last_activity: 2026-03-22 — Completed Phase 11 Visibility & Sharing (all 4 plans)
 progress:
-  total_phases: 9
+  [██████████] 95%
   completed_phases: 5
   total_plans: 12
   completed_plans: 12
@@ -67,14 +99,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Track jobs you've applied to with their status, documents, and timeline so nothing falls through the cracks during a job search.
-**Current focus:** v1.1 Infrastructure & Deployment — Phase 16 (Data Stores on K8s)
+**Current focus:** v1.1 Infrastructure & Deployment — Phase 17 (App Deployment & ArgoCD)
 
 ## Current Position
 
-Phase: 16 of 18 (Data Stores on K8s)
+Phase: 17 of 18 (App Deployment & ArgoCD)
 Plan: 2 of 2 (completed)
 Status: Phase Complete
-Last activity: 2026-03-24 — Completed 16-02 operational tooling
+Last activity: 2026-03-24 — Completed 17-02 CI pipeline extension and startup ordering
 
 Progress: [██████████] 100%
 
@@ -119,6 +151,8 @@ Recent decisions affecting current work:
 - [Phase 16-02]: mc CLI downloaded at runtime in backup CronJob (avoids custom image)
 - [Phase 16-02]: Bucket init Job backoffLimit:5 to handle MinIO startup delay
 - [Phase 16-02]: Staging suspends CronJob only; bucket init Job left to fail/retry on-demand
+- [Phase 17-01]: Staging auto-sync with selfHeal; prod manual sync only for safe promotion
+- [Phase 17-01]: Placeholder SealedSecret files with empty encryptedData to keep kustomize build valid pre-sealing
 
 ### Pending Todos
 
@@ -132,6 +166,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T11:59:08.226Z
-Stopped at: Phase 15 context gathered
-Resume file: .planning/phases/15-k3s-cluster-setup/15-CONTEXT.md
+Last session: 2026-03-24T13:10:14.103Z
+Stopped at: Completed 17-02-PLAN.md
+Resume file: None

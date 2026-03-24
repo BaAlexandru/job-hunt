@@ -71,8 +71,12 @@ Backend and frontend pods running on K8s, managed by ArgoCD GitOps pipeline. Inc
 
 ### Existing K8s manifests
 - `infra/k8s/base/` — Base Kustomize manifests for all components (backend, frontend, postgres, redis, minio)
+- `infra/k8s/base/storage-class.yaml` — Custom StorageClass with Retain reclaim policy (Phase 16)
+- `infra/k8s/base/postgres/backup-cronjob.yaml` — Daily pg_dump backup CronJob (Phase 16)
+- `infra/k8s/base/minio/bucket-init-job.yaml` — MinIO bucket initialization Job (Phase 16)
 - `infra/k8s/overlays/prod/kustomization.yaml` — Production overlay with GHCR image references, replicas: 1
 - `infra/k8s/overlays/staging/kustomization.yaml` — Staging overlay with replicas: 0
+- `infra/k8s/overlays/staging/suspend-jobs.yaml` — Staging patch to suspend CronJobs (Phase 16)
 - `infra/k8s/overlays/prod/secrets.yaml` — Plaintext placeholder secrets (to be replaced with SealedSecrets)
 - `infra/k8s/overlays/prod/configmap.yaml` — Backend and frontend ConfigMaps
 - `infra/k8s/overlays/prod/ingress.yaml` — Ingress with host-based routing (job-hunt.dev)
@@ -111,7 +115,7 @@ Backend and frontend pods running on K8s, managed by ArgoCD GitOps pipeline. Inc
 
 ### Integration Points
 - SealedSecrets must produce K8s Secrets with names matching existing secretRef: `backend-secrets`, `postgres-secrets`, `minio-secrets`
-- CI workflow needs write access to push kustomize tag updates back to the repo
+- CI workflow needs write access to push kustomize tag updates back to the repo (current `permissions: contents: read` in `.github/workflows/ci.yml` must change to `contents: write`)
 - ArgoCD needs read access to the Git repo via SSH deploy key
 - Init containers need lightweight images with pg_isready, redis-cli, and curl utilities
 
@@ -134,6 +138,44 @@ Backend and frontend pods running on K8s, managed by ArgoCD GitOps pipeline. Inc
 None — discussion stayed within phase scope
 
 </deferred>
+
+<skills>
+## Skills & Documentation
+
+### Recommended Skills
+
+| Skill | Tier | Relevance |
+|---|---|---|
+| `kubernetes-specialist` | Essential | Primary skill — deployments, init containers, probes, rolling updates, RBAC, Helm charts, GitOps pipelines (~80% of phase work) |
+| `github-actions-templates` | Essential | CI workflow extension: kustomize image tag update + git commit/push step |
+| `argocd-expert` | Essential | ArgoCD installation, app-of-apps pattern, Application CRDs, sync policies, web UI setup |
+| `helm-chart-scaffolding` | Essential | Helm-based installation of ArgoCD and Sealed Secrets controllers, chart values configuration |
+| `sequential-thinking` | Supporting | Multi-step reasoning for ArgoCD architecture, deployment flow design, memory budget calculations on 2GB instance |
+| `systematic-debugging` | Supporting | Debugging pod crashes, init container failures, ArgoCD sync issues on the live cluster |
+| `conventional-commit` | Workflow | Structured commit messages during phase execution |
+| `verification-before-completion` | Workflow | Verify ArgoCD sync status, pod health, sealed secrets decryption before marking complete |
+
+### Context7 Documentation Sources
+
+Downstream agents SHOULD query these Context7 library IDs for up-to-date documentation during planning and implementation.
+
+| Technology | Context7 Library ID | Snippets | Trust Score | Key Topics |
+|---|---|---|---|---|
+| ArgoCD (Argo Helm) | `/argoproj/argo-helm` | 122 | 9.3 | Helm chart install, app-of-apps values, Application CRDs, sync configuration |
+| Kubernetes | `/websites/kubernetes_io` | 15,032 | 9.9 | Init containers, liveness/readiness probes, RollingUpdate strategy, Deployments |
+| Kustomize | `/kubernetes-sigs/kustomize` | 1,397 | 8.1 | Base/overlay pattern, `kustomize edit set image`, images transformer, CI integration |
+| Sealed Secrets | `/bitnami-labs/sealed-secrets` | 246 | 7.9 | kubeseal CLI, controller Helm install, SealedSecret CRDs, key backup/rotation, encryption workflows |
+| GitHub Actions | `/websites/github_en_actions` | 2,337 | 10 | Push event triggers, workflow steps, kustomize + kubectl deploy patterns |
+| Helm | `/websites/helm_sh` | 1,315 | 9.9 | `helm install` with values, chart dependencies, namespace targeting, `--set` overrides |
+
+### Skill Gap Coverage
+
+The following phase technologies have no dedicated skill — Context7 docs above fill the gap:
+- **Kustomize** — overlay authoring, `kustomize edit set image` in CI
+- **Sealed Secrets** — kubeseal encryption, controller install, key management
+- **Shell scripting** — `seal-secrets.sh` helper (openssl rand, kubeseal piping)
+
+</skills>
 
 ---
 

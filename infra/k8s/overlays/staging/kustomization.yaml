@@ -6,7 +6,9 @@ namespace: jobhunt-staging
 resources:
   - ../../base
   - configmap.yaml
-  - secrets.yaml
+  - backend-sealed-secret.yaml
+  - postgres-sealed-secret.yaml
+  - minio-sealed-secret.yaml
   - ingress.yaml
 
 images:

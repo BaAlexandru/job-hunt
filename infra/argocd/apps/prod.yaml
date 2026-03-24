@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jobhunt-prod
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:baalexandru/job-hunt.git
+    targetRevision: master
+    path: infra/k8s/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jobhunt-prod
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 1m

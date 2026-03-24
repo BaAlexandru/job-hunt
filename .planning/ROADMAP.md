@@ -39,7 +39,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 - [ ] **Phase 14: AWS Infrastructure** - EC2 instance provisioned via OpenTofu with VPC and networking `[parallel-B]`
 - [ ] **Phase 15: K3s Cluster Setup** - Kubernetes cluster with namespace separation and Kustomize manifests
 - [ ] **Phase 16: Data Stores on K8s** - PostgreSQL, Redis, MinIO deployed with persistence and backups
-- [ ] **Phase 17: App Deployment & ArgoCD** - Application pods running, GitOps pipeline managing all resources
+- [x] **Phase 17: App Deployment & ArgoCD** - Application pods running, GitOps pipeline managing all resources (completed 2026-03-24)
 - [ ] **Phase 18: Domain & TLS** - job-hunt.dev live with Cloudflare proxy, HTTPS, and staging subdomain
 
 ## Parallel Execution Map
@@ -69,14 +69,15 @@ Wave 6:                Phase 18 ──── depends on Phase 17
 | Component | RAM |
 |-----------|-----|
 | K3s system (kubelet, Traefik, CoreDNS) | ~350MB |
-| ArgoCD (core-mode) | ~300MB |
+| ArgoCD (full install with web UI) | ~400MB |
+| Sealed Secrets controller | ~50MB |
 | PostgreSQL | ~256MB |
 | Backend (Spring Boot JVM, `-XX:MaxRAMPercentage=75.0`) | ~384MB |
 | Frontend (Node.js) | ~128MB |
 | Redis | ~64MB |
 | MinIO | ~128MB |
-| **Total** | **~1,610MB** |
-| **Headroom** | **~438MB** |
+| **Total** | **~1,760MB** |
+| **Headroom** | **~288MB** |
 
 **Mitigation strategy — staging scale-to-zero:**
 - Staging namespace Kustomize overlay sets `replicas: 0` for all Deployments/StatefulSets by default
@@ -186,10 +187,13 @@ Plans:
 **Requirements**: K8S-05, ARGO-01, ARGO-02, ARGO-03, ARGO-04
 **Success Criteria** (what must be TRUE):
   1. Backend and frontend pods are running and healthy in production namespace
-  2. ArgoCD (core-mode) is installed and managing all K8s resources via app-of-apps pattern
+  2. ArgoCD (full install with web UI) is installed and managing all K8s resources via app-of-apps pattern
   3. Credentials are managed via Sealed Secrets and stored encrypted in Git
   4. Pushing to master auto-syncs to staging; production requires manual promotion in ArgoCD
-**Plans**: TBD
+**Plans:** 2/2 plans complete
+Plans:
+- [ ] 17-01-PLAN.md — ArgoCD Helm values, app-of-apps manifests, Sealed Secrets scripts, overlay kustomization updates
+- [ ] 17-02-PLAN.md — Backend init containers for startup ordering, CI image tag update job, verification script
 
 ### Phase 18: Domain & TLS
 **Goal**: The application is publicly accessible at job-hunt.dev with HTTPS and staging subdomain
@@ -223,7 +227,7 @@ Plans:
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
 | 15. K3s Cluster Setup | v1.1 | 0/3 | Planned | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
-| 17. App Deployment & ArgoCD | v1.1 | 0/? | Not started | - |
+| 17. App Deployment & ArgoCD | 2/2 | Complete   | 2026-03-24 | - |
 | 18. Domain & TLS | v1.1 | 0/? | Not started | - |
 
 ## Deferred
