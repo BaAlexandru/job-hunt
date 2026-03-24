@@ -4,32 +4,32 @@ kind: Kustomization
 namespace: jobhunt-staging
 
 resources:
-  - ../../base
-  - configmap.yaml
-  - backend-sealed-secret.yaml
-  - postgres-sealed-secret.yaml
-  - minio-sealed-secret.yaml
-  - ingress.yaml
+- ../../base
+- configmap.yaml
+- backend-sealed-secret.yaml
+- postgres-sealed-secret.yaml
+- minio-sealed-secret.yaml
+- ingress.yaml
 
 images:
-  - name: jobhunt-backend
-    newName: ghcr.io/baalexandru/jobhunt-backend
-    newTag: latest
-  - name: jobhunt-frontend
-    newName: ghcr.io/baalexandru/jobhunt-frontend
-    newTag: latest
+- name: jobhunt-backend
+  newName: ghcr.io/baalexandru/jobhunt-backend
+  newTag: sha-f7fc724
+- name: jobhunt-frontend
+  newName: ghcr.io/baalexandru/jobhunt-frontend
+  newTag: sha-f7fc724
 
 patches:
-  - path: suspend-jobs.yaml
+- path: suspend-jobs.yaml
 
 replicas:
-  - name: backend
-    count: 0
-  - name: frontend
-    count: 0
-  - name: redis
-    count: 0
-  - name: postgres
-    count: 0
-  - name: minio
-    count: 0
+- count: 0
+  name: backend
+- count: 0
+  name: frontend
+- count: 0
+  name: redis
+- count: 0
+  name: postgres
+- count: 0
+  name: minio
