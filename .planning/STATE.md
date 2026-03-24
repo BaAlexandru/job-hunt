@@ -2,93 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
-status: completed
-stopped_at: Completed 17-02-PLAN.md
-last_updated: "2026-03-24T13:10:14.108Z"
-last_activity: 2026-03-24 — Completed 17-01 ArgoCD manifests and Sealed Secrets scripts
+status: in_progress
+stopped_at: Phase 17 complete — approved after manual testing
+last_updated: "2026-03-24"
+last_activity: 2026-03-24 — Completed Phase 17 App Deployment & ArgoCD (all plans, verified, approved)
 progress:
   total_phases: 9
   completed_phases: 8
   total_plans: 19
   completed_plans: 19
-  percent: 100
----
-
----
-gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Infrastructure & Deployment
-status: completed
-stopped_at: Completed 17-01-PLAN.md
-last_updated: "2026-03-24T13:04:41.293Z"
-last_activity: 2026-03-24 — Completed 16-02 operational tooling
-progress:
-  [██████████] 100%
-  completed_phases: 7
-  total_plans: 19
-  completed_plans: 18
-  percent: 95
----
-
----
-gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Infrastructure & Deployment
-status: completed
-stopped_at: Phase 15 context gathered
-last_updated: "2026-03-23T11:59:08.229Z"
-last_activity: 2026-03-22 — Completed Phase 11 Visibility & Sharing (all 4 plans)
-progress:
-  [██████████] 95%
-  completed_phases: 5
-  total_plans: 12
-  completed_plans: 12
----
-
----
-gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Infrastructure & Deployment
-status: completed
-stopped_at: Completed 13-01-PLAN.md
-last_updated: "2026-03-22T23:41:21.252Z"
-last_activity: 2026-03-22 — Completed Phase 11 Visibility & Sharing (all 4 plans)
-progress:
-  [█████████░] 93%
-  completed_phases: 5
-  total_plans: 12
-  completed_plans: 12
-  percent: 100
----
-
----
-gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Infrastructure & Deployment
-status: completed
-stopped_at: Phase 13 context gathered
-last_updated: "2026-03-22T22:15:17.671Z"
-last_activity: 2026-03-22 — Completed Phase 11 Visibility & Sharing (all 4 plans)
-progress:
-  [██████████] 100%
-  completed_phases: 4
-  total_plans: 11
-  completed_plans: 11
----
-
----
-gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Infrastructure & Deployment
-status: completed
-stopped_at: Completed 11-04-PLAN.md (Phase 11 complete)
-last_updated: "2026-03-22T17:15:47.932Z"
-last_activity: 2026-03-22 — Completed Phase 11 Visibility & Sharing (all 4 plans)
-progress:
-  total_phases: 9
-  completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
   percent: 100
 ---
 
@@ -99,14 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Track jobs you've applied to with their status, documents, and timeline so nothing falls through the cracks during a job search.
-**Current focus:** v1.1 Infrastructure & Deployment — Phase 17 (App Deployment & ArgoCD)
+**Current focus:** v1.1 Infrastructure & Deployment — Phase 18 (Domain & TLS)
 
 ## Current Position
 
-Phase: 17 of 18 (App Deployment & ArgoCD)
-Plan: 2 of 2 (completed)
-Status: Phase Complete
-Last activity: 2026-03-24 — Completed 17-02 CI pipeline extension and startup ordering
+Phase: 17 of 18 complete (App Deployment & ArgoCD — approved after manual testing)
+Next: Phase 18 (Domain & TLS)
+Last activity: 2026-03-24 — Phase 17 approved after manual testing and fixes
 
 Progress: [██████████] 100%
 
