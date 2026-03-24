@@ -17,6 +17,9 @@ images:
     newName: ghcr.io/baalexandru/jobhunt-frontend
     newTag: latest
 
+patches:
+  - path: suspend-jobs.yaml
+
 replicas:
   - name: backend
     count: 0

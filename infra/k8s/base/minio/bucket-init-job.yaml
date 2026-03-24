@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-bucket-init
+  labels:
+    app: minio-bucket-init
+    app.kubernetes.io/part-of: jobhunt
+spec:
+  backoffLimit: 5
+  template:
+    metadata:
+      labels:
+        app: minio-bucket-init
+    spec:
+      restartPolicy: OnFailure
+      automountServiceAccountToken: false
+      containers:
+        - name: mc
+          image: minio/mc:RELEASE.2025-09-07T16-10-49Z
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mc alias set myminio http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD &&
+              mc mb myminio/jobhunt-documents --ignore-existing &&
+              mc mb myminio/jobhunt-backups --ignore-existing &&
+              mc ilm rule ls myminio/jobhunt-backups --json | grep -q '"expiration"' ||
+              mc ilm rule add myminio/jobhunt-backups --expire-days 7
+          envFrom:
+            - secretRef:
+                name: minio-secrets
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: 25m
+            limits:
+              memory: 64Mi
+              cpu: 100m
