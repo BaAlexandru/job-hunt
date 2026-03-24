@@ -35,9 +35,9 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 - [ ] **Phase 10: Gap Closure** - Complete missing UI features and email delivery from v1.0 `[parallel-A]`
 - [x] **Phase 11: Visibility & Sharing** - Backend + frontend for private/public/shared visibility on resources `[parallel-A]` (completed 2026-03-22)
 - [ ] **Phase 12: Production Docker Images** - Multi-stage Dockerfiles for backend and frontend `[parallel-A]`
-- [x] **Phase 13: CI Pipeline** - GitHub Actions builds, tests, scans, and pushes images to GHCR (completed 2026-03-22)
+- [x] **Phase 13: CI Pipeline** - GitHub Actions builds, tests, scans, and pushes images to GHCR (completed 2026-03-22)
 - [ ] **Phase 14: AWS Infrastructure** - EC2 instance provisioned via OpenTofu with VPC and networking `[parallel-B]`
-- [x] **Phase 15: K3s Cluster Setup** - Kubernetes cluster with namespace separation and Kustomize manifests (completed 2026-03-23)
+- [x] **Phase 15: K3s Cluster Setup** - Kubernetes cluster with namespace separation and Kustomize manifests (completed 2026-03-23)
 - [ ] **Phase 16: Data Stores on K8s** - PostgreSQL, Redis, MinIO deployed with persistence and backups
 - [ ] **Phase 17: App Deployment & ArgoCD** - Application pods running, GitOps pipeline managing all resources
 - [ ] **Phase 18: Domain & TLS** - job-hunt.dev live with Cloudflare proxy, HTTPS, and staging subdomain
@@ -174,7 +174,10 @@ Plans:
   2. Redis is running on K8s with persistence enabled
   3. MinIO StatefulSet is running with persistent volume and accessible via S3 API
   4. Automated daily pg_dump CronJob runs and stores backups successfully
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 16-01-PLAN.md — StorageClass with Retain policy, Redis conversion to StatefulSet with RDB persistence, PostgreSQL/MinIO PVC updates
+- [ ] 16-02-PLAN.md — MinIO bucket init Job, PostgreSQL backup CronJob, download-backups.sh script
 
 ### Phase 17: App Deployment & ArgoCD
 **Goal**: Backend and frontend pods are running on K8s, managed by ArgoCD GitOps pipeline
@@ -218,7 +221,7 @@ Plans:
 | 13. CI Pipeline | 1/1 | Complete    | 2026-03-22 | - |
 | 14. AWS Infrastructure | v1.1 | 0/? | Not started | - |
 | 15. K3s Cluster Setup | 3/3 | Complete    | 2026-03-23 | - |
-| 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
+| 16. Data Stores on K8s | v1.1 | 0/2 | Planned | - |
 | 17. App Deployment & ArgoCD | v1.1 | 0/? | Not started | - |
 | 18. Domain & TLS | v1.1 | 0/? | Not started | - |
 
