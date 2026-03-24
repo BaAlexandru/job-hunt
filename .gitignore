@@ -34,3 +34,6 @@ docker-compose.override.yml
 *.tfstate.backup
 *.tfvars
 !*.tfvars.example
+
+# Database backups (downloaded via infra/scripts/download-backups.sh)
+backups/
