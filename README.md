@@ -12,4 +12,3 @@ Track jobs you've applied to with their status, documents, and timeline so nothi
 - **Cache:** Redis 7
 - **Storage:** MinIO (S3-compatible)
 - **CI:** GitHub Actions -> GHCR
-
