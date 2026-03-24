@@ -22,7 +22,6 @@ spec:
         app: postgres
     spec:
       securityContext:
-        runAsUser: 999
         fsGroup: 999
       containers:
         - name: postgres

@@ -22,7 +22,6 @@ spec:
         app: minio
     spec:
       securityContext:
-        runAsUser: 1000
         fsGroup: 1000
       containers:
         - name: minio
