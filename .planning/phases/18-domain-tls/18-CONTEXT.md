@@ -156,7 +156,8 @@ None — discussion stayed within phase scope
 | Skill | Tier | Relevance |
 |---|---|---|
 | `opentofu-cloudflare` | Essential | IaC for DNS records + SSL zone settings — `cloudflare_dns_record` (3 A records), `cloudflare_zone_setting` (SSL strict, Always HTTPS, HSTS, TLS 1.3), `cloudflare_origin_ca_certificate` (wildcard cert), provider config, .tfvars patterns (~20% of phase work) |
-| `kubernetes-specialist` | Essential | Ingress resources, IngressRouteTCP CRD, TLS Secrets in kube-system, namespace routing, Traefik default cert configuration (~35% of phase work) |
+| `traefik-k3s` | Essential | TLSStore default cert CRD, IngressRouteTCP for ArgoCD TLS passthrough, K3s HelmChartConfig for HTTP→HTTPS redirect + Cloudflare trusted IPs, entrypoint config (~20% of phase work) |
+| `kubernetes-specialist` | Essential | Ingress resources, TLS Secrets in kube-system, namespace routing, SealedSecret for Origin CA cert (~15% of phase work) |
 | `argocd-expert` | Essential | ArgoCD TLS cert configuration (argocd-cmd-params-cm or server args), Ingress/IngressRouteTCP exposure at argocd.job-hunt.dev, admin password management, Helm values updates (~18% of phase) |
 | `helm-chart-scaffolding` | Supporting | ArgoCD Helm values configuration for TLS cert, server flags (--insecure=false), and IngressRouteTCP resource generation |
 | `sequential-thinking` | Supporting | Multi-step reasoning for TLS chain (Cloudflare → Traefik → ArgoCD), rollout ordering, debugging connectivity across DNS/proxy/ingress/pod layers |
@@ -185,7 +186,6 @@ Downstream agents SHOULD query these Context7 library IDs for up-to-date documen
 
 The following phase technologies have no dedicated skill — Context7 docs above fill the gap:
 
-- **Traefik ingress (advanced)** — `kubernetes-specialist` covers basic Ingress but NOT Traefik-specific features (TLSStore default cert, IngressRouteTCP CRD, HelmChartConfig). Use `/websites/doc_traefik_io_traefik` + `/traefik/traefik-helm-chart` Context7 docs — these are CRITICAL for this phase
 - **Shell scripting** — No skill needed; verify-domain.sh is straightforward curl/dig scripting
 
 ### Important: Cloudflare Provider v5 Change
