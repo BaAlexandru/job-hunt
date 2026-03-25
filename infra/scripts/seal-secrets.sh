@@ -5,6 +5,9 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
 ENV="${1:?Usage: seal-secrets.sh <staging|prod>}"
 NAMESPACE="jobhunt-${ENV}"
 CONTROLLER_NAME="sealed-secrets"
@@ -20,7 +23,7 @@ POSTGRES_PASSWORD="$DB_PASSWORD"
 MINIO_ROOT_USER="$MINIO_ACCESS_KEY"
 MINIO_ROOT_PASSWORD="$MINIO_SECRET_KEY"
 
-OUTPUT_DIR="infra/k8s/overlays/${ENV}"
+OUTPUT_DIR="${PROJECT_ROOT}/infra/k8s/overlays/${ENV}"
 
 # Backend secrets (8 keys)
 kubectl create secret generic backend-secrets \

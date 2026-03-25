@@ -5,11 +5,14 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
 ENV="${1:?Usage: seal-smtp-secrets.sh <staging|prod>}"
 NAMESPACE="jobhunt-${ENV}"
 CONTROLLER_NAME="sealed-secrets"
 CONTROLLER_NAMESPACE="kube-system"
-OUTPUT_DIR="infra/k8s/overlays/${ENV}"
+OUTPUT_DIR="${PROJECT_ROOT}/infra/k8s/overlays/${ENV}"
 SEALED_SECRET_FILE="${OUTPUT_DIR}/backend-sealed-secret.yaml"
 
 : "${SMTP_USERNAME:?ERROR: Set SMTP_USERNAME env var before running}"
