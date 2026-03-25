@@ -228,7 +228,7 @@ Plans:
 | 15. K3s Cluster Setup | v1.1 | 0/3 | Planned | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
 | 17. App Deployment & ArgoCD | 2/2 | Complete   | 2026-03-24 | - |
-| 18. Domain & TLS | 3/3 | Complete   | 2026-03-25 | - |
+| 18. Domain & TLS | 3/3 | Complete    | 2026-03-25 | - |
 
 ## Deferred
 
