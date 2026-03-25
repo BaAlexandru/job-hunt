@@ -40,7 +40,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 - [ ] **Phase 15: K3s Cluster Setup** - Kubernetes cluster with namespace separation and Kustomize manifests
 - [ ] **Phase 16: Data Stores on K8s** - PostgreSQL, Redis, MinIO deployed with persistence and backups
 - [x] **Phase 17: App Deployment & ArgoCD** - Application pods running, GitOps pipeline managing all resources (completed 2026-03-24)
-- [ ] **Phase 18: Domain & TLS** - job-hunt.dev live with Cloudflare proxy, HTTPS, and staging subdomain
+- [x] **Phase 18: Domain & TLS** - job-hunt.dev live with Cloudflare proxy, HTTPS, and staging subdomain (completed 2026-03-25)
 
 ## Parallel Execution Map
 
@@ -228,7 +228,7 @@ Plans:
 | 15. K3s Cluster Setup | v1.1 | 0/3 | Planned | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
 | 17. App Deployment & ArgoCD | 2/2 | Complete   | 2026-03-24 | - |
-| 18. Domain & TLS | v1.1 | 0/? | Not started | - |
+| 18. Domain & TLS | 3/3 | Complete    | 2026-03-25 | - |
 
 ## Deferred
 

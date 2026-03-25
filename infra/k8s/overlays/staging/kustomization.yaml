@@ -9,6 +9,7 @@ resources:
 - backend-sealed-secret.yaml
 - postgres-sealed-secret.yaml
 - minio-sealed-secret.yaml
+- frontend-sealed-secret.yaml
 - ingress.yaml
 
 images:

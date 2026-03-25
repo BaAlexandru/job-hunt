@@ -66,16 +66,16 @@ resource "aws_security_group" "main" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "HTTP"
+    cidr_blocks = local.cloudflare_ipv4_cidrs
+    description = "HTTP (Cloudflare only)"
   }
 
   ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "HTTPS"
+    cidr_blocks = local.cloudflare_ipv4_cidrs
+    description = "HTTPS (Cloudflare only)"
   }
 
   egress {
