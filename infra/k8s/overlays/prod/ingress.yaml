@@ -4,6 +4,7 @@ metadata:
   name: jobhunt-ingress
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-security-headers@kubernetescrd
 spec:
   rules:
     - host: job-hunt.dev

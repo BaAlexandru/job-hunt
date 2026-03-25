@@ -76,7 +76,7 @@ resource "tls_cert_request" "origin_ca" {
 
 resource "cloudflare_origin_ca_certificate" "wildcard" {
   csr                = tls_cert_request.origin_ca.cert_request_pem
-  hostnames          = ["job-hunt.dev", "*.job-hunt.dev"]
+  hostnames          = ["*.job-hunt.dev", "job-hunt.dev"]
   request_type       = "origin-rsa"
   requested_validity = 5475
 }
@@ -131,39 +131,10 @@ resource "cloudflare_zone_setting" "security_header" {
 # This is redundant with the Transform Rule below but harmless (headers are idempotent).
 
 # -----------------------------------------------------------------------------
-# Transform Rules (security response headers)
+# Security Response Headers
 # -----------------------------------------------------------------------------
-resource "cloudflare_ruleset" "security_headers" {
-  zone_id     = var.cloudflare_zone_id
-  name        = "Security response headers"
-  description = "Add security headers to all responses"
-  kind        = "zone"
-  phase       = "http_response_headers_transform"
-
-  rules = [{
-    ref         = "security_headers"
-    description = "Set security response headers"
-    expression  = "true"
-    action      = "rewrite"
-    action_parameters = {
-      headers = {
-        "X-Content-Type-Options" = {
-          operation = "set"
-          value     = "nosniff"
-        }
-        "X-Frame-Options" = {
-          operation = "set"
-          value     = "DENY"
-        }
-        "Referrer-Policy" = {
-          operation = "set"
-          value     = "strict-origin-when-cross-origin"
-        }
-        "Permissions-Policy" = {
-          operation = "set"
-          value     = "camera=(), microphone=(), geolocation=()"
-        }
-      }
-    }
-  }]
-}
+# NOTE: Security headers (X-Content-Type-Options, X-Frame-Options,
+# Referrer-Policy, Permissions-Policy, HSTS) are set via Traefik middleware
+# (infra/k8s/traefik/security-headers-middleware.yaml) rather than Cloudflare
+# Transform Rules. This avoids requiring Zone:Rulesets:Edit API token
+# permission which is difficult to configure in Cloudflare's token UI.
