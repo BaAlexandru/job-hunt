@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: in_progress
-stopped_at: Completed 18-01-PLAN.md
+stopped_at: Completed 18-03-PLAN.md (pending human-verify checkpoint)
 last_updated: "2026-03-25"
-last_activity: 2026-03-25 — Completed Phase 18 Plan 01 (Cloudflare IaC)
+last_activity: 2026-03-25 — Completed Phase 18 Plan 03 (Apply Infrastructure & Verify)
 progress:
   total_phases: 9
-  completed_phases: 8
+  completed_phases: 9
   total_plans: 22
-  completed_plans: 21
-  percent: 95
+  completed_plans: 22
+  percent: 100
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 
 ## Current Position
 
-Phase: 18 (Domain & TLS) — Plan 01 of 03 complete
-Next: Phase 18 Plan 02 (Traefik TLS & ArgoCD Passthrough) - already executed
-Last activity: 2026-03-25 — Completed Phase 18 Plan 01 (Cloudflare IaC)
+Phase: 18 (Domain & TLS) — Plan 03 of 03 complete
+Next: Phase 18 complete — pending manual browser smoke test
+Last activity: 2026-03-25 — Completed Phase 18 Plan 03 (Apply Infrastructure & Verify)
 
-Progress: [█████████░] 95%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -79,6 +79,8 @@ Recent decisions affecting current work:
 - [Phase 18-01]: Cloudflare provider v5 individual cloudflare_zone_setting resources (not monolithic override)
 - [Phase 18-01]: Cloudflare ruleset rules attribute uses map syntax for headers (v5 schema requirement)
 - [Phase 18-01]: AWS SG ports 80/443 restricted to Cloudflare IPv4 CIDRs via locals block
+- [Phase 18-03]: Security headers via Traefik middleware instead of Cloudflare Transform Rules (API permission issue)
+- [Phase 18-03]: staging-up/down scripts pause/resume ArgoCD auto-sync to handle selfHeal
 
 ### Pending Todos
 
@@ -92,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T12:56:29Z
-Stopped at: Completed 18-01-PLAN.md
+Last session: 2026-03-25T14:25:00Z
+Stopped at: Completed 18-03-PLAN.md (pending human-verify checkpoint)
 Resume file: None
