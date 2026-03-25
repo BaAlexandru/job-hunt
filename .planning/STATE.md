@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: in_progress
-stopped_at: Phase 18 context gathered
-last_updated: "2026-03-25T11:15:47.179Z"
-last_activity: 2026-03-24 — Phase 17 approved after manual testing and fixes
+stopped_at: Phase 18 complete — all 3 plans done, user approved final smoke test
+last_updated: "2026-03-25T17:20:01.114Z"
+last_activity: 2026-03-25 — Phase 18 Plan 03 complete (user approved manual browser smoke test)
 progress:
   total_phases: 9
-  completed_phases: 8
-  total_plans: 19
-  completed_plans: 19
+  completed_phases: 9
+  total_plans: 22
+  completed_plans: 22
 ---
 
 ---
@@ -18,14 +18,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: in_progress
-stopped_at: Phase 17 complete — approved after manual testing
-last_updated: "2026-03-24"
-last_activity: 2026-03-24 — Completed Phase 17 App Deployment & ArgoCD (all plans, verified, approved)
+stopped_at: Completed 18-03-PLAN.md (all tasks complete, user approved)
+last_updated: "2026-03-25"
+last_activity: 2026-03-25 — Phase 18 Plan 03 complete (user approved manual browser smoke test)
 progress:
   total_phases: 9
-  completed_phases: 8
-  total_plans: 19
-  completed_plans: 19
+  completed_phases: 9
+  total_plans: 22
+  completed_plans: 22
   percent: 100
 ---
 
@@ -40,9 +40,9 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 
 ## Current Position
 
-Phase: 17 of 18 complete (App Deployment & ArgoCD — approved after manual testing)
-Next: Phase 18 (Domain & TLS)
-Last activity: 2026-03-24 — Phase 17 approved after manual testing and fixes
+Phase: 18 (Domain & TLS) — Plan 03 of 03 complete
+Next: Phase 18 complete — all plans done, v1.1 deployment milestone largely complete
+Last activity: 2026-03-25 — Phase 18 Plan 03 complete (user approved manual browser smoke test)
 
 Progress: [██████████] 100%
 
@@ -89,6 +89,13 @@ Recent decisions affecting current work:
 - [Phase 16-02]: Staging suspends CronJob only; bucket init Job left to fail/retry on-demand
 - [Phase 17-01]: Staging auto-sync with selfHeal; prod manual sync only for safe promotion
 - [Phase 17-01]: Placeholder SealedSecret files with empty encryptedData to keep kustomize build valid pre-sealing
+- [Phase 18-domain-tls]: TLSStore+TLSOption named 'default' in kube-system for automatic Traefik TLS on all connections
+- [Phase 18-domain-tls]: ArgoCD TLS passthrough via IngressRouteTCP (exception to standard Ingress API)
+- [Phase 18-01]: Cloudflare provider v5 individual cloudflare_zone_setting resources (not monolithic override)
+- [Phase 18-01]: Cloudflare ruleset rules attribute uses map syntax for headers (v5 schema requirement)
+- [Phase 18-01]: AWS SG ports 80/443 restricted to Cloudflare IPv4 CIDRs via locals block
+- [Phase 18-03]: Security headers via Traefik middleware instead of Cloudflare Transform Rules (API permission issue)
+- [Phase 18-03]: staging-up/down scripts pause/resume ArgoCD auto-sync to handle selfHeal
 
 ### Pending Todos
 
@@ -102,6 +109,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T11:15:47.175Z
-Stopped at: Phase 18 context gathered
-Resume file: .planning/phases/18-domain-tls/18-CONTEXT.md
+Last session: 2026-03-25
+Stopped at: Phase 18 complete — all 3 plans done, user approved final smoke test
+Resume file: None

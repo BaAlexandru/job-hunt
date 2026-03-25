@@ -9,15 +9,16 @@ resources:
 - backend-sealed-secret.yaml
 - postgres-sealed-secret.yaml
 - minio-sealed-secret.yaml
+- frontend-sealed-secret.yaml
 - ingress.yaml
 
 images:
 - name: jobhunt-backend
   newName: ghcr.io/baalexandru/jobhunt-backend
-  newTag: sha-84b1e1f
+  newTag: sha-22ffe2b
 - name: jobhunt-frontend
   newName: ghcr.io/baalexandru/jobhunt-frontend
-  newTag: sha-84b1e1f
+  newTag: sha-22ffe2b
 
 patches:
 - path: suspend-jobs.yaml

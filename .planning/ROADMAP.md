@@ -40,7 +40,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 - [ ] **Phase 15: K3s Cluster Setup** - Kubernetes cluster with namespace separation and Kustomize manifests
 - [ ] **Phase 16: Data Stores on K8s** - PostgreSQL, Redis, MinIO deployed with persistence and backups
 - [x] **Phase 17: App Deployment & ArgoCD** - Application pods running, GitOps pipeline managing all resources (completed 2026-03-24)
-- [ ] **Phase 18: Domain & TLS** - job-hunt.dev live with Cloudflare proxy, HTTPS, and staging subdomain
+- [x] **Phase 18: Domain & TLS** - job-hunt.dev live with Cloudflare proxy, HTTPS, and staging subdomain (completed 2026-03-25)
 
 ## Parallel Execution Map
 
@@ -150,7 +150,7 @@ Plans:
 **Parallel**: `[parallel-B]` — can run alongside Phases 10, 11, 12
 **Requirements**: K8S-01
 **Success Criteria** (what must be TRUE):
-  1. EC2 m7i-flex.large instance is running with an Elastic IP, provisioned by OpenTofu
+  1. EC2 t3.small instance is running with an Elastic IP, provisioned by OpenTofu
   2. VPC, subnet, and security groups allow SSH (restricted), HTTP (80), and HTTPS (443)
   3. OpenTofu state is stored remotely and `tofu plan` shows no drift
 **Plans**: TBD
@@ -205,11 +205,7 @@ Plans:
   3. HTTP requests are redirected to HTTPS (Cloudflare Always Use HTTPS + HSTS enabled)
   4. Cloudflare SSL/TLS is set to Full (Strict) with Origin CA cert installed on the cluster
   5. Traefik ingress routes correctly direct traffic to the appropriate namespace based on hostname
-**Plans:** 3 plans
-Plans:
-- [ ] 18-01-PLAN.md — OpenTofu Cloudflare IaC (DNS records, Origin CA cert, SSL settings, security headers, SG restriction) + scripts
-- [ ] 18-02-PLAN.md — Traefik TLS CRDs (TLSStore, TLSOption, HelmChartConfig) + ArgoCD IngressRouteTCP + password script
-- [ ] 18-03-PLAN.md — Live rollout execution + end-to-end verification (automated + manual smoke test)
+**Plans**: TBD
 
 ## Progress
 
@@ -232,7 +228,7 @@ Plans:
 | 15. K3s Cluster Setup | v1.1 | 0/3 | Planned | - |
 | 16. Data Stores on K8s | v1.1 | 0/? | Not started | - |
 | 17. App Deployment & ArgoCD | 2/2 | Complete   | 2026-03-24 | - |
-| 18. Domain & TLS | v1.1 | 0/3 | Planned | - |
+| 18. Domain & TLS | 3/3 | Complete    | 2026-03-25 | - |
 
 ## Deferred
 

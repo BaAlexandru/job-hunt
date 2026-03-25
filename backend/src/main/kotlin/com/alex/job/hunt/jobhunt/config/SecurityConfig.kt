@@ -40,7 +40,8 @@ class SecurityConfig(
             }
             authorizeHttpRequests {
                 authorize("/api/auth/**", permitAll)
-                authorize("/actuator/**", permitAll)
+                authorize("/actuator/health/**", permitAll)
+                authorize("/actuator/**", authenticated)
                 authorize(anyRequest, authenticated)
             }
             exceptionHandling {
@@ -59,7 +60,7 @@ class SecurityConfig(
         val config = CorsConfiguration()
         config.allowedOrigins = allowedOrigins.split(",").map { it.trim() }
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-        config.allowedHeaders = listOf("*")
+        config.allowedHeaders = listOf("Authorization", "Content-Type", "X-Internal-Secret", "Cookie")
         config.allowCredentials = true
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", config)

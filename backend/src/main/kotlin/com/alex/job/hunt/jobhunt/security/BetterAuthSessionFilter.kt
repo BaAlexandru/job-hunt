@@ -35,6 +35,7 @@ class BetterAuthSessionFilter(
 
     companion object {
         private const val COOKIE_NAME = "better-auth.session_token"
+        private const val SECURE_COOKIE_NAME = "__Secure-better-auth.session_token"
     }
 
     override fun doFilterInternal(
@@ -58,7 +59,7 @@ class BetterAuthSessionFilter(
 
     private fun extractSessionToken(request: HttpServletRequest): String? {
         val cookieValue = request.cookies
-            ?.firstOrNull { it.name == COOKIE_NAME }
+            ?.firstOrNull { it.name == SECURE_COOKIE_NAME || it.name == COOKIE_NAME }
             ?.value ?: return null
 
         // Better Auth cookie format is "token.hash" — DB stores just the token part
