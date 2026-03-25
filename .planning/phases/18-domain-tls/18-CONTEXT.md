@@ -155,6 +155,7 @@ None — discussion stayed within phase scope
 
 | Skill | Tier | Relevance |
 |---|---|---|
+| `opentofu-cloudflare` | Essential | IaC for DNS records + SSL zone settings — `cloudflare_dns_record` (3 A records), `cloudflare_zone_setting` (SSL strict, Always HTTPS, HSTS, TLS 1.3), `cloudflare_origin_ca_certificate` (wildcard cert), provider config, .tfvars patterns (~20% of phase work) |
 | `kubernetes-specialist` | Essential | Ingress resources, IngressRouteTCP CRD, TLS Secrets in kube-system, namespace routing, Traefik default cert configuration (~35% of phase work) |
 | `argocd-expert` | Essential | ArgoCD TLS cert configuration (argocd-cmd-params-cm or server args), Ingress/IngressRouteTCP exposure at argocd.job-hunt.dev, admin password management, Helm values updates (~18% of phase) |
 | `helm-chart-scaffolding` | Supporting | ArgoCD Helm values configuration for TLS cert, server flags (--insecure=false), and IngressRouteTCP resource generation |
@@ -169,7 +170,7 @@ Downstream agents SHOULD query these Context7 library IDs for up-to-date documen
 
 | Technology | Context7 Library ID | Snippets | Trust Score | Key Topics |
 |---|---|---|---|---|
-| Cloudflare Terraform Provider | `/cloudflare/terraform-provider-cloudflare` | 1,586 | 7.8 | `cloudflare_record` (A records, proxied), `cloudflare_zone_settings_override` (SSL mode, Always HTTPS, HSTS), Origin CA cert resources, zone_id data source |
+| Cloudflare Terraform Provider | `/cloudflare/terraform-provider-cloudflare` | 1,586 | 7.8 | `cloudflare_dns_record` (A records, proxied), `cloudflare_zone_setting` (v5: individual settings for SSL mode, Always HTTPS, HSTS), `cloudflare_origin_ca_certificate`, zone data source |
 | Traefik (official docs) | `/websites/doc_traefik_io_traefik` | 8,368 | 8.0 | TLSStore default cert, IngressRouteTCP CRD for TLS passthrough, entrypoints redirect (web→websecure), HelmChartConfig for K3s Traefik customization |
 | Traefik Helm Chart | `/traefik/traefik-helm-chart` | 104 | 8.0 | K3s uses this chart internally — HelmChartConfig values override Traefik defaults (ports, TLS, middleware) |
 | ArgoCD (Argo Helm) | `/argoproj/argo-helm` | 122 | 9.3 | argocd-server TLS cert configuration, Helm values for `server.certificate`, `server.ingress`, `server.extraArgs` |
@@ -184,10 +185,12 @@ Downstream agents SHOULD query these Context7 library IDs for up-to-date documen
 
 The following phase technologies have no dedicated skill — Context7 docs above fill the gap:
 
-- **Cloudflare DNS/SSL/TLS** — No Cloudflare skill. Use `/cloudflare/terraform-provider-cloudflare` Context7 docs for `cloudflare_record`, `cloudflare_zone_settings_override`, and Origin CA resources
-- **OpenTofu + Cloudflare provider** — No OpenTofu skill (`aws-cdk-python-setup` is unrelated). Use `/opentofu/opentofu` + `/cloudflare/terraform-provider-cloudflare` Context7 docs
 - **Traefik ingress (advanced)** — `kubernetes-specialist` covers basic Ingress but NOT Traefik-specific features (TLSStore default cert, IngressRouteTCP CRD, HelmChartConfig). Use `/websites/doc_traefik_io_traefik` + `/traefik/traefik-helm-chart` Context7 docs — these are CRITICAL for this phase
 - **Shell scripting** — No skill needed; verify-domain.sh is straightforward curl/dig scripting
+
+### Important: Cloudflare Provider v5 Change
+
+The Cloudflare Terraform provider v5 replaced the monolithic `cloudflare_zone_settings_override` resource with individual `cloudflare_zone_setting` resources (one per setting). The `opentofu-cloudflare` skill documents both patterns. Use the v5 pattern (`cloudflare_zone_setting` with `setting_id`) for new code.
 
 </skills>
 
