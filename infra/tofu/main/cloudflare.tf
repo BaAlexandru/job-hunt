@@ -128,13 +128,10 @@ resource "cloudflare_zone_setting" "security_header" {
   })
 }
 # NOTE: nosniff=true in HSTS also adds X-Content-Type-Options:nosniff header.
-# This is redundant with the Transform Rule below but harmless (headers are idempotent).
-
-# -----------------------------------------------------------------------------
-# Security Response Headers
-# -----------------------------------------------------------------------------
-# NOTE: Security headers (X-Content-Type-Options, X-Frame-Options,
-# Referrer-Policy, Permissions-Policy, HSTS) are set via Traefik middleware
+# This is redundant with the Traefik security-headers middleware but harmless
+# (headers are idempotent).
+#
+# Security headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy,
+# Permissions-Policy, HSTS) are set via Traefik middleware
 # (infra/k8s/traefik/security-headers-middleware.yaml) rather than Cloudflare
-# Transform Rules. This avoids requiring Zone:Rulesets:Edit API token
-# permission which is difficult to configure in Cloudflare's token UI.
+# Transform Rules, to avoid requiring Zone:Rulesets:Edit API token permission.

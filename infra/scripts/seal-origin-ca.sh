@@ -22,12 +22,18 @@ fi
 # Ensure output directories exist
 mkdir -p infra/k8s/traefik infra/k8s/argocd
 
+# Write cert/key to temp files (process substitution not available on Windows Git Bash)
+TMPDIR=$(mktemp -d)
+trap 'rm -rf "$TMPDIR"' EXIT
+echo "$CERT" > "$TMPDIR/tls.crt"
+echo "$KEY" > "$TMPDIR/tls.key"
+
 # 1. Traefik default cert (kube-system, cluster-wide scope)
 echo "Sealing Origin CA cert for Traefik (kube-system, cluster-wide)..."
 kubectl create secret tls origin-ca-tls \
   --namespace=kube-system \
-  --cert=<(echo "$CERT") \
-  --key=<(echo "$KEY") \
+  --cert="$TMPDIR/tls.crt" \
+  --key="$TMPDIR/tls.key" \
   --dry-run=client -o yaml | \
 kubeseal --controller-name="$CONTROLLER_NAME" \
   --controller-namespace="$CONTROLLER_NAMESPACE" \
@@ -38,8 +44,8 @@ kubeseal --controller-name="$CONTROLLER_NAME" \
 echo "Sealing Origin CA cert for ArgoCD (argocd, namespace-scoped)..."
 kubectl create secret tls argocd-server-tls \
   --namespace=argocd \
-  --cert=<(echo "$CERT") \
-  --key=<(echo "$KEY") \
+  --cert="$TMPDIR/tls.crt" \
+  --key="$TMPDIR/tls.key" \
   --dry-run=client -o yaml | \
 kubeseal --controller-name="$CONTROLLER_NAME" \
   --controller-namespace="$CONTROLLER_NAMESPACE" \
