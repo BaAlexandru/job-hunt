@@ -63,7 +63,7 @@ completed: 2026-03-25
 - **Duration:** 30 min
 - **Started:** 2026-03-25T13:54:10Z
 - **Completed:** 2026-03-25T14:25:00Z
-- **Tasks:** 1 (auto) + 1 (checkpoint:human-verify pending)
+- **Tasks:** 2/2 complete (1 auto + 1 human-verify approved)
 - **Files modified:** 9
 
 ## Accomplishments
@@ -79,6 +79,7 @@ completed: 2026-03-25
 Each task was committed atomically:
 
 1. **Task 1: Apply infrastructure and K8s manifests** - `4429907` (feat)
+2. **Task 2: Manual browser smoke test** - approved by user (checkpoint:human-verify)
 
 ## Files Created/Modified
 - `infra/k8s/traefik/origin-ca-sealed-secret.yaml` - SealedSecret for Traefik default TLS cert (cluster-wide)
@@ -183,15 +184,27 @@ FAIL: Route: staging host serves content (expected: staging is scale-to-zero)
 Results: 13 passed, 2 failed (2 expected failures)
 ```
 
-## User Actions Required
-1. **Change ArgoCD admin password:** Run `bash infra/scripts/change-argocd-password.sh` (requires SSH tunnel + interactive password input)
-2. **Manual browser smoke test:** See Task 2 checkpoint in 18-03-PLAN.md
+## Manual Browser Smoke Test (Task 2)
+
+User confirmed all checks passed (2026-03-25):
+- https://job-hunt.dev loads with padlock, login works, API works through Cloudflare
+- Security headers confirmed (HSTS, X-Frame-Options: DENY, X-Content-Type-Options: nosniff, Referrer-Policy, Permissions-Policy)
+- HTTP redirects to HTTPS
+- https://argocd.job-hunt.dev works with new password
+- Automated verification: 13/15 pass (2 expected staging failures by design)
 
 ## Next Phase Readiness
-- Phase 18 Domain & TLS is complete (pending manual browser verification)
+- Phase 18 Domain & TLS is complete
 - All 5 DNS requirements (DNS-01 through DNS-05) are met
 - Application is publicly accessible at https://job-hunt.dev
-- v1.1 Infrastructure & Deployment milestone is complete
+- v1.1 Infrastructure & Deployment milestone is complete (excluding Phases 10, 12, 14)
+
+## Self-Check: PASSED
+
+- Task 1 commit 4429907: verified in git log
+- Task 2: user-approved checkpoint (no commit required)
+- SUMMARY.md: exists and complete
+- All 5 DNS requirements marked complete in REQUIREMENTS.md
 
 ---
 *Phase: 18-domain-tls*

@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: in_progress
-stopped_at: Completed 18-03-PLAN.md (pending human-verify checkpoint)
+stopped_at: Completed 18-03-PLAN.md (all tasks complete, user approved)
 last_updated: "2026-03-25"
-last_activity: 2026-03-25 — Completed Phase 18 Plan 03 (Apply Infrastructure & Verify)
+last_activity: 2026-03-25 — Phase 18 Plan 03 complete (user approved manual browser smoke test)
 progress:
   total_phases: 9
   completed_phases: 9
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 18 (Domain & TLS) — Plan 03 of 03 complete
-Next: Phase 18 complete — pending manual browser smoke test
-Last activity: 2026-03-25 — Completed Phase 18 Plan 03 (Apply Infrastructure & Verify)
+Next: Phase 18 complete — all plans done, v1.1 deployment milestone largely complete
+Last activity: 2026-03-25 — Phase 18 Plan 03 complete (user approved manual browser smoke test)
 
 Progress: [██████████] 100%
 
@@ -94,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T14:25:00Z
-Stopped at: Completed 18-03-PLAN.md (pending human-verify checkpoint)
+Last session: 2026-03-25
+Stopped at: Phase 18 complete — all 3 plans done, user approved final smoke test
 Resume file: None
