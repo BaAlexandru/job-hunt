@@ -52,10 +52,10 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 
 ### Domain & TLS
 
-- [ ] **DNS-01**: Cloudflare DNS A record pointing job-hunt.dev to EC2 Elastic IP (proxied)
-- [ ] **DNS-02**: Cloudflare SSL/TLS set to Full (Strict) with Origin CA cert on K8s
-- [ ] **DNS-03**: HTTPS enforced -- HTTP requests redirect to HTTPS (Cloudflare Always Use HTTPS + HSTS)
-- [ ] **DNS-04**: staging.job-hunt.dev subdomain configured for staging namespace
+- [x] **DNS-01**: Cloudflare DNS A record pointing job-hunt.dev to EC2 Elastic IP (proxied)
+- [x] **DNS-02**: Cloudflare SSL/TLS set to Full (Strict) with Origin CA cert on K8s
+- [x] **DNS-03**: HTTPS enforced -- HTTP requests redirect to HTTPS (Cloudflare Always Use HTTPS + HSTS)
+- [x] **DNS-04**: staging.job-hunt.dev subdomain configured for staging namespace
 - [x] **DNS-05**: Traefik ingress routes configured for prod and staging hosts
 
 ## Future Requirements
@@ -112,10 +112,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ARGO-02 | Phase 17 | Complete |
 | ARGO-03 | Phase 17 | Complete |
 | ARGO-04 | Phase 17 | Complete |
-| DNS-01 | Phase 18 | Pending |
-| DNS-02 | Phase 18 | Pending |
-| DNS-03 | Phase 18 | Pending |
-| DNS-04 | Phase 18 | Pending |
+| DNS-01 | Phase 18 | Complete |
+| DNS-02 | Phase 18 | Complete |
+| DNS-03 | Phase 18 | Complete |
+| DNS-04 | Phase 18 | Complete |
 | DNS-05 | Phase 18 | Complete |
 
 **Coverage:**

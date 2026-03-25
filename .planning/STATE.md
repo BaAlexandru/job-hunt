@@ -3,31 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: in_progress
-stopped_at: Completed 18-02-PLAN.md
-last_updated: "2026-03-25T12:53:38.100Z"
-last_activity: 2026-03-24 — Phase 17 approved after manual testing and fixes
+stopped_at: Completed 18-01-PLAN.md
+last_updated: "2026-03-25"
+last_activity: 2026-03-25 — Completed Phase 18 Plan 01 (Cloudflare IaC)
 progress:
   total_phases: 9
   completed_phases: 8
   total_plans: 22
-  completed_plans: 20
-  percent: 91
----
-
----
-gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Infrastructure & Deployment
-status: in_progress
-stopped_at: Phase 17 complete — approved after manual testing
-last_updated: "2026-03-24"
-last_activity: 2026-03-24 — Completed Phase 17 App Deployment & ArgoCD (all plans, verified, approved)
-progress:
-  [█████████░] 91%
-  completed_phases: 8
-  total_plans: 19
-  completed_plans: 19
-  percent: 100
+  completed_plans: 21
+  percent: 95
 ---
 
 # Project State
@@ -41,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 
 ## Current Position
 
-Phase: 17 of 18 complete (App Deployment & ArgoCD — approved after manual testing)
-Next: Phase 18 (Domain & TLS)
-Last activity: 2026-03-24 — Phase 17 approved after manual testing and fixes
+Phase: 18 (Domain & TLS) — Plan 01 of 03 complete
+Next: Phase 18 Plan 02 (Traefik TLS & ArgoCD Passthrough) - already executed
+Last activity: 2026-03-25 — Completed Phase 18 Plan 01 (Cloudflare IaC)
 
-Progress: [██████████] 100%
+Progress: [█████████░] 95%
 
 ## Performance Metrics
 
@@ -92,6 +76,9 @@ Recent decisions affecting current work:
 - [Phase 17-01]: Placeholder SealedSecret files with empty encryptedData to keep kustomize build valid pre-sealing
 - [Phase 18-domain-tls]: TLSStore+TLSOption named 'default' in kube-system for automatic Traefik TLS on all connections
 - [Phase 18-domain-tls]: ArgoCD TLS passthrough via IngressRouteTCP (exception to standard Ingress API)
+- [Phase 18-01]: Cloudflare provider v5 individual cloudflare_zone_setting resources (not monolithic override)
+- [Phase 18-01]: Cloudflare ruleset rules attribute uses map syntax for headers (v5 schema requirement)
+- [Phase 18-01]: AWS SG ports 80/443 restricted to Cloudflare IPv4 CIDRs via locals block
 
 ### Pending Todos
 
@@ -105,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T12:53:38.096Z
-Stopped at: Completed 18-02-PLAN.md
+Last session: 2026-03-25T12:56:29Z
+Stopped at: Completed 18-01-PLAN.md
 Resume file: None
