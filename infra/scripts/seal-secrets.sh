@@ -30,8 +30,8 @@ kubectl create secret generic backend-secrets \
   --from-literal=JWT_SECRET="$JWT_SECRET" \
   --from-literal=MINIO_ACCESS_KEY="$MINIO_ACCESS_KEY" \
   --from-literal=MINIO_SECRET_KEY="$MINIO_SECRET_KEY" \
-  --from-literal=SMTP_USERNAME=changeme \
-  --from-literal=SMTP_PASSWORD=changeme \
+  --from-literal=SMTP_USERNAME="${SMTP_USERNAME:?ERROR: Set SMTP_USERNAME env var before running}" \
+  --from-literal=SMTP_PASSWORD="${SMTP_PASSWORD:?ERROR: Set SMTP_PASSWORD env var before running}" \
   --from-literal=INTERNAL_API_SECRET="$INTERNAL_API_SECRET" \
   --dry-run=client -o yaml | \
 kubeseal --controller-name="$CONTROLLER_NAME" \

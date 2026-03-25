@@ -16,6 +16,7 @@ import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
+import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CookieValue
@@ -36,7 +37,11 @@ class AuthController(
     private val passwordResetService: PasswordResetService,
     private val emailService: EmailService,
     @org.springframework.beans.factory.annotation.Value("\${app.internal-api-secret}") private val internalApiSecret: String,
+    private val environment: Environment,
 ) {
+
+    private val secureCookie: Boolean
+        get() = environment.activeProfiles.contains("prod")
 
     @PostMapping("/register")
     fun register(@Valid @RequestBody request: RegisterRequest): ResponseEntity<MessageResponse> {
@@ -53,7 +58,7 @@ class AuthController(
 
         val cookie = Cookie("refresh_token", refreshToken)
         cookie.isHttpOnly = true
-        cookie.secure = false
+        cookie.secure = secureCookie
         cookie.path = "/api/auth/refresh"
         cookie.maxAge = (jwtTokenProvider.getRefreshExpirationMs() / 1000).toInt()
         cookie.setAttribute("SameSite", "Lax")
@@ -71,7 +76,7 @@ class AuthController(
 
         val cookie = Cookie("refresh_token", newRefreshToken)
         cookie.isHttpOnly = true
-        cookie.secure = false
+        cookie.secure = secureCookie
         cookie.path = "/api/auth/refresh"
         cookie.maxAge = (jwtTokenProvider.getRefreshExpirationMs() / 1000).toInt()
         cookie.setAttribute("SameSite", "Lax")
@@ -98,7 +103,7 @@ class AuthController(
         // Clear the refresh cookie
         val cookie = Cookie("refresh_token", "")
         cookie.isHttpOnly = true
-        cookie.secure = false
+        cookie.secure = secureCookie
         cookie.path = "/api/auth/refresh"
         cookie.maxAge = 0
         cookie.setAttribute("SameSite", "Lax")
