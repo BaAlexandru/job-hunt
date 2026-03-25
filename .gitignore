@@ -45,8 +45,9 @@ id_rsa
 infra/k8s/overlays/*/secrets.yaml
 infra/k8s/overlays/*/secrets.yaml.bak
 
-# Manual testing guides (local-only)
+# Local-only guides and docs
 .planning/phases/17-app-deployment-argocd/17-MANUAL-TESTING.md
+SECURITY-AUDIT-GUIDE.md
 
 # Database backups (downloaded via infra/scripts/download-backups.sh)
 backups/
