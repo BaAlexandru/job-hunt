@@ -23,22 +23,17 @@ if [[ ! -f "$SEALED_SECRET_FILE" ]]; then
   exit 1
 fi
 
-# Seal each SMTP value individually using --merge, which patches the existing SealedSecret
-echo -n "$SMTP_USERNAME" | kubeseal --raw \
-  --name=backend-secrets \
+# Create a partial secret with only SMTP keys, seal it, and merge into existing sealed secret
+kubectl create secret generic backend-secrets \
   --namespace="$NAMESPACE" \
-  --controller-name="$CONTROLLER_NAME" \
+  --from-literal=SMTP_USERNAME="$SMTP_USERNAME" \
+  --from-literal=SMTP_PASSWORD="$SMTP_PASSWORD" \
+  --dry-run=client -o yaml | \
+kubeseal --controller-name="$CONTROLLER_NAME" \
   --controller-namespace="$CONTROLLER_NAMESPACE" \
-  --from-file=/dev/stdin | \
-xargs -I{} yq -i '.spec.encryptedData.SMTP_USERNAME = "{}"' "$SEALED_SECRET_FILE"
-
-echo -n "$SMTP_PASSWORD" | kubeseal --raw \
-  --name=backend-secrets \
   --namespace="$NAMESPACE" \
-  --controller-name="$CONTROLLER_NAME" \
-  --controller-namespace="$CONTROLLER_NAMESPACE" \
-  --from-file=/dev/stdin | \
-xargs -I{} yq -i '.spec.encryptedData.SMTP_PASSWORD = "{}"' "$SEALED_SECRET_FILE"
+  --format=yaml \
+  --merge-into "$SEALED_SECRET_FILE"
 
 echo "SMTP credentials sealed into ${SEALED_SECRET_FILE}"
 echo "Commit and push to deploy via ArgoCD."
