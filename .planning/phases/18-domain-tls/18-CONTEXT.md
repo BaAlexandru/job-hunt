@@ -148,6 +148,49 @@ None — discussion stayed within phase scope
 
 </deferred>
 
+<skills>
+## Skills & Documentation
+
+### Recommended Skills
+
+| Skill | Tier | Relevance |
+|---|---|---|
+| `kubernetes-specialist` | Essential | Ingress resources, IngressRouteTCP CRD, TLS Secrets in kube-system, namespace routing, Traefik default cert configuration (~35% of phase work) |
+| `argocd-expert` | Essential | ArgoCD TLS cert configuration (argocd-cmd-params-cm or server args), Ingress/IngressRouteTCP exposure at argocd.job-hunt.dev, admin password management, Helm values updates (~18% of phase) |
+| `helm-chart-scaffolding` | Supporting | ArgoCD Helm values configuration for TLS cert, server flags (--insecure=false), and IngressRouteTCP resource generation |
+| `sequential-thinking` | Supporting | Multi-step reasoning for TLS chain (Cloudflare → Traefik → ArgoCD), rollout ordering, debugging connectivity across DNS/proxy/ingress/pod layers |
+| `systematic-debugging` | Supporting | Debugging TLS handshake failures, DNS propagation delays, Ingress routing issues, Cloudflare Full (Strict) certificate validation errors on live cluster |
+| `conventional-commit` | Workflow | Structured commit messages during phase execution |
+| `verification-before-completion` | Workflow | Verify all 5 DNS requirements (DNS-01..05) are met, run verify-domain.sh + manual smoke test before marking phase complete |
+
+### Context7 Documentation Sources
+
+Downstream agents SHOULD query these Context7 library IDs for up-to-date documentation during planning and implementation.
+
+| Technology | Context7 Library ID | Snippets | Trust Score | Key Topics |
+|---|---|---|---|---|
+| Cloudflare Terraform Provider | `/cloudflare/terraform-provider-cloudflare` | 1,586 | 7.8 | `cloudflare_record` (A records, proxied), `cloudflare_zone_settings_override` (SSL mode, Always HTTPS, HSTS), Origin CA cert resources, zone_id data source |
+| Traefik (official docs) | `/websites/doc_traefik_io_traefik` | 8,368 | 8.0 | TLSStore default cert, IngressRouteTCP CRD for TLS passthrough, entrypoints redirect (web→websecure), HelmChartConfig for K3s Traefik customization |
+| Traefik Helm Chart | `/traefik/traefik-helm-chart` | 104 | 8.0 | K3s uses this chart internally — HelmChartConfig values override Traefik defaults (ports, TLS, middleware) |
+| ArgoCD (Argo Helm) | `/argoproj/argo-helm` | 122 | 9.3 | argocd-server TLS cert configuration, Helm values for `server.certificate`, `server.ingress`, `server.extraArgs` |
+| Kubernetes | `/websites/kubernetes_io` | 15,032 | 9.9 | Ingress TLS, IngressClass, TLS Secrets (kubernetes.io/tls type), cross-namespace secret references |
+| Kustomize | `/kubernetes-sigs/kustomize` | 1,397 | 9.1 | Overlay patches, resource references (minimal use in this phase) |
+| Sealed Secrets | `/bitnami-labs/sealed-secrets` | 246 | 7.9 | kubeseal --scope cluster-wide for cross-namespace TLS secret, SealedSecret for kube-system namespace |
+| OpenTofu | `/opentofu/opentofu` | 3,996 | 7.6 | Provider configuration, S3 backend (existing), variable files, output references between resources |
+| Terraform AWS Provider | `/hashicorp/terraform-provider-aws` | 22,352 | 7.9 | `aws_eip` output referenced by Cloudflare A records (existing, no new AWS resources in this phase) |
+| Helm | `/websites/helm_sh` | 1,315 | 9.9 | `helm upgrade` with `--set` overrides for ArgoCD, chart values structure |
+
+### Skill Gap Coverage
+
+The following phase technologies have no dedicated skill — Context7 docs above fill the gap:
+
+- **Cloudflare DNS/SSL/TLS** — No Cloudflare skill. Use `/cloudflare/terraform-provider-cloudflare` Context7 docs for `cloudflare_record`, `cloudflare_zone_settings_override`, and Origin CA resources
+- **OpenTofu + Cloudflare provider** — No OpenTofu skill (`aws-cdk-python-setup` is unrelated). Use `/opentofu/opentofu` + `/cloudflare/terraform-provider-cloudflare` Context7 docs
+- **Traefik ingress (advanced)** — `kubernetes-specialist` covers basic Ingress but NOT Traefik-specific features (TLSStore default cert, IngressRouteTCP CRD, HelmChartConfig). Use `/websites/doc_traefik_io_traefik` + `/traefik/traefik-helm-chart` Context7 docs — these are CRITICAL for this phase
+- **Shell scripting** — No skill needed; verify-domain.sh is straightforward curl/dig scripting
+
+</skills>
+
 ---
 
 *Phase: 18-domain-tls*
