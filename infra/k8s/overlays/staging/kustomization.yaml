@@ -15,10 +15,10 @@ resources:
 images:
 - name: jobhunt-backend
   newName: ghcr.io/baalexandru/jobhunt-backend
-  newTag: sha-22ffe2b
+  newTag: sha-14465af
 - name: jobhunt-frontend
   newName: ghcr.io/baalexandru/jobhunt-frontend
-  newTag: sha-22ffe2b
+  newTag: sha-14465af
 
 patches:
 - path: suspend-jobs.yaml
