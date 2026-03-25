@@ -279,9 +279,14 @@ class AuthControllerIntegrationTests {
 
     @Test
     fun protectedEndpointRequiresAuth() {
-        // Public actuator info endpoint
+        // Public actuator health endpoint (may return 503 if a health indicator is DOWN, but must not require auth)
+        val healthStatus = mockMvc.perform(get("/actuator/health"))
+            .andReturn().response.status
+        assert(healthStatus != 401 && healthStatus != 403) { "Health endpoint should not require auth, got $healthStatus" }
+
+        // Non-health actuator endpoints require authentication
         mockMvc.perform(get("/actuator/info"))
-            .andExpect(status().isOk)
+            .andExpect(status().isUnauthorized)
 
         // Non-existent API endpoint without token should return 401
         mockMvc.perform(get("/api/protected"))
