@@ -21,3 +21,4 @@ metadata:
   name: frontend-config
 data:
   NEXT_PUBLIC_API_URL: https://staging.job-hunt.dev/api
+  BETTER_AUTH_URL: https://staging.job-hunt.dev
