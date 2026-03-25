@@ -56,7 +56,7 @@ Requirements for Infrastructure & Deployment milestone. Each maps to roadmap pha
 - [ ] **DNS-02**: Cloudflare SSL/TLS set to Full (Strict) with Origin CA cert on K8s
 - [ ] **DNS-03**: HTTPS enforced -- HTTP requests redirect to HTTPS (Cloudflare Always Use HTTPS + HSTS)
 - [ ] **DNS-04**: staging.job-hunt.dev subdomain configured for staging namespace
-- [ ] **DNS-05**: Traefik ingress routes configured for prod and staging hosts
+- [x] **DNS-05**: Traefik ingress routes configured for prod and staging hosts
 
 ## Future Requirements
 
@@ -116,7 +116,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DNS-02 | Phase 18 | Pending |
 | DNS-03 | Phase 18 | Pending |
 | DNS-04 | Phase 18 | Pending |
-| DNS-05 | Phase 18 | Pending |
+| DNS-05 | Phase 18 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 30 total (3 GAP + 5 VISI + 4 DOCK + 5 K8S + 4 DATA + 4 ARGO + 5 DNS)

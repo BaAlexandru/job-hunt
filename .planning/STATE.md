@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Infrastructure & Deployment
 status: in_progress
+stopped_at: Completed 18-02-PLAN.md
+last_updated: "2026-03-25T12:53:38.100Z"
+last_activity: 2026-03-24 — Phase 17 approved after manual testing and fixes
+progress:
+  total_phases: 9
+  completed_phases: 8
+  total_plans: 22
+  completed_plans: 20
+  percent: 91
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.1
+milestone_name: Infrastructure & Deployment
+status: in_progress
 stopped_at: Phase 17 complete — approved after manual testing
 last_updated: "2026-03-24"
 last_activity: 2026-03-24 — Completed Phase 17 App Deployment & ArgoCD (all plans, verified, approved)
 progress:
-  total_phases: 9
+  [█████████░] 91%
   completed_phases: 8
   total_plans: 19
   completed_plans: 19
@@ -74,6 +90,8 @@ Recent decisions affecting current work:
 - [Phase 16-02]: Staging suspends CronJob only; bucket init Job left to fail/retry on-demand
 - [Phase 17-01]: Staging auto-sync with selfHeal; prod manual sync only for safe promotion
 - [Phase 17-01]: Placeholder SealedSecret files with empty encryptedData to keep kustomize build valid pre-sealing
+- [Phase 18-domain-tls]: TLSStore+TLSOption named 'default' in kube-system for automatic Traefik TLS on all connections
+- [Phase 18-domain-tls]: ArgoCD TLS passthrough via IngressRouteTCP (exception to standard Ingress API)
 
 ### Pending Todos
 
@@ -87,6 +105,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T13:10:14.103Z
-Stopped at: Completed 17-02-PLAN.md
+Last session: 2026-03-25T12:53:38.096Z
+Stopped at: Completed 18-02-PLAN.md
 Resume file: None
